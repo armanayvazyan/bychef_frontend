@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import i18n from "i18next";
 import { LOCALES } from "@/types.ts";
+import logo from "@/assets/logo.svg";
 import {
   DropdownMenu,
   DropdownMenuItem,
@@ -12,20 +13,24 @@ import changeLanguage from "@/helpers/changeLanguage.ts";
 import { NavigationMenu } from "@/components/ui/navigation-menu";
 
 const languageNames = {
-  [LOCALES.HY]: "ARM",
+  [LOCALES.HY]: "AM",
   [LOCALES.EN]: "EN",
   [LOCALES.RU]: "RU"
 };
 
 const Header = () => {
-  const [selectedLocale, setSelectedLocale] = useState((i18n.language as LOCALES) || LOCALES.HY);
+  const [selectedLocale, setSelectedLocale] = useState<LOCALES | null>(null);
+
+  useEffect(() => {
+    setSelectedLocale(i18n.resolvedLanguage as LOCALES);
+  }, []);
 
   return (
     <NavigationMenu className="w-full flex justify-between max-w-full px-4 md:px-16 py-6">
-      <img src="src/assets/logo.svg" alt="logo"/>
+      <img src={logo} alt="logo"/>
       <DropdownMenu>
         <DropdownMenuTrigger>
-          <Button variant="outline">{languageNames[selectedLocale]}</Button>
+          <Button variant="outline">{languageNames[selectedLocale ?? LOCALES.HY]}</Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuItem
