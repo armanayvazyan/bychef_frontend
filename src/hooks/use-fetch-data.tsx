@@ -70,16 +70,20 @@ const useFetchData = (initialPath = "") => {
         }
       );
 
-      const res = await response.json();
-
       if (!response.ok) {
-        if (injectErrorMessage && res.error) {
+        if (injectErrorMessage && response) {
+          const res = await response.json();
           return { error: res.error, isInjected: true };
         }
 
         return { ...processErrorResponse(response.status), isInjected: false };
       }
 
+      if (response.status === 201) {
+        return {};
+      }
+
+      const res = await response.json();
       return { result: res.data };
     } catch (e) {
       console.error(e);
