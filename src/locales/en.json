@@ -1,0 +1,58 @@
+{
+  "home-page": {
+    "subscribe": {
+      "title": "Pre-sign up",
+      "details": "Sign up now to be among the first to launch your business with our support.",
+      "nameInput": "Full Name",
+      "phoneInput": "Phone number",
+      "button": "Sign Up",
+      "successTitle": "You have successfully registered.",
+      "successDetails": "We will contact you shortly to discuss the next steps."
+    },
+    "illustration1": {
+      "title": "Authentic, homemade food",
+      "details": "Discover 100s of homemade and delicious dishes that will make you come back every time."
+    },
+    "illustration2": {
+      "title": "Prepared, not produced",
+      "details": "Crafted with fresh, quality ingredients in small batches by your chef - prepared with love."
+    },
+    "illustration3": {
+      "title": "Quality food available for everyone",
+      "details": "You can now eat homemade food without having to prepare it at home!"
+    },
+    "about-us": {
+      "title": "About us",
+      "details": "ByCHEF allows you to find tasty, high-quality homemade food prepared by a chef. Our mission is to make tasty homemade food accessible just a few clicks away for everyone."
+    },
+    "faq": {
+      "q1": {
+        "question": "How can I order food from a chef?",
+        "answer": {
+          "p1": "Ordering food on ByCHEF is easy-peasy.",
+          "p2": "You just need to:",
+          "p3": "Select a delivery address to see all the chefs available for your delivery area,",
+          "p4": "From the available chefs you see choose one,",
+          "p5": "Add the dish you want to your cart,",
+          "p6": "Pay with the available payment methods,",
+          "p7": "That's it! You now need to wait for your food to be delivered!"
+        }
+      },
+      "q2": {
+        "question": "Can I become a chef at ByCHEF?",
+        "answer": "If you are interested in joining ByCHEF as a chef, fill out the pre-sign up form and we'll get in touch with you for the next steps. We'll help you at each step of your journey of starting your own business from A to Z. "
+      },
+      "q3": {
+        "question": "Why can’t I see all the chefs on the platform?",
+        "answer": "Your delivery address is out of our current coverage. You can change your delivery address to check whether the coverage is expanded."
+      }
+    },
+    "food-safety": {
+      "title": "Food Safety",
+      "details": "All chefs selling through our platform take their responsibility to provide you with safe meals very seriously. And ByCHEF, in turn, tries to do everything to ensure that all chefs strictly follow the rules of food preparation and storage."
+    }
+  },
+  "footer": {
+    "copyright": "© 2024 ByCHEF, All rights reserved"
+  }
+}
