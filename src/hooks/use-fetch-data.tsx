@@ -79,6 +79,10 @@ const useFetchData = (initialPath = "") => {
         return { ...processErrorResponse(response.status), isInjected: false };
       }
 
+      if (response.status === 201) {
+        return {};
+      }
+
       const res = await response.json();
       return { result: res.data };
     } catch (e) {
