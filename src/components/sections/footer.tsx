@@ -8,6 +8,7 @@ import {
 import Button from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
 import Separator from "@/components/ui/separator";
+import instagramLogo from "@/assets/instagram.svg";
 import { NavigationMenuItem } from "@radix-ui/react-navigation-menu";
 
 const components: { title: string; href: string }[][] = [
@@ -35,7 +36,7 @@ const components: { title: string; href: string }[][] = [
 
 const socials = [
   {
-    logo: "src/assets/instagram.svg",
+    logo: instagramLogo,
     href: "https://www.instagram.com/",
   },
 ];
