@@ -34,7 +34,6 @@ const processErrorResponse = (status?: number) => {
   }
 };
 
-// TODO: create class and store there
 const useFetchData = (initialPath = "") => {
   const fetchData = useCallback(async ({
     url = "",

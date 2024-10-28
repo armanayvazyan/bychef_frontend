@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import Button from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
-import { Separator } from "@/components/ui/separator";
+import Separator from "@/components/ui/separator";
 import { NavigationMenuItem } from "@radix-ui/react-navigation-menu";
 
 const components: { title: string; href: string }[][] = [
@@ -34,10 +34,6 @@ const components: { title: string; href: string }[][] = [
 ];
 
 const socials = [
-  // {
-  //   logo: "src/assets/facebook.svg",
-  //   href: "https://www.facebook.com/",
-  // },
   {
     logo: "src/assets/instagram.svg",
     href: "https://www.instagram.com/",
