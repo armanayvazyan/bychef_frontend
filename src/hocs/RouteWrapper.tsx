@@ -12,7 +12,7 @@ const wrapComponentWithHF = (component: ReactNode, name?: string) => {
     <HFWrapper>
       <ScrollResetWrapper>
         <Helmet>
-          <title>{name ? `ByChef | ${name}` : "ByChef"}</title>
+          <title>{name ? `byChef | ${name}` : "byChef"}</title>
         </Helmet>
         {component}
       </ScrollResetWrapper>

@@ -15,6 +15,7 @@ i18n
     interpolation: {
       escapeValue: false,
     },
+    load: "languageOnly",
     resources: {
       hy: {
         translation: hy,
