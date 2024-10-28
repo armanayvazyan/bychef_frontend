@@ -28,8 +28,8 @@ const components: { title: string; href: string }[][] = [
     //   href: "/privacy",
     // },
     {
-      title: "support@bychef",
-      href: "mailto:support@bychef",
+      title: "support@bychef.am",
+      href: "mailto:support@bychef.am",
     }
   ],
 ];
@@ -37,7 +37,7 @@ const components: { title: string; href: string }[][] = [
 const socials = [
   {
     logo: instagramLogo,
-    href: "https://www.instagram.com/",
+    href: "https://www.instagram.com/bychef.am",
   },
 ];
 
