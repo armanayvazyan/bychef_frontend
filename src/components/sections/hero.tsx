@@ -66,8 +66,8 @@ const HeroTemp = () => {
             <h1 className="text-2xl font-extrabold">{t("subscribe.title")}</h1>
             <p className="text-center text-zinc-600">{t("subscribe.details")}</p>
             <Input type="text" placeholder={t("subscribe.nameInput")} value={info.name} onChange={handleChange} name="name" id="nameInput" />
-            <Input type="text" placeholder={t("subscribe.phoneInput")} value={info.phone} onChange={handleChange} name="phone" id="phoneInput" />
-            <Button type="submit">{t("subscribe.button")}</Button>
+            <Input type="tel" placeholder={t("subscribe.phoneInput")} value={info.phone} onChange={handleChange} name="phone" id="phoneInput" />
+            <Button type="submit" disabled={!info.name || !info.phone}>{t("subscribe.button")}</Button>
           </div>
         </div>
       </form>

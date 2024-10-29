@@ -6,7 +6,7 @@ const Faq = () => {
 
   return (
     <section className="flex flex-col items-center mt-16 px-4">
-      <h1 className="text-2xl">FAQ</h1>
+      <h1 className="text-2xl mb-4 font-bold">FAQ</h1>
       <Accordion type="single" collapsible className="w-full max-w-[498px]">
         <AccordionItem value="item-1">
           <AccordionTrigger>{t("faq.q1.question")}</AccordionTrigger>
