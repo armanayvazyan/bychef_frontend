@@ -1,11 +1,10 @@
 import { ReactNode } from "react";
-import { Helmet } from "react-helmet-async";
-import { RouterProvider, Navigate, createBrowserRouter } from "react-router-dom";
-
 import Home from "@/pages/Home";
+import Explore from "@/pages/Explore";
 import HFWrapper from "@/hocs/HFWrapper";
-
+import { Helmet } from "react-helmet-async";
 import ScrollResetWrapper from "@/hocs/ScrollResetWrapper.tsx";
+import { RouterProvider, Navigate, createBrowserRouter } from "react-router-dom";
 
 const wrapComponentWithHF = (component: ReactNode, name?: string) => {
   return (
@@ -26,9 +25,13 @@ const routes = [
     element: wrapComponentWithHF(<Home />),
   },
   {
+    path: "/explore",
+    element: wrapComponentWithHF(<Explore />)
+  },
+  {
     path: "*",
-    element: <Navigate to="/" replace/>
-  }
+    element: <Navigate to="/" replace />
+  },
 ];
 
 const RouteWrapper = () => {

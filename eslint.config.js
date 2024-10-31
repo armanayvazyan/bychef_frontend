@@ -34,6 +34,7 @@ export default tseslint.config(
       ],
       ...react.configs.recommended.rules,
       ...react.configs["jsx-runtime"].rules,
+      "@typescript-eslint/no-unused-vars": ["warn"],
       "@typescript-eslint/no-unsafe-assignment": ["warn"],
       "@typescript-eslint/no-misused-promises": ["warn"],
       "@typescript-eslint/no-unsafe-call": ["warn"],
