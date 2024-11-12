@@ -17,6 +17,7 @@ const Header = () => {
     const modifiedItems = cardItem?.items.map((item) => {
       if (item.id == id) {
         const quantity = item.quantity + ((item.quantity == 1 && diff == -1) ? 0 : diff);
+
         return { ...item, quantity };
       } else {
         return item;
