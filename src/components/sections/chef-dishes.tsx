@@ -40,7 +40,7 @@ const ChefDishes = ({ workdays }: IChefDishes) => {
         ))}
       </div>
       {dishes.length ? (
-        <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pb-[104px]">
+        <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-4 pb-[104px]">
           {dishes.map((dish) => <DishCard key={dish.name} dishInfo={dish} selectedDate={selectedDay} />)}
         </div>
       ) : (
