@@ -57,7 +57,7 @@ const Header = () => {
         <PopoverTrigger>
           <div className="relative">
             {!!products?.length && (
-              <Circle size={20} className="text-destructive fill-destructive absolute translate-x-1/4 -translate-y-1/4 right-0 top-0" />
+              <Circle size={14} className="text-destructive fill-destructive absolute translate-x-1/4 -translate-y-1/4 right-0 top-0" />
             )}
             <Button className="rounded-full w-8 h-8 md:w-10 md:h-10">
               <ShoppingCart />
