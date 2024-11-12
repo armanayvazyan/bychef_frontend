@@ -1,4 +1,14 @@
+import { useEffect, useState } from "react";
+import i18n from "i18next";
+import { LOCALES } from "@/types";
+import { Globe } from "lucide-react";
 import { Link } from "react-router-dom";
+import {
+  DropdownMenu,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+} from "@/components/ui/dropdown-menu";
 import {
   NavigationMenu,
   NavigationMenuLink,
@@ -9,6 +19,7 @@ import Button from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
 import Separator from "@/components/ui/separator";
 import instagramLogo from "@/assets/instagram.svg";
+import changeLanguage from "@/helpers/changeLanguage";
 import { NavigationMenuItem } from "@radix-ui/react-navigation-menu";
 
 const components: { title: string; href: string }[][] = [
@@ -41,8 +52,20 @@ const socials = [
   },
 ];
 
+const languageNames = {
+  [LOCALES.HY]: "AM",
+  [LOCALES.EN]: "EN",
+  [LOCALES.RU]: "RU"
+};
+
 const Footer = () => {
   const { t } = useTranslation("translation", { keyPrefix: "footer" });
+
+  const [selectedLocale, setSelectedLocale] = useState<LOCALES | null>(null);
+
+  useEffect(() => {
+    setSelectedLocale(i18n.resolvedLanguage as LOCALES);
+  }, []);
 
   return (
     <footer className="flex flex-col items-center mt-16 px-4">
@@ -67,6 +90,43 @@ const Footer = () => {
                 )}
               </div>
             ))}
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <Button variant="ghost2">
+                  <Globe />
+                  {languageNames[selectedLocale ?? LOCALES.HY]}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem
+                  className="py-1 cursor-pointer data-[selected=true]:bg-secondary"
+                  data-selected={selectedLocale === LOCALES.HY}
+                  onSelect={() => { changeLanguage(LOCALES.HY); setSelectedLocale(LOCALES.HY); }}
+                >
+                  <p>{languageNames[LOCALES.HY]}</p>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className="py-1 cursor-pointer data-[selected=true]:bg-secondary"
+                  data-selected={selectedLocale === LOCALES.EN}
+                  onSelect={() => {
+                    changeLanguage(LOCALES.EN);
+                    setSelectedLocale(LOCALES.EN);
+                  }}
+                >
+                  <p>{languageNames[LOCALES.EN]}</p>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className="py-1 cursor-pointer data-[selected=true]:bg-secondary"
+                  data-selected={selectedLocale === LOCALES.RU}
+                  onSelect={() => {
+                    changeLanguage(LOCALES.RU);
+                    setSelectedLocale(LOCALES.RU);
+                  }}
+                >
+                  <p>{languageNames[LOCALES.RU]}</p>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </NavigationMenuList>
         </NavigationMenu>
         <div className="flex gap-4 py-6">

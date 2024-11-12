@@ -1,70 +1,80 @@
-import { useEffect, useState } from "react";
-import i18n from "i18next";
-import { LOCALES } from "@/types.ts";
+import { useCallback } from "react";
+import { db } from "@/db";
 import logo from "@/assets/logo.svg";
 import { Link } from "react-router-dom";
-import {
-  DropdownMenu,
-  DropdownMenuItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu.tsx";
-import Button from "@/components/ui/button.tsx";
-import changeLanguage from "@/helpers/changeLanguage.ts";
+import Button from "@/components/ui/button";
+import { ShoppingCart } from "lucide-react";
+import CartItem from "@/components/ui/cart-item";
+import { useLiveQuery } from "dexie-react-hooks";
 import { NavigationMenu } from "@/components/ui/navigation-menu";
-
-const languageNames = {
-  [LOCALES.HY]: "AM",
-  [LOCALES.EN]: "EN",
-  [LOCALES.RU]: "RU"
-};
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 const Header = () => {
-  const [selectedLocale, setSelectedLocale] = useState<LOCALES | null>(null);
+  const products = useLiveQuery(() => db.products.reverse().toArray());
 
-  useEffect(() => {
-    setSelectedLocale(i18n.resolvedLanguage as LOCALES);
-  }, []);
+  const handleChangeQuantity = useCallback((id: string, date: string, diff: -1 | 1) => {
+    const cardItem = products?.find(product => product.date === date);
+    const modifiedItems = cardItem?.items.map((item) => {
+      if (item.id == id) {
+        const quantity = item.quantity + ((item.quantity == 1 && diff == -1) ? 0 : diff);
+        return { ...item, quantity };
+      } else {
+        return item;
+      }
+    });
+
+    if (cardItem && modifiedItems) {
+      db.products.put({
+        ...cardItem,
+        items: modifiedItems,
+      }, date);
+    }
+  }, [products]);
+
+  const handleDeleteCartItem = useCallback((id: string, date: string) => {
+    const cardItem = products?.find(product => product.date === date);
+    const modifiedItems = cardItem?.items.filter((item) => item.id !== id);
+
+    if (cardItem && modifiedItems) {
+      if (!modifiedItems.length) {
+        db.products.delete(date);
+        return;
+      }
+
+      db.products.put({
+        ...cardItem,
+        items: modifiedItems,
+      }, date);
+    }
+  }, [products]);
 
   return (
-    <NavigationMenu className="w-full flex justify-between max-w-full px-4 md:px-16 py-6">
+    <NavigationMenu className="w-full flex justify-between max-w-full border-b-2 border-zinc-100 px-4 md:px-16 py-6">
       <Link to="/">
         <img src={logo} alt="logo" />
       </Link>
-      <DropdownMenu>
-        <DropdownMenuTrigger>
-          <Button variant="outline">{languageNames[selectedLocale ?? LOCALES.HY]}</Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <DropdownMenuItem
-            className="py-1 cursor-pointer data-[selected=true]:bg-secondary"
-            data-selected={selectedLocale === LOCALES.HY}
-            onSelect={() => { changeLanguage(LOCALES.HY); setSelectedLocale(LOCALES.HY); }}
-          >
-            <p>{languageNames[LOCALES.HY]}</p>
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            className="py-1 cursor-pointer data-[selected=true]:bg-secondary"
-            data-selected={selectedLocale === LOCALES.EN}
-            onSelect={() => {
-              changeLanguage(LOCALES.EN);
-              setSelectedLocale(LOCALES.EN);
-            }}
-          >
-            <p>{languageNames[LOCALES.EN]}</p>
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            className="py-1 cursor-pointer data-[selected=true]:bg-secondary"
-            data-selected={selectedLocale === LOCALES.RU}
-            onSelect={() => {
-              changeLanguage(LOCALES.RU);
-              setSelectedLocale(LOCALES.RU);
-            }}
-          >
-            <p>{languageNames[LOCALES.RU]}</p>
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <Popover>
+        <PopoverTrigger>
+          <Button className="rounded-full w-10 h-10">
+            <ShoppingCart />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent align="end" sideOffset={8} className="flex flex-col gap-6 max-h-[500px] overflow-y-scroll">
+          <>
+            {products?.length ?
+              products.map(product => (
+                <CartItem
+                  key={product.date}
+                  product={product}
+                  onDeleteItem={handleDeleteCartItem}
+                  onChangeQuantity={handleChangeQuantity}
+                />
+              )) : (
+                <p className="text-base font-extrabold text-zinc-800">Cart is empty</p>
+              )}
+          </>
+        </PopoverContent>
+      </Popover>
     </NavigationMenu>
   );
 };

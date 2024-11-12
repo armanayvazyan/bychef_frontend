@@ -54,5 +54,25 @@
   },
   "footer": {
     "copyright": "© 2024 ByCHEF, All rights reserved"
+  },
+  "header": {
+    "change-address": "Change delivery address"
+  },
+  "status": {
+    "days": {
+      "monday": "Monday",
+      "tuesday": "Tuesday",
+      "wednesday": "Wednesday",
+      "thursday": "Thursday",
+      "friday": "Friday",
+      "saturday": "Saturday",
+      "sunday": "Sunday",
+      "today": "today"
+    },
+    "unavailable": "Not available",
+    "available": "Available on {{day}}"
+  },
+  "explore": {
+    "title": "Chefs near you"
   }
 }
