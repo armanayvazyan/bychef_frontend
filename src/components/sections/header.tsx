@@ -3,9 +3,9 @@ import { db } from "@/db";
 import logo from "@/assets/logo.svg";
 import { Link } from "react-router-dom";
 import Button from "@/components/ui/button";
-import { ShoppingCart } from "lucide-react";
 import CartItem from "@/components/ui/cart-item";
 import { useLiveQuery } from "dexie-react-hooks";
+import { Circle, ShoppingCart } from "lucide-react";
 import { NavigationMenu } from "@/components/ui/navigation-menu";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
@@ -55,9 +55,14 @@ const Header = () => {
       </Link>
       <Popover>
         <PopoverTrigger>
-          <Button className="rounded-full w-10 h-10">
-            <ShoppingCart />
-          </Button>
+          <div className="relative">
+            {!!products?.length && (
+              <Circle size={20} className="text-destructive fill-destructive absolute translate-x-1/4 -translate-y-1/4 right-0 top-0" />
+            )}
+            <Button className="rounded-full w-10 h-10">
+              <ShoppingCart />
+            </Button>
+          </div>
         </PopoverTrigger>
         <PopoverContent align="end" sideOffset={8} className="flex flex-col gap-6 max-h-[500px] overflow-y-scroll">
           <>
