@@ -54,5 +54,25 @@
   },
   "footer": {
     "copyright": "© 2024 ByCHEF, Բոլոր իրավունքները պաշտպանված են"
+  },
+  "header": {
+    "change-address": "Փոխել առաքման հասցեն"
+  },
+  "status": {
+    "days": {
+      "monday": "Երկուշաբթի",
+      "tuesday": "Երեքշաբթի",
+      "wednesday": "Չորեքշաբթի",
+      "thursday": "Հինգշաբթի",
+      "friday": "Ուրբաթ",
+      "saturday": "Շաբաթ",
+      "sunday": "Կիրակի",
+      "today": "այսօր"
+    },
+    "unavailable": "Հասանելի չէ",
+    "available": "Հասանելի է {{day}}"
+  },
+  "explore": {
+    "title": "Խոհարարներ մոտակայքում"
   }
 }

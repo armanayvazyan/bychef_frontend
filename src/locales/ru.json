@@ -54,5 +54,25 @@
   },
   "footer": {
     "copyright": "© 2024 ByCHEF, Все права защищены"
+  },
+  "header": {
+    "change-address": "Изменить адрес доставки"
+  },
+  "status": {
+    "days": {
+      "monday": "Понедельник",
+      "tuesday": "Вторник",
+      "wednesday": "Среду",
+      "thursday": "Четверг",
+      "friday": "Пятницу",
+      "saturday": "Субботу",
+      "sunday": "Воскресенье",
+      "today": "сегодня"
+    },
+    "unavailable": "Не доступен(а)",
+    "available": "Доступен(а) {{day}}"
+  },
+  "explore": {
+    "title": "Повара поблизости"
   }
 }
