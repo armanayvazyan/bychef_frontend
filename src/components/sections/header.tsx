@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import i18n from "i18next";
 import { LOCALES } from "@/types.ts";
 import logo from "@/assets/logo.svg";
+import { Link } from "react-router-dom";
 import {
   DropdownMenu,
   DropdownMenuItem,
@@ -27,7 +28,9 @@ const Header = () => {
 
   return (
     <NavigationMenu className="w-full flex justify-between max-w-full px-4 md:px-16 py-6">
-      <img src={logo} alt="logo"/>
+      <Link to="/">
+        <img src={logo} alt="logo" />
+      </Link>
       <DropdownMenu>
         <DropdownMenuTrigger>
           <Button variant="outline">{languageNames[selectedLocale ?? LOCALES.HY]}</Button>
