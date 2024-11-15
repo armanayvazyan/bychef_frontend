@@ -1,15 +1,15 @@
-import { ICart } from "@/db";
+import { ICart, ICartItem } from "@/db";
 import Button from "@/components/ui/button";
 import Separator from "@/components/ui/separator";
 import { Minus, Plus, Trash2, TriangleAlert } from "lucide-react";
 
-interface ICartItem {
+interface ICartItemProps {
   product: ICart;
-  onDeleteItem: (id: string, date: string) => void;
-  onChangeQuantity: (id: string, date: string, type: -1 | 1) => void;
+  onDeleteItem: (date: string, targetItem: ICartItem) => void;
+  onChangeQuantity: (date: string, targetItem: ICartItem, diff: -1 | 1) => void;
 }
 
-const CartItem = ({ product, onChangeQuantity, onDeleteItem }: ICartItem) => {
+const CartItem = ({ product, onChangeQuantity, onDeleteItem }: ICartItemProps) => {
   return (
     <div className="flex flex-col">
       <h1 className="text-xl font-extrabold text-zinc-800 mb-4">{product.date}</h1>
@@ -23,20 +23,16 @@ const CartItem = ({ product, onChangeQuantity, onDeleteItem }: ICartItem) => {
               <div className="flex gap-3 items-center mt-8">
                 <Button
                   size="icon"
-                  onClick={() => {
-                    onChangeQuantity(item.id, product.date, -1);
-                  }}
                   className="bg-muted hover:bg-muted"
+                  onClick={() => { onChangeQuantity(product.date, item, -1); }}
                 >
                   <Minus size={16} className="text-foreground"/>
                 </Button>
                 <p className="text-xl font-extrabold text-zinc-950">{item.quantity}</p>
                 <Button
                   size="icon"
-                  onClick={() => {
-                    onChangeQuantity(item.id, product.date, 1);
-                  }}
                   className="bg-muted hover:bg-muted"
+                  onClick={() => { onChangeQuantity(product.date, item, 1); }}
                 >
                   <Plus size={16} className="text-foreground"/>
                 </Button>
@@ -45,10 +41,8 @@ const CartItem = ({ product, onChangeQuantity, onDeleteItem }: ICartItem) => {
             <Button
               size="icon"
               variant="ghost2"
-              onClick={() => {
-                onDeleteItem(item.id, product.date);
-              }}
               className="bg-muted hover:bg-muted"
+              onClick={() => { onDeleteItem(product.date, item); }}
             >
               <Trash2/>
             </Button>

@@ -15,6 +15,10 @@ export interface ICart {
 }
 
 const db = new Dexie("UserCart") as Dexie & {
+  generalInfo?: EntityTable<{
+    id: string,
+    price: number,
+  }, "id">;
   products: EntityTable<
     ICart,
     "date"
@@ -23,6 +27,7 @@ const db = new Dexie("UserCart") as Dexie & {
 
 // Schema declaration:
 db.version(1).stores({
+  generalInfo: "id, price",
   products: "date, items"
 });
 

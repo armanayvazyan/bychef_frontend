@@ -56,7 +56,12 @@
     "copyright": "© 2024 ByCHEF, All rights reserved"
   },
   "header": {
-    "change-address": "Change delivery address"
+    "change-address": "Change delivery address",
+    "locales": {
+      "AM": "Հայերեն",
+      "RU": "Русский",
+      "EN": "English"
+    }
   },
   "status": {
     "days": {

@@ -53,7 +53,12 @@
     }
   },
   "footer": {
-    "copyright": "© 2024 ByCHEF, Все права защищены"
+    "copyright": "© 2024 ByCHEF, Все права защищены",
+    "locales": {
+      "AM": "Հայերեն",
+      "RU": "Русский",
+      "EN": "English"
+    }
   },
   "header": {
     "change-address": "Изменить адрес доставки"
