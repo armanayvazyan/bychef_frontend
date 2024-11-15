@@ -4,6 +4,7 @@ import Chef from "@/pages/Chef";
 import Explore from "@/pages/Explore";
 import HFWrapper from "@/hocs/HFWrapper";
 import { Helmet } from "react-helmet-async";
+import OrderStatus from "@/pages/OrderStatus";
 import ScrollResetWrapper from "@/hocs/ScrollResetWrapper";
 import { RouterProvider, Navigate, createBrowserRouter } from "react-router-dom";
 
@@ -32,6 +33,14 @@ const routes = [
   {
     path: "/chef/:id",
     element: wrapComponentWithHF(<Chef />)
+  },
+  {
+    path: "/order/success",
+    element: wrapComponentWithHF(<OrderStatus type="success" />)
+  },
+  {
+    path: "/order/failed",
+    element: wrapComponentWithHF(<OrderStatus type="failure" />)
   },
   {
     path: "*",
