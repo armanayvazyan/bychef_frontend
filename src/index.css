@@ -72,6 +72,10 @@ body {
   * {
     @apply border-border;
   }
+  #root {
+    display: flex;
+    flex-direction: column;
+  }
   body {
     @apply bg-background text-foreground;
   }
