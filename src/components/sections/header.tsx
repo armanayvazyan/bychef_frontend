@@ -17,6 +17,7 @@ const Header = () => {
     const modifiedItems = cardItem?.items.map((item) => {
       if (item.id == id) {
         const quantity = item.quantity + ((item.quantity == 1 && diff == -1) ? 0 : diff);
+
         return { ...item, quantity };
       } else {
         return item;
@@ -49,7 +50,7 @@ const Header = () => {
   }, [products]);
 
   return (
-    <NavigationMenu className="w-full sticky top-0 bg-background flex justify-between max-w-full border-b-2 border-zinc-100 px-4 md:px-16 py-4 md:py-6">
+    <NavigationMenu className="w-full sticky top-0 bg-background flex-none flex justify-between max-w-full border-b-2 border-zinc-100 px-4 md:px-16 py-4 md:py-6">
       <Link to="/">
         <img src={logo} alt="logo" className="h-8 md:h-auto" />
       </Link>
@@ -57,7 +58,7 @@ const Header = () => {
         <PopoverTrigger>
           <div className="relative">
             {!!products?.length && (
-              <Circle size={20} className="text-destructive fill-destructive absolute translate-x-1/4 -translate-y-1/4 right-0 top-0" />
+              <Circle size={14} className="text-destructive fill-destructive absolute translate-x-1/4 -translate-y-1/4 right-0 top-0" />
             )}
             <Button className="rounded-full w-8 h-8 md:w-10 md:h-10">
               <ShoppingCart />

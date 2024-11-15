@@ -68,7 +68,7 @@ const Footer = () => {
   }, []);
 
   return (
-    <footer className="flex flex-col items-center mt-16 px-4">
+    <footer className="flex flex-none flex-col items-center mt-16 px-4">
       <div className="w-full px-16 flex flex-col-reverse md:flex-row justify-between items-center py-6">
         <NavigationMenu>
           <NavigationMenuList className="flex justify-between items-center text-zinc-700">
