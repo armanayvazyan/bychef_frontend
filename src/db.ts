@@ -6,7 +6,10 @@ interface ICartItem {
   name: string;
   price: number;
   quantity: number;
-  notices?: string[];
+  notices?: {
+    key: "orderDaysAhead" | "orderHoursAhead";
+    time: number;
+  }[];
 }
 
 export interface ICart {

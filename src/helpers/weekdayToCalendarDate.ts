@@ -1,5 +1,5 @@
 const dayOfWeekAsString = (dayIndex: number) => {
-  return ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][dayIndex] || "";
+  return ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"][dayIndex] || "";
 };
 
 const weekdaysToCalendarDate = (targetWeekdays: number[]) => {
@@ -14,14 +14,23 @@ const weekdaysToCalendarDate = (targetWeekdays: number[]) => {
 
     // Format the date as "Month Day" (e.g., "August 18")
     const formattedDate = targetDate.toLocaleDateString("en-US", { month: "long", day: "numeric" });
-    return { weekdayNum: targetWeekday, weekday: dayOfWeekAsString(targetWeekday), date: formattedDate, targetDate };
+    const [month, day] = formattedDate.split(" ");
+    return {
+      targetDate,
+      weekdayNum: targetWeekday,
+      weekday: dayOfWeekAsString(targetWeekday),
+      date: {
+        day,
+        month,
+      },
+    };
   });
 
   // Sort dates by the number of days until each target weekday from today
   dates.sort((a, b) => Number(a.targetDate) - Number(b.targetDate));
 
   // Return an array of formatted date strings in sorted order
-  return dates.map(item => ({ day: item.date, weekday: item.weekday, weekdayNum: item.weekdayNum }));
+  return dates.map(item => ({ date: item.date, weekday: item.weekday, weekdayNum: item.weekdayNum }));
 };
 
 export default weekdaysToCalendarDate;

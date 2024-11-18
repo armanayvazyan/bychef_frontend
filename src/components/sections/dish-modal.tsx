@@ -4,6 +4,7 @@ import { IDishInfo } from "@/types";
 import Button from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Label } from "@/components/ui/label";
+import { useTranslation } from "react-i18next";
 import Separator from "@/components/ui/separator";
 import { Minus, Plus, TriangleAlert } from "lucide-react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -17,6 +18,8 @@ interface IDishModal {
 
 const DishModal = ({ selectedDate, dishInfo, onCloseDialog }: IDishModal) => {
   const { toast } = useToast();
+  const { t } = useTranslation();
+
   const [product, setProduct] = useState<{ quantity: number; }>({
     quantity: 1,
   });
@@ -127,9 +130,11 @@ const DishModal = ({ selectedDate, dishInfo, onCloseDialog }: IDishModal) => {
         </div>
         <div className="flex flex-col gap-3 mt-6">
           {dishInfo.notices?.map(notice => (
-            <div key={notice} className="flex gap-3">
+            <div key={notice.key} className="flex gap-3">
               <TriangleAlert size={24} className="text-destructive"/>
-              <p className="text-destructive font-normal text-base">{notice}</p>
+              <p className="text-destructive font-normal text-base">
+                {t(`generic.${notice.key}`, { timeAhead: notice.time })}
+              </p>
             </div>
           ))}
         </div>

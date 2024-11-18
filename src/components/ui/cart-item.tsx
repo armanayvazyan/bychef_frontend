@@ -1,5 +1,6 @@
 import { ICart, ICartItem } from "@/db";
 import Button from "@/components/ui/button";
+import { useTranslation } from "react-i18next";
 import Separator from "@/components/ui/separator";
 import { Minus, Plus, Trash2, TriangleAlert } from "lucide-react";
 
@@ -10,9 +11,13 @@ interface ICartItemProps {
 }
 
 const CartItem = ({ product, onChangeQuantity, onDeleteItem }: ICartItemProps) => {
+  const { t } = useTranslation("translation");
+
   return (
     <div className="flex flex-col">
-      <h1 className="text-xl font-extrabold text-zinc-800 mb-4">{product.date}</h1>
+      <h1 className="text-xl font-extrabold text-zinc-800 mb-4">
+        {product.date.split(" ")[0] + " " + t(`generic.months.${product.date.split(" ")[1].toLowerCase()}`)}
+      </h1>
       {product.items.map((item, index) => (
         <div key={item.id}>
           <div className="flex items-center gap-4">
@@ -44,14 +49,16 @@ const CartItem = ({ product, onChangeQuantity, onDeleteItem }: ICartItemProps) =
               className="bg-muted hover:bg-muted"
               onClick={() => { onDeleteItem(product.date, item); }}
             >
-              <Trash2/>
+              <Trash2 />
             </Button>
           </div>
           <div className="flex flex-col gap-3 mt-6">
             {item.notices?.map(notice => (
-              <div key={notice} className="flex items-center gap-2">
+              <div key={notice.key} className="flex items-center gap-2">
                 <TriangleAlert size={14} className="text-destructive"/>
-                <p className="text-destructive font-normal text-sm">{notice}</p>
+                <p className="text-destructive font-normal text-sm">
+                  {t(`generic.${notice.key}`, { timeAhead: notice.time })}
+                </p>
               </div>
             ))}
           </div>

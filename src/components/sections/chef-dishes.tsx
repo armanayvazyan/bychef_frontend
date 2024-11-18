@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Button from "@/components/ui/button";
 import { dishes } from "@/configs/constants";
+import { useTranslation } from "react-i18next";
 import DishCard from "@/components/sections/dish-card";
 import weekdaysToCalendarDate from "@/helpers/weekdayToCalendarDate";
 
@@ -9,6 +10,8 @@ interface IChefDishes {
 }
 
 const ChefDishes = ({ workdays }: IChefDishes) => {
+  const { t } = useTranslation("translation");
+
   const [selectedDay, setSelectedDay] = useState<string>("");
 
   const modifiedWorkdays = useMemo(() => weekdaysToCalendarDate(workdays), [workdays]);
@@ -19,7 +22,7 @@ const ChefDishes = ({ workdays }: IChefDishes) => {
 
   useEffect(() => {
     if (modifiedWorkdays.length) {
-      setSelectedDay(modifiedWorkdays[0].day);
+      setSelectedDay(modifiedWorkdays[0].date.day + " " + modifiedWorkdays[0].date.month);
     }
   }, [modifiedWorkdays]);
 
@@ -28,14 +31,14 @@ const ChefDishes = ({ workdays }: IChefDishes) => {
       <div className="flex gap-4 mt-6 overflow-x-scroll">
         {modifiedWorkdays.map((workday) => (
           <Button
-            key={workday.day}
+            key={workday.weekday}
             variant="secondary"
-            data-selected={selectedDay === workday.day}
-            onClick={() => { handleSelectDay(workday.day); }}
+            data-selected={selectedDay === workday.date.day + " " + workday.date.month}
+            onClick={() => { handleSelectDay(workday.date.day + " " + workday.date.month); }}
             className="h-auto w-auto flex flex-col p-3 border-0 rounded-md bg-zinc-100 text-black data-[selected=true]:bg-zinc-800 data-[selected=true]:text-white"
           >
-            <p className="text-xs">{workday.weekday}</p>
-            <p className="text-lg">{workday.day}</p>
+            <p className="text-xs">{t(`generic.weekdays.${workday.weekday}`)}</p>
+            <p className="text-lg">{workday.date.day + " " + t(`generic.months.${workday.date.month.toLowerCase()}`)}</p>
           </Button>
         ))}
       </div>

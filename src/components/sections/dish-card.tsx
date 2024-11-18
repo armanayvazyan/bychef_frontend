@@ -49,7 +49,7 @@ const DishCard = ({ dishInfo, selectedDate }: IDishCard) => {
                           <Leaf size={16} className="text-[#15803D]"/>
                         </div>
                       </TooltipTrigger>
-                      <TooltipContent side="bottom" className="text-[#15803D] bg-background">
+                      <TooltipContent side="bottom" className="text-[#15803D] font-semibold bg-background p-2">
                         <p>Vegan friendly</p>
                       </TooltipContent>
                     </Tooltip>

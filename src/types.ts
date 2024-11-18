@@ -6,14 +6,17 @@ export enum LOCALES {
 
 export interface IDishInfo {
   id: string;
-  name: string,
-  isAvailable: boolean,
-  isVegan: boolean,
   img: string,
+  name: string,
   price: number,
+  isVegan: boolean,
   dishes: string[],
+  isAvailable: boolean,
   ingredients: string[],
-  options?: { id: number, question: string }[],
-  notices?: string[],
   onAddToCard: () => void;
+  options?: { id: number, question: string }[],
+  notices?: {
+    key: "orderDaysAhead" | "orderHoursAhead",
+    time: number
+  }[],
 }
