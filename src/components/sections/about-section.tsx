@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import ImageSection from "@/components/ui/image-section.tsx";
+import ImageSection from "@/components/ui/image-section";
 
 const AboutSection = () => {
   const { t } = useTranslation("translation", { keyPrefix: "home-page" });

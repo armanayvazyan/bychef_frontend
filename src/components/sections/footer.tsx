@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import Button from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
+import facebookLogo from "@/assets/facebook.svg";
 import Separator from "@/components/ui/separator";
 import instagramLogo from "@/assets/instagram.svg";
 import changeLanguage from "@/helpers/changeLanguage";
@@ -49,6 +50,10 @@ const socials = [
   {
     logo: instagramLogo,
     href: "https://www.instagram.com/bychef.am",
+  },
+  {
+    logo: facebookLogo,
+    href: "https://www.facebook.com/share/18kiaYPUia/?mibextid=JRoKGi",
   },
 ];
 
@@ -138,7 +143,7 @@ const Footer = () => {
         <div className="flex gap-4 py-6">
           {socials.map((social) => (
             <Link key={social.logo} to={social.href} target="_blank" rel="noopener noreferrer">
-              <Button variant="ghost2" role="link" data-href={social.href}>
+              <Button variant="ghost2" role="link" data-href={social.href} className="w-[40px] h-[40px] p-0">
                 <img src={social.logo} alt="social icon" />
               </Button>
             </Link>
