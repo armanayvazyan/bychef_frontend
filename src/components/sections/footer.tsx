@@ -63,6 +63,15 @@ const Footer = () => {
 
   const [selectedLocale, setSelectedLocale] = useState<LOCALES | null>(null);
 
+  const handleSelectLocale = (e: Event) => {
+    const name = (e.currentTarget as HTMLElement).getAttribute("data-locale");
+
+    if (name) {
+      changeLanguage(name as LOCALES);
+      setSelectedLocale(name as LOCALES);
+    }
+  };
+
   useEffect(() => {
     setSelectedLocale(i18n.resolvedLanguage as LOCALES);
   }, []);
@@ -94,36 +103,33 @@ const Footer = () => {
               <DropdownMenuTrigger>
                 <Button variant="ghost2">
                   <Globe />
-                  {languageNames[selectedLocale ?? LOCALES.HY]}
+                  {t(`locales.${languageNames[selectedLocale ?? LOCALES.HY]}`)}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 <DropdownMenuItem
+                  data-locale={LOCALES.HY}
                   className="py-1 cursor-pointer data-[selected=true]:bg-secondary"
                   data-selected={selectedLocale === LOCALES.HY}
-                  onSelect={() => { changeLanguage(LOCALES.HY); setSelectedLocale(LOCALES.HY); }}
+                  onSelect={handleSelectLocale}
                 >
-                  <p>{languageNames[LOCALES.HY]}</p>
+                  <p>{t(`locales.${languageNames[LOCALES.HY]}`)}</p>
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   className="py-1 cursor-pointer data-[selected=true]:bg-secondary"
                   data-selected={selectedLocale === LOCALES.EN}
-                  onSelect={() => {
-                    changeLanguage(LOCALES.EN);
-                    setSelectedLocale(LOCALES.EN);
-                  }}
+                  data-locale={LOCALES.EN}
+                  onSelect={handleSelectLocale}
                 >
-                  <p>{languageNames[LOCALES.EN]}</p>
+                  <p>{t(`locales.${languageNames[LOCALES.EN]}`)}</p>
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   className="py-1 cursor-pointer data-[selected=true]:bg-secondary"
                   data-selected={selectedLocale === LOCALES.RU}
-                  onSelect={() => {
-                    changeLanguage(LOCALES.RU);
-                    setSelectedLocale(LOCALES.RU);
-                  }}
+                  data-locale={LOCALES.RU}
+                  onSelect={handleSelectLocale}
                 >
-                  <p>{languageNames[LOCALES.RU]}</p>
+                  <p>{t(`locales.${languageNames[LOCALES.RU]}`)}</p>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

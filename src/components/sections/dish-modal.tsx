@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { db } from "@/db";
 import { IDishInfo } from "@/types";
 import Button from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Label } from "@/components/ui/label";
+import { useTranslation } from "react-i18next";
 import Separator from "@/components/ui/separator";
 import { Minus, Plus, TriangleAlert } from "lucide-react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -12,10 +13,13 @@ import { DialogDescription, DialogFooter, DialogTitle } from "@/components/ui/di
 interface IDishModal {
   dishInfo: IDishInfo;
   selectedDate: string;
+  onCloseDialog: () => void;
 }
 
-const DishModal = ({ selectedDate, dishInfo }: IDishModal) => {
+const DishModal = ({ selectedDate, dishInfo, onCloseDialog }: IDishModal) => {
   const { toast } = useToast();
+  const { t } = useTranslation();
+
   const [product, setProduct] = useState<{ quantity: number; }>({
     quantity: 1,
   });
@@ -36,9 +40,10 @@ const DishModal = ({ selectedDate, dishInfo }: IDishModal) => {
     setProduct(prevState => ({ ...prevState, [name]: value }));
   };
 
-  const handleAddToCart = async () => {
+  const handleAddToCart = useCallback(async () => {
     try {
       const selectedDateExistsInCart = await db.products.get(selectedDate);
+
       const updatedCartList = selectedDateExistsInCart?.items ?? [];
       const itemIndexInCart = updatedCartList.findIndex(item => item.id === dishInfo.id);
       const isAlreadyInTheCart = itemIndexInCart !== -1;
@@ -61,6 +66,18 @@ const DishModal = ({ selectedDate, dishInfo }: IDishModal) => {
         items: updatedCartList,
       }, selectedDate);
 
+      if (db.generalInfo) {
+        const generalInfo = await db.generalInfo.toArray();
+        const totalPrice = generalInfo[0]?.price || 0;
+
+        await db.generalInfo.put({
+          id: "1",
+          price: totalPrice + (dishInfo.price * product.quantity),
+        }, "1");
+      }
+
+      onCloseDialog();
+
       toast({
         title: "Product added to cart!",
       });
@@ -71,12 +88,22 @@ const DishModal = ({ selectedDate, dishInfo }: IDishModal) => {
         description: error?.toString(),
       });
     }
-  };
+  }, [
+    toast,
+    product,
+    dishInfo.id,
+    dishInfo.img,
+    selectedDate,
+    onCloseDialog,
+    dishInfo.name,
+    dishInfo.price,
+    dishInfo.notices,
+  ]);
 
   return (
     <>
-      <img src={dishInfo.img} alt="dish image" className="w-full h-[282px] object-cover rounded-xl"/>
-      <div className="h-[365px] overflow-y-scroll">
+      <img src={dishInfo.img} alt="dish image" className="w-full max-h-[282px] object-cover rounded-xl"/>
+      <div className="max-h-[calc(90dvh-282px-88px-16px-36px-0px)] overflow-y-scroll">
         <p className="text-base text-zinc-400 font-medium mt-4">{dishInfo.dishes.join(" • ")}</p>
         <DialogTitle className="mt-4">
           <p className="text-zinc-900 text-lg font-bold">{dishInfo.name}</p>
@@ -103,9 +130,11 @@ const DishModal = ({ selectedDate, dishInfo }: IDishModal) => {
         </div>
         <div className="flex flex-col gap-3 mt-6">
           {dishInfo.notices?.map(notice => (
-            <div key={notice} className="flex gap-3">
+            <div key={notice.key} className="flex gap-3">
               <TriangleAlert size={24} className="text-destructive"/>
-              <p className="text-destructive font-normal text-base">{notice}</p>
+              <p className="text-destructive font-normal text-base">
+                {t(`generic.${notice.key}`, { timeAhead: notice.time })}
+              </p>
             </div>
           ))}
         </div>
@@ -134,8 +163,8 @@ const DishModal = ({ selectedDate, dishInfo }: IDishModal) => {
           ))}
         </div>
       </div>
-      <DialogFooter>
-        <Button className="w-full" onClick={handleAddToCart}>Ավելացնել</Button>
+      <DialogFooter className="sticky">
+        <Button className="w-full" onClick={handleAddToCart} type="submit">Ավելացնել</Button>
       </DialogFooter>
     </>
   );

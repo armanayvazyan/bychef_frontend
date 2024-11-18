@@ -17,7 +17,6 @@ export const chefInfo = {
   img: chef,
   workingDays: [1, 2, 4, 0],
   about: "Լորեմ Իպսումը տպագրության և տպագրական արդյունաբերության համար նախատեսված մոդելային տեքստ է։ Սկսած 1500-ականներից՝ Լորեմ Իպսումը հանդիսացել է տպագրական արդյունաբերության ստանդարտ մոդելային տեքստ...",
-  // dishes: ["healthy food", "salads", "fish", "meat", "desert", "healthy food", "salads", "fish", "meat", "desert", "healthy food", "salads", "fish", "meat", "desert", "healthy food", "salads", "fish", "meat", "desert"],
   dishes: ["healthy food", "healthy food", "healthy food"]
 };
 
@@ -48,7 +47,7 @@ export const dishes = [
     price: 1000,
     ingredients: ["tomato", "egg", "beef"],
     options: [{ id: 1, question: "Ավելացնել կծու՞" }],
-    notices: ["Պատվիրել 3 ժամ առաջ"],
+    notices: [{ key: "orderDaysAhead", time: 3 }],
     dishes: ["salads", "fish", "meat", "desert", "healthy food", "salads", "fish", "meat", "desert"],
   },
   {
@@ -60,7 +59,7 @@ export const dishes = [
     price: 1000,
     ingredients: ["tomato", "egg", "beef"],
     options: [{ id: 1, question: "Ավելացնել կծու՞" }, { id: 2, question: "Ավելացնել կծու՞" }, { id: 3, question: "Ավելացնել կծու՞" }],
-    notices: ["Պատվիրել 3 ժամ առաջ", "Պատվիրել 3 ժամ առաջ", "Պատվիրել 3 ժամ առաջ"],
+    notices: [{ key: "orderHoursAhead", time: 4 }],
     dishes: ["healthy food", "salads", "fish", "meat", "desert"],
   },
   {
@@ -72,7 +71,7 @@ export const dishes = [
     price: 1000,
     ingredients: ["tomato", "egg", "beef"],
     options: [{ id: 1, question: "Ավելացնել կծու՞" }, { id: 2, question: "Ավելացնել կծու՞" }, { id: 3, question: "Ավելացնել կծու՞" }],
-    notices: ["Պատվիրել 3 ժամ առաջ", "Պատվիրել 3 ժամ առաջ", "Պատվիրել 3 ժամ առաջ"],
+    notices: [{ key: "orderDaysAhead", time: 5 }],
     dishes: ["healthy food", "salads", "fish", "meat", "desert"],
   },
   {
@@ -84,7 +83,7 @@ export const dishes = [
     price: 1000,
     ingredients: ["tomato", "egg", "beef"],
     options: [{ id: 1, question: "Ավելացնել կծու՞" }, { id: 2, question: "Ավելացնել կծու՞" }, { id: 3, question: "Ավելացնել կծու՞" }],
-    notices: ["Պատվիրել 3 ժամ առաջ", "Պատվիրել 3 ժամ առաջ", "Պատվիրել 3 ժամ առաջ"],
+    notices: [{ key: "orderHoursAhead", time: 6 }],
     dishes: ["healthy food", "salads", "fish", "meat", "desert"],
   }
 ] as IDishInfo[];

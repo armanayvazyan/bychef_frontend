@@ -2,7 +2,7 @@
 
 import { HTMLAttributes, useState } from "react";
 import { CalendarIcon } from "@radix-ui/react-icons";
-import { addDays, format } from "date-fns";
+import { format } from "date-fns";
 import { DateRange } from "react-day-picker";
 import {
   Popover,
@@ -12,14 +12,17 @@ import {
 import { cn } from "@/lib/utils";
 import Button from "@/components/ui/button";
 import Calendar from "@/components/ui/calendar";
+import { useTranslation } from "react-i18next";
 
 const DatePicker = ({
   className,
 }: HTMLAttributes<HTMLDivElement>) => {
-  const [date, setDate] = useState<DateRange | undefined>({
-    from: new Date(2022, 0, 20),
-    to: addDays(new Date(2022, 0, 20), 20),
-  });
+  const { t } = useTranslation("translation");
+
+  // format:
+  // from: new Date(2022, 0, 20),
+  // to: addDays(new Date(2022, 0, 20), 20),
+  const [date, setDate] = useState<DateRange | undefined>();
 
   return (
     <div className={cn("grid gap-2", className)}>
@@ -44,7 +47,7 @@ const DatePicker = ({
                 format(date.from, "LLL dd, y")
               )
             ) : (
-              <span>Pick a date</span>
+              <span>{t("explore.pick-date")}</span>
             )}
           </Button>
         </PopoverTrigger>
@@ -57,6 +60,10 @@ const DatePicker = ({
             onSelect={setDate}
             numberOfMonths={2}
           />
+          <div className="flex justify-end w-full gap-2 px-4 my-2">
+            <Button disabled={!date} onClick={() => { setDate(undefined); }}>{t("generic.clear")}</Button>
+            <Button disabled={!date}>{t("generic.show")}</Button>
+          </div>
         </PopoverContent>
       </Popover>
     </div>

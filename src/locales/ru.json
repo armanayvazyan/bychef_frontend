@@ -1,4 +1,34 @@
 {
+  "generic": {
+    "weekdays": {
+      "monday": "Понедельник",
+      "tuesday": "Вторник",
+      "wednesday": "Среду",
+      "thursday": "Четверг",
+      "friday": "Пятницу",
+      "saturday": "Субботу",
+      "sunday": "Воскресенье",
+      "today": "сегодня"
+    },
+    "months": {
+      "january": "Января",
+      "february": "Февраля",
+      "march": "Марта",
+      "april": "Апреля",
+      "may": "Мая",
+      "june": "Июня",
+      "july": "Июля",
+      "august": "Августа",
+      "september": "Сентября",
+      "october": "Октября",
+      "november": "Ноября",
+      "december": "Декабря"
+    },
+    "show": "Показать",
+    "clear": "Очистить",
+    "orderDaysAhead": "Заказ за {{timeAhead}} дня",
+    "orderHoursAhead": "Заказ за {{timeAhead}} часа(ов)"
+  },
   "home-page": {
     "subscribe": {
       "title": "Зарегестрироваться",
@@ -53,26 +83,27 @@
     }
   },
   "footer": {
-    "copyright": "© 2024 ByCHEF, Все права защищены"
+    "copyright": "© 2024 ByCHEF, Все права защищены",
+    "locales": {
+      "AM": "Հայերեն",
+      "RU": "Русский",
+      "EN": "English"
+    }
   },
   "header": {
     "change-address": "Изменить адрес доставки"
   },
   "status": {
-    "days": {
-      "monday": "Понедельник",
-      "tuesday": "Вторник",
-      "wednesday": "Среду",
-      "thursday": "Четверг",
-      "friday": "Пятницу",
-      "saturday": "Субботу",
-      "sunday": "Воскресенье",
-      "today": "сегодня"
-    },
     "unavailable": "Не доступен(а)",
     "available": "Доступен(а) {{day}}"
   },
   "explore": {
+    "pick-date": "Выберите дату",
     "title": "Повара поблизости"
+  },
+  "user-cart": {
+    "total": "Всего",
+    "order": "Заказать",
+    "empty-cart": "В вашей корзине ничего нет"
   }
 }

@@ -1,0 +1,119 @@
+import { useCallback } from "react";
+import { db, ICartItem } from "@/db";
+import Button from "@/components/ui/button";
+import { useTranslation } from "react-i18next";
+import CartItem from "@/components/ui/cart-item";
+import { useLiveQuery } from "dexie-react-hooks";
+import Separator from "@/components/ui/separator";
+import { Circle, CircleX, ShoppingCart } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+
+const UserCart = () => {
+  const { t } = useTranslation("translation");
+
+  const products = useLiveQuery(() => db.products.reverse().toArray());
+  const generalInfo = useLiveQuery(() => db.generalInfo ? db.generalInfo.toArray() : []);
+
+  const handleChangeQuantity = useCallback(async (date: string, targetItem: ICartItem, diff: -1 | 1) => {
+    const cardItem = products?.find(product => product.date === date);
+
+    if (targetItem.quantity == 1 && diff == -1) return;
+
+    const quantity = targetItem.quantity + diff;
+    const modifiedItems = cardItem?.items.map((item) => item.id == targetItem.id ? { ...item, quantity } : item);
+
+    if (cardItem && modifiedItems) {
+      await db.products.put({
+        ...cardItem,
+        items: modifiedItems,
+      }, date);
+    }
+
+    if (generalInfo) {
+      await db.generalInfo?.put({
+        id: "1",
+        price: generalInfo[0].price + (diff * targetItem.price),
+      }, "1");
+    }
+  }, [generalInfo, products]);
+
+  const handleDeleteCartItem = useCallback(async (date: string, targetItem: ICartItem) => {
+    const cardItem = products?.find(product => product.date === date);
+    const modifiedItems = cardItem?.items.filter((item) => item.id !== targetItem.id);
+
+    if (cardItem && modifiedItems) {
+      if (generalInfo) {
+        await db.generalInfo?.put({
+          id: "1",
+          price: generalInfo[0].price - (targetItem.quantity * targetItem.price),
+        }, "1");
+      }
+
+      if (!modifiedItems.length) {
+        await db.products.delete(date);
+        return;
+      }
+
+      db.products.put({
+        ...cardItem,
+        items: modifiedItems,
+      }, date);
+    }
+  }, [generalInfo, products]);
+
+  return (
+    <Popover>
+      <PopoverTrigger>
+        <div className="relative">
+          {!!products?.length && (
+            <Circle size={14} className="text-destructive fill-destructive absolute translate-x-1/4 -translate-y-1/4 right-0 top-0" />
+          )}
+          <Button className="rounded-full w-8 h-8 md:w-10 md:h-10">
+            <ShoppingCart />
+          </Button>
+        </div>
+      </PopoverTrigger>
+      <PopoverContent align="end" sideOffset={8} className="flex flex-col gap-6 max-h-[500px] overflow-y-scroll">
+        <>
+          {products?.length ? (
+            <>
+              {products.map(product => (
+                <CartItem
+                  key={product.date}
+                  product={product}
+                  onDeleteItem={handleDeleteCartItem}
+                  onChangeQuantity={handleChangeQuantity}
+                />
+              ))}
+              <Separator />
+              {generalInfo?.length && (
+                <div className="flex justify-between text-base font-bold text-zinc-800">
+                  <p>{t("user-cart.total")}</p>
+                  <p>{generalInfo[0].price} դր.</p>
+                </div>
+              )}
+              <Button type="submit">
+                {t("user-cart.order")}
+              </Button>
+            </>
+          ) : (
+            <div className="flex flex-col items-center justify-center w-full min-w-[314px] md:min-w-[408px] h-[300px] md:h-[348px]">
+              <div className="flex flex-col items-center max-w-[233px] gap-2">
+                <div className="relative">
+                  <ShoppingCart className="w-[20px] h-[20px] md:w-[32px] md:h-[32px]"/>
+                  <CircleX
+                    className="absolute top-0 right-0 fill-destructive text-white w-[8px] h-[8px] md:w-[14px] md:h-[14px]"/>
+                </div>
+                <p className="text-base font-normal text-primary text-wrap text-center">
+                  {t("user-cart.empty-cart")}
+                </p>
+              </div>
+            </div>
+          )}
+        </>
+      </PopoverContent>
+    </Popover>
+  );
+};
+
+export default UserCart;

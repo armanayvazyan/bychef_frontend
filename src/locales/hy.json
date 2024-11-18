@@ -1,4 +1,34 @@
 {
+  "generic": {
+    "weekdays": {
+      "monday": "Երկուշաբթի",
+      "tuesday": "Երեքշաբթի",
+      "wednesday": "Չորեքշաբթի",
+      "thursday": "Հինգշաբթի",
+      "friday": "Ուրբաթ",
+      "saturday": "Շաբաթ",
+      "sunday": "Կիրակի",
+      "today": "այսօր"
+    },
+    "months": {
+      "january": "Հունվարի",
+      "february": "Փետրվարի",
+      "march": "Մարտի",
+      "april": "Ապրիլի",
+      "may": "Մայիսի",
+      "june": "Հունիսի",
+      "july": "Հուլիսի",
+      "august": "Օգոստոսի",
+      "september": "Սեպտեմբերի",
+      "october": "Հոկտեմբերի",
+      "november": "Նոյեմբերի",
+      "december": "Դեկտեմբերի"
+    },
+    "show": "Ցուցադրել",
+    "clear": "Մաքրել",
+    "orderDaysAhead": "Պատվիրել {{timeAhead}} օր առաջ",
+    "orderHoursAhead": "Պատվիրել {{timeAhead}} ժամ առաջ"
+  },
   "home-page": {
     "subscribe": {
       "title": "Գրանցվել նախապես",
@@ -53,26 +83,27 @@
     }
   },
   "footer": {
-    "copyright": "© 2024 ByCHEF, Բոլոր իրավունքները պաշտպանված են"
+    "copyright": "© 2024 ByCHEF, Բոլոր իրավունքները պաշտպանված են",
+    "locales": {
+      "AM": "Հայերեն",
+      "RU": "Русский",
+      "EN": "English"
+    }
   },
   "header": {
     "change-address": "Փոխել առաքման հասցեն"
   },
   "status": {
-    "days": {
-      "monday": "Երկուշաբթի",
-      "tuesday": "Երեքշաբթի",
-      "wednesday": "Չորեքշաբթի",
-      "thursday": "Հինգշաբթի",
-      "friday": "Ուրբաթ",
-      "saturday": "Շաբաթ",
-      "sunday": "Կիրակի",
-      "today": "այսօր"
-    },
     "unavailable": "Հասանելի չէ",
     "available": "Հասանելի է {{day}}"
   },
   "explore": {
+    "pick-date": "Ընտրեք ամսաթիվ",
     "title": "Խոհարարներ մոտակայքում"
+  },
+  "user-cart": {
+    "total": "Ընդամենը",
+    "order": "Պատվիրել",
+    "empty-cart": "Ձեր զամբյուղը այս պահին դատարկ է"
   }
 }

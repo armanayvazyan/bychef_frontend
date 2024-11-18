@@ -29,7 +29,7 @@ const ChefCard = ({ chefInfo }: { chefInfo: IChefCard }) => {
           <Separator/>
           <div className="flex items-center gap-2 text-[#15803D]">
             <CalendarCheck2 size={14}/>
-            <p className="text-sm font-medium">{t("status.available", { day: t("status.days.today") })}</p>
+            <p className="text-sm font-medium">{t("status.available", { day: t("generic.weekdays.today") })}</p>
           </div>
         </>
       }
