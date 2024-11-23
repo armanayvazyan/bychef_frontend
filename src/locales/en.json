@@ -26,6 +26,7 @@
     },
     "show": "Show",
     "clear": "Clear",
+    "back": "Go back",
     "orderDaysAhead": "Order {{timeAhead}} days in advance",
     "orderHoursAhead": "Order {{timeAhead}} hours in advance"
   },

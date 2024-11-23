@@ -7,7 +7,12 @@ interface IChefDetails {
     img: string;
     name: string;
     about: string;
-    dishes: string[]
+    dishes: string[];
+    socials: {
+      name: string;
+      icon: string;
+      url: string
+    }[];
     businessName: string;
     workingDays: number[];
   }
@@ -22,7 +27,16 @@ const ChefDetails = ({ details }: IChefDetails) => {
           <AvatarFallback>{details.name}</AvatarFallback>
         </Avatar>
         <div className="flex flex-col gap-4">
-          <h1 className="text-zinc-900 font-bold text-base md:text-2xl">{details.name}</h1>
+          <h1 className="text-zinc-900 font-bold text-base md:text-2xl">{details.businessName}</h1>
+          <h2 className="text-base text-primary">{details.name}</h2>
+          <div className="flex items-center gap-3">
+            {details.socials.map((social) => (
+              <a className="flex gap-2 items-center" key={social.url} href={social.url}>
+                <img src={social.icon} alt="social icon" />
+                <p className="text-xs font-semibold text-primary">{social.name}</p>
+              </a>
+            ))}
+          </div>
           <div className="flex flex-wrap gap-2">
             {details.dishes.map(dish => (
               <Chip key={dish} label={dish}/>

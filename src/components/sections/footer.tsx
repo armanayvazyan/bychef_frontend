@@ -68,8 +68,8 @@ const Footer = () => {
 
   const [selectedLocale, setSelectedLocale] = useState<LOCALES | null>(null);
 
-  const handleSelectLocale = (e: Event) => {
-    const name = (e.currentTarget as HTMLElement).getAttribute("data-locale");
+  const handleSelectLocale = (event: Event) => {
+    const name = (event.currentTarget as HTMLElement).getAttribute("data-locale");
 
     if (name) {
       changeLanguage(name as LOCALES);
@@ -114,9 +114,9 @@ const Footer = () => {
               <DropdownMenuContent>
                 <DropdownMenuItem
                   data-locale={LOCALES.HY}
-                  className="py-1 cursor-pointer data-[selected=true]:bg-secondary"
-                  data-selected={selectedLocale === LOCALES.HY}
                   onSelect={handleSelectLocale}
+                  data-selected={selectedLocale === LOCALES.HY}
+                  className="py-1 cursor-pointer data-[selected=true]:bg-secondary"
                 >
                   <p>{t(`locales.${languageNames[LOCALES.HY]}`)}</p>
                 </DropdownMenuItem>

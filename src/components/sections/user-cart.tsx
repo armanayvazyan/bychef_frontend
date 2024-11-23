@@ -1,7 +1,8 @@
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { db, ICartItem } from "@/db";
 import Button from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import CartItem from "@/components/ui/cart-item";
 import { useLiveQuery } from "dexie-react-hooks";
 import Separator from "@/components/ui/separator";
@@ -9,7 +10,10 @@ import { Circle, CircleX, ShoppingCart } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 const UserCart = () => {
+  const navigate = useNavigate();
   const { t } = useTranslation("translation");
+
+  const [open, setOpen] = useState(false);
 
   const products = useLiveQuery(() => db.products.reverse().toArray());
   const generalInfo = useLiveQuery(() => db.generalInfo ? db.generalInfo.toArray() : []);
@@ -61,8 +65,13 @@ const UserCart = () => {
     }
   }, [generalInfo, products]);
 
+  const handleCheckout = () => {
+    setOpen(false);
+    navigate("/checkout");
+  };
+
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger>
         <div className="relative">
           {!!products?.length && (
@@ -92,7 +101,7 @@ const UserCart = () => {
                   <p>{generalInfo[0].price} դր.</p>
                 </div>
               )}
-              <Button type="submit">
+              <Button onClick={handleCheckout}>
                 {t("user-cart.order")}
               </Button>
             </>
@@ -102,7 +111,8 @@ const UserCart = () => {
                 <div className="relative">
                   <ShoppingCart className="w-[20px] h-[20px] md:w-[32px] md:h-[32px]"/>
                   <CircleX
-                    className="absolute top-0 right-0 fill-destructive text-white w-[8px] h-[8px] md:w-[14px] md:h-[14px]"/>
+                    className="absolute top-0 right-0 fill-destructive text-white w-[8px] h-[8px] md:w-[14px] md:h-[14px]"
+                  />
                 </div>
                 <p className="text-base font-normal text-primary text-wrap text-center">
                   {t("user-cart.empty-cart")}

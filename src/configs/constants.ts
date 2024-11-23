@@ -1,6 +1,8 @@
 import { IDishInfo } from "@/types";
 import dish from "@/assets/dish.png";
 import chef from "@/assets/chef.jpeg";
+import facebookLogo from "@/assets/facebook.svg";
+import instagramLogo from "@/assets/instagram.svg";
 
 export const REDIRECT_PATH = "/";
 export const PATHS = [];
@@ -16,6 +18,10 @@ export const chefInfo = {
   businessName: "Լիլիթ Ստեփանյան Kitchen",
   img: chef,
   workingDays: [1, 2, 4, 0],
+  socials: [
+    { name: "Facebook", url: "https://www.facebook.com/", icon: facebookLogo },
+    { name: "Instagram", url: "https://www.instagram.com/", icon: instagramLogo },
+  ],
   about: "Լորեմ Իպսումը տպագրության և տպագրական արդյունաբերության համար նախատեսված մոդելային տեքստ է։ Սկսած 1500-ականներից՝ Լորեմ Իպսումը հանդիսացել է տպագրական արդյունաբերության ստանդարտ մոդելային տեքստ...",
   dishes: ["healthy food", "healthy food", "healthy food"]
 };
@@ -39,7 +45,7 @@ export const chefs = [
 
 export const dishes = [
   {
-    id: Math.random().toString(),
+    id: "1",
     name: "kololak",
     isAvailable: true,
     isVegan: true,
@@ -51,7 +57,7 @@ export const dishes = [
     dishes: ["salads", "fish", "meat", "desert", "healthy food", "salads", "fish", "meat", "desert"],
   },
   {
-    id: Math.random().toString(),
+    id: "2",
     name: "kololak",
     isAvailable: true,
     isVegan: true,
@@ -63,7 +69,7 @@ export const dishes = [
     dishes: ["healthy food", "salads", "fish", "meat", "desert"],
   },
   {
-    id: Math.random().toString(),
+    id: "3",
     name: "kololak",
     isAvailable: true,
     isVegan: true,
@@ -75,7 +81,7 @@ export const dishes = [
     dishes: ["healthy food", "salads", "fish", "meat", "desert"],
   },
   {
-    id: Math.random().toString(),
+    id: "4",
     name: "kololak",
     isAvailable: true,
     isVegan: true,
