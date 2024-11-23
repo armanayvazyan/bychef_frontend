@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useId, useState } from "react";
+import { useCallback, useId, useState } from "react";
 import { z } from "zod";
 import { db, ICartItem } from "@/db";
 import { ChevronUp } from "lucide-react";
@@ -84,7 +84,13 @@ const OrderDetails = () => {
 
   const navigate = useNavigate();
   const { t } = useTranslation("translation");
-  const products = useLiveQuery(() => db.products.reverse().toArray());
+  const products = useLiveQuery(async () => {
+    const products = await db.products.reverse().toArray();
+
+    if (!products.length) navigate("/explore");
+
+    return products;
+  });
   const generalInfo = useLiveQuery(() => db.generalInfo ? db.generalInfo.toArray() : []);
 
   const selectedDeliveryDate = form.watch(EInputNames.delivery_date);
@@ -153,10 +159,6 @@ const OrderDetails = () => {
       }, date);
     }
   }, [generalInfo, products]);
-
-  useEffect(() => {
-    if (!products?.length) navigate("/explore");
-  }, [navigate, products?.length]);
 
   return (
     // @ts-expect-error zod problem (temp solution)
