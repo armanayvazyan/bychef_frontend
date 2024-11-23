@@ -82,18 +82,20 @@ const UserCart = () => {
           </Button>
         </div>
       </PopoverTrigger>
-      <PopoverContent align="end" sideOffset={8} className="flex flex-col gap-6 max-h-[500px] overflow-y-scroll">
+      <PopoverContent align="end" sideOffset={8} className="flex flex-col gap-6">
         <>
           {products?.length ? (
             <>
-              {products.map(product => (
-                <CartItem
-                  key={product.date}
-                  product={product}
-                  onDeleteItem={handleDeleteCartItem}
-                  onChangeQuantity={handleChangeQuantity}
-                />
-              ))}
+              <div className="max-h-[500px] overflow-y-scroll">
+                {products.map(product => (
+                  <CartItem
+                    key={product.date}
+                    product={product}
+                    onDeleteItem={handleDeleteCartItem}
+                    onChangeQuantity={handleChangeQuantity}
+                  />
+                ))}
+              </div>
               <Separator />
               {generalInfo?.length && (
                 <div className="flex justify-between text-base font-bold text-zinc-800">
