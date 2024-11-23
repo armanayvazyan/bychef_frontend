@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 import Home from "@/pages/Home";
 import Chef from "@/pages/Chef";
 import Explore from "@/pages/Explore";
+import Checkout from "@/pages/Checkout";
 import HFWrapper from "@/hocs/HFWrapper";
 import { Helmet } from "react-helmet-async";
 import OrderStatus from "@/pages/OrderStatus";
@@ -33,6 +34,10 @@ const routes = [
   {
     path: "/chef/:id",
     element: wrapComponentWithHF(<Chef />)
+  },
+  {
+    path: "/checkout",
+    element: wrapComponentWithHF(<Checkout />)
   },
   {
     path: "/order/success",

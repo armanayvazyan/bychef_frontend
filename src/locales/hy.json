@@ -26,6 +26,7 @@
     },
     "show": "Ցուցադրել",
     "clear": "Մաքրել",
+    "back": "Վերադառնալ",
     "orderDaysAhead": "Պատվիրել {{timeAhead}} օր առաջ",
     "orderHoursAhead": "Պատվիրել {{timeAhead}} ժամ առաջ"
   },

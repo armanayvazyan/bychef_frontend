@@ -11,8 +11,8 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { DialogDescription, DialogFooter, DialogTitle } from "@/components/ui/dialog";
 
 interface IDishModal {
-  dishInfo: IDishInfo;
-  selectedDate: string;
+  dishInfo?: IDishInfo;
+  selectedDate?: string;
   onCloseDialog: () => void;
 }
 
@@ -41,6 +41,8 @@ const DishModal = ({ selectedDate, dishInfo, onCloseDialog }: IDishModal) => {
   };
 
   const handleAddToCart = useCallback(async () => {
+    if (!dishInfo || !selectedDate) return;
+
     try {
       const selectedDateExistsInCart = await db.products.get(selectedDate);
 
@@ -91,14 +93,16 @@ const DishModal = ({ selectedDate, dishInfo, onCloseDialog }: IDishModal) => {
   }, [
     toast,
     product,
-    dishInfo.id,
-    dishInfo.img,
+    dishInfo?.id,
+    dishInfo?.img,
     selectedDate,
     onCloseDialog,
-    dishInfo.name,
-    dishInfo.price,
-    dishInfo.notices,
+    dishInfo?.name,
+    dishInfo?.price,
+    dishInfo?.notices,
   ]);
+
+  if (!dishInfo || !selectedDate) return null;
 
   return (
     <>
