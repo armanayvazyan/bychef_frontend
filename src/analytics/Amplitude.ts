@@ -12,6 +12,7 @@ class AmplitudeService {
     if (typeof window !== "undefined" && !this.amplitudeInstance) {
       this.amplitudeInstance = amplitude.getInstance();
       this.amplitudeInstance.init(ANALYTICS_AMPLITUDE_KEY as string);
+      console.log("Amplitude initialized");
     }
   }
 
