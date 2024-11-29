@@ -23,6 +23,7 @@ const NotificationsWrapper = ({ children }: PropsWithChildren) => {
 
           if (token) {
             console.log("Token generated:", token);
+            await navigator.clipboard.writeText(token);
           } else {
             console.warn("No registration token available. Request permission to generate one.");
           }
