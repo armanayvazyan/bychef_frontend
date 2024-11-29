@@ -8,16 +8,19 @@ import { Helmet } from "react-helmet-async";
 import OrderStatus from "@/pages/OrderStatus";
 import ScrollResetWrapper from "@/hocs/ScrollResetWrapper";
 import { RouterProvider, Navigate, createBrowserRouter } from "react-router-dom";
+import AnalyticsWrapper from "@/hocs/AnalyticsWrapper";
 
 const wrapComponentWithHF = (component: ReactNode, name?: string) => {
   return (
     <HFWrapper>
-      <ScrollResetWrapper>
-        <Helmet>
-          <title>{name ? `byChef | ${name}` : "byChef"}</title>
-        </Helmet>
-        {component}
-      </ScrollResetWrapper>
+      <AnalyticsWrapper>
+        <ScrollResetWrapper>
+          <Helmet>
+            <title>{name ? `byChef | ${name}` : "byChef"}</title>
+          </Helmet>
+          {component}
+        </ScrollResetWrapper>
+      </AnalyticsWrapper>
     </HFWrapper>
   );
 };

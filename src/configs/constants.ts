@@ -11,6 +11,7 @@ export const SB_KEY = import.meta.env.VITE_SB_KEY;
 export const YMAP_KEY = import.meta.env.VITE_YMAP_KEY;
 export const IDRAM_ORDER_ID_PREFIX = import.meta.env.VITE_IDRAM_ORDER_ID_URL_PREFIX;
 export const YMAP_SEARCH_RESULTS_COUNT = import.meta.env.VITE_YMAP_SEARCH_RESULTS_COUNT;
+export const ANALYTICS_AMPLITUDE_KEY = import.meta.env.VITE_ANALYTICS_AMPLITUDE_KEY;
 
 export const chefInfo = {
   name: "Լիլիթ Ստեփանյան",
