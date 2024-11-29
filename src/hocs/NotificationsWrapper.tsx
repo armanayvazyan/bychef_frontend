@@ -1,8 +1,15 @@
 import { PropsWithChildren, useEffect } from "react";
 import { getToken, onMessage } from "firebase/messaging";
 import { messaging } from "@/firebase/firebaseConfig";
+import { FIREBASE_VAPID_KEY } from "@/configs/constants";
 
 const NotificationsWrapper = ({ children }: PropsWithChildren) => {
+
+  onMessage(messaging, (payload) => {
+    const title = payload.notification?.title ??  "";
+    const body = payload.notification?.body ?? "";
+    new Notification(title, { body: body });
+  });
   useEffect(() => {
     const requestNotificationPermission = async () => {
       try {
@@ -10,7 +17,7 @@ const NotificationsWrapper = ({ children }: PropsWithChildren) => {
 
         if (permission === "granted") {
           const token = await getToken(messaging, {
-            vapidKey: "BLrEzq6TgEUUyNs4W5cb8r5MRRolr6nrLGKCmk3OPMiYIBOTnVuuvF0eiP5w6A5iYpZN_LISvkuOIOpsMckHNiI",
+            vapidKey: FIREBASE_VAPID_KEY,
           });
 
           if (token) {
@@ -27,22 +34,7 @@ const NotificationsWrapper = ({ children }: PropsWithChildren) => {
         console.error("Error during permission request or token generation:", error);
       }
     };
-
-    const setupMessageListener = () => {
-      onMessage(messaging, (payload) => {
-        console.log("Message received in foreground:", payload);
-
-        if (payload.notification) {
-          const { title, body, icon } = payload.notification;
-          if (title) {
-            new Notification(title, { body, icon });
-          }
-        }
-      });
-    };
-
     requestNotificationPermission();
-    setupMessageListener();
   }, []);
 
   return <>{children}</>;

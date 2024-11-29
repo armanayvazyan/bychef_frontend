@@ -1,5 +1,6 @@
-importScripts("https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js");
-importScripts("https://www.gstatic.com/firebasejs/9.15.0/firebase-messaging.js");
+importScripts('https://www.gstatic.com/firebasejs/8.2.0/firebase-app.js');
+importScripts('https://www.gstatic.com/firebasejs/8.2.0/firebase-messaging.js');
+
 
 const firebaseConfig = {
     apiKey: "AIzaSyBpIi9PjtxAUEN8mhDwPFAdrgwjBhzUt8I",
@@ -13,11 +14,17 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
+// Retrieve firebase messaging
 const messaging = firebase.messaging();
 
-messaging.onBackgroundMessage((payload) => {
-    console.log("Received background message: ", payload);
+messaging.onBackgroundMessage(function(payload) {
+    console.log('Received background message ', payload);
 
-    const { title, body, icon } = payload.notification || {};
-    self.registration.showNotification(title, { body, icon });
+    const notificationTitle = payload.notification.title;
+    const notificationOptions = {
+        body: payload.notification.body,
+    };
+
+    self.registration.showNotification(notificationTitle,
+        notificationOptions);
 });
