@@ -27,4 +27,7 @@ messaging.onBackgroundMessage(function(payload) {
 
     self.registration.showNotification(notificationTitle,
         notificationOptions);
+    self.addEventListener('notificationclick', (e) => {
+        e.waitUntil(clients.openWindow(e.notification.data.url))      // and here
+    })
 });
