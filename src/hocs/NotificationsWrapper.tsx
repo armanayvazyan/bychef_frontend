@@ -9,7 +9,7 @@ const NotificationsWrapper = ({ children }: PropsWithChildren) => {
       const permission = await Notification.requestPermission();
 
       if (permission === "granted") {
-        const token = getToken(messaging, {
+        const token =  await getToken(messaging, {
           vapidKey: "BLrEzq6TgEUUyNs4W5cb8r5MRRolr6nrLGKCmk3OPMiYIBOTnVuuvF0eiP5w6A5iYpZN_LISvkuOIOpsMckHNiI",
         });
         console.log("Token generated : ", token);
