@@ -31,8 +31,7 @@ messaging.onBackgroundMessage(function(payload) {
 
 self.addEventListener('notificationclick', (event) => {
     event.notification.close(); // CLosing the notification when clicked
-    console.log('Notification click Received. ', event);
-    const urlToOpen = event?.notification?.data?.url || 'https://bychef.am';
+    const urlToOpen = event?.notification?.fcmOptions?.link || 'https://bychef.am';
     event.waitUntil(
         clients.matchAll({
             type: 'window',
