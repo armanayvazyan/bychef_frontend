@@ -29,25 +29,23 @@ messaging.onBackgroundMessage(function(payload) {
         notificationOptions);
 });
 
-self.addEventListener('notificationclick', (event) => {
-    console.log('On notification click: ', event);
-    event.notification.close(); // CLosing the notification when clicked
-    const urlToOpen = event?.notification?.fcmOptions?.link || 'https://bychef.am';
+self.addEventListener("notificationclick", (event) => {
+    console.log("On notification click: ", event.notification.tag);
+    event.notification.close();
+
+    // This looks to see if the current is already open and
+    // focuses if it is
     event.waitUntil(
-        clients.matchAll({
-            type: 'window',
-        })
-            .then((windowClients) => {
-                // Check if there is already a window/tab open with the target URL
-                for (const client of windowClients) {
-                    if (client.url === urlToOpen && 'focus' in client) {
-                        return client.focus();
-                    }
-                }
-                // If not, open a new window/tab with the target URL
-                if (clients.openWindow) {
-                    return clients.openWindow(urlToOpen);
-                }
+        clients
+            .matchAll({
+                type: "window",
             })
+            .then((clientList) => {
+                for (const client of clientList) {
+                    if (client.url === "/" && "focus" in client) return client.focus();
+                }
+                if (clients.openWindow) return clients.openWindow("/");
+            }),
     );
 });
+
