@@ -27,7 +27,27 @@ messaging.onBackgroundMessage(function(payload) {
 
     self.registration.showNotification(notificationTitle,
         notificationOptions);
-    self.addEventListener('notificationclick', (e) => {
-        e.waitUntil(clients.openWindow(e.notification.data.url))      // and here
-    })
+});
+
+self.addEventListener('notificationclick', (event) => {
+    event.notification.close(); // CLosing the notification when clicked
+    const urlToOpen = event?.notification?.data?.url || 'https://bychef.am';
+    // Open the URL in the default browser.
+    event.waitUntil(
+        clients.matchAll({
+            type: 'window',
+        })
+            .then((windowClients) => {
+                // Check if there is already a window/tab open with the target URL
+                for (const client of windowClients) {
+                    if (client.url === urlToOpen && 'focus' in client) {
+                        return client.focus();
+                    }
+                }
+                // If not, open a new window/tab with the target URL
+                if (clients.openWindow) {
+                    return clients.openWindow(urlToOpen);
+                }
+            })
+    );
 });
