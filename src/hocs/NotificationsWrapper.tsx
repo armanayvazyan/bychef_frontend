@@ -6,6 +6,7 @@ import { FIREBASE_VAPID_KEY } from "@/configs/constants";
 const NotificationsWrapper = ({ children }: PropsWithChildren) => {
 
   onMessage(messaging, (payload) => {
+    console.log("Received foreground message ", payload);
     const title = payload.notification?.title ??  "";
     const body = payload.notification?.body ?? "";
     new Notification(title, { body: body });
