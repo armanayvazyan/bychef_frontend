@@ -1,6 +1,8 @@
 import chef from "@/assets/chef.jpeg";
 import Chip from "@/components/ui/chip";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import DynamicIcon from "@/components/ui/DynamicIcon";
+import dynamicIconImports from "lucide-react/dynamicIconImports";
 
 interface IChefDetails {
   details: {
@@ -10,7 +12,7 @@ interface IChefDetails {
     dishes: string[];
     socials: {
       name: string;
-      icon: string;
+      icon: keyof typeof dynamicIconImports;
       url: string
     }[];
     businessName: string;
@@ -32,7 +34,7 @@ const ChefDetails = ({ details }: IChefDetails) => {
           <div className="flex items-center gap-3">
             {details.socials.map((social) => (
               <a className="flex gap-2 items-center" key={social.url} href={social.url}>
-                <img src={social.icon} alt="social icon" />
+                <DynamicIcon name={social.icon} />
                 <p className="text-xs font-semibold text-primary">{social.name}</p>
               </a>
             ))}

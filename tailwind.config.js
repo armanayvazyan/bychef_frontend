@@ -7,7 +7,7 @@ export default {
   ],
   theme: {
 		fontFamily: {
-			'sans': ["Noto Sans Armenian", "Open Sans", 'Helvetica', 'Arial', 'sans-serif'],
+			'sans': ["Noto Sans Armenian", "Open Sans", "Noto Sans", 'Helvetica', 'Arial', 'sans-serif'],
 		},
   	spacing: {
   		'0': '0px',

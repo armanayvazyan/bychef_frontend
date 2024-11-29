@@ -1,8 +1,7 @@
 import { IDishInfo } from "@/types";
 import dish from "@/assets/dish.png";
 import chef from "@/assets/chef.jpeg";
-import facebookLogo from "@/assets/facebook.svg";
-import instagramLogo from "@/assets/instagram.svg";
+import dynamicIconImports from "lucide-react/dynamicIconImports";
 
 export const REDIRECT_PATH = "/";
 export const PATHS = [];
@@ -19,8 +18,8 @@ export const chefInfo = {
   img: chef,
   workingDays: [1, 2, 4, 0],
   socials: [
-    { name: "Facebook", url: "https://www.facebook.com/", icon: facebookLogo },
-    { name: "Instagram", url: "https://www.instagram.com/", icon: instagramLogo },
+    { name: "Facebook", url: "https://www.facebook.com/", icon: "facebook" as keyof typeof dynamicIconImports },
+    { name: "Instagram", url: "https://www.instagram.com/", icon: "instagram" as keyof typeof dynamicIconImports },
   ],
   about: "Լորեմ Իպսումը տպագրության և տպագրական արդյունաբերության համար նախատեսված մոդելային տեքստ է։ Սկսած 1500-ականներից՝ Լորեմ Իպսումը հանդիսացել է տպագրական արդյունաբերության ստանդարտ մոդելային տեքստ...",
   dishes: ["healthy food", "healthy food", "healthy food"]

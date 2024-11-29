@@ -25,9 +25,6 @@ const CartItem = ({ product, onChangeQuantity, onDeleteItem }: ICartItemProps) =
 
   return (
     <div className="flex flex-col">
-      <h1 className="text-xl font-extrabold text-zinc-800 mb-4">
-        {product.date.split(" ")[0] + " " + t(`generic.months.${product.date.split(" ")[1].toLowerCase()}`)}
-      </h1>
       {product.items.map((item, index) => (
         <div key={item.id} className="cursor-pointer" onClick={() => { handleSelectDish(item.id, product.date); }}>
           <div className="flex items-center gap-4">
