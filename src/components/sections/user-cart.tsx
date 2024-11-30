@@ -70,8 +70,14 @@ const UserCart = () => {
     navigate("/checkout");
   };
 
+  const handleToggleCart = () => {
+    document.body.classList.toggle("overflow-y-hidden");
+    document.body.classList.toggle("md:overflow-y-auto");
+    setOpen(prevState => !prevState);
+  };
+
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover open={open} onOpenChange={handleToggleCart}>
       <PopoverTrigger>
         <div className="relative">
           {!!products?.length && (
