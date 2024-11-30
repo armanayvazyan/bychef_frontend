@@ -17,6 +17,7 @@ import FormItem from "@/components/ui/form-item-wrapper";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select";
 
 enum EInputNames {
+  email = "email",
   address = "address",
   apartment = "apartment",
   entrance = "entrance",
@@ -29,15 +30,16 @@ enum EInputNames {
 }
 
 const formSchema = z.object({
-  [EInputNames.address]: z.string(),
-  [EInputNames.apartment]: z.string(),
-  [EInputNames.entrance]: z.string(),
-  [EInputNames.floor]: z.string(),
-  [EInputNames.phone]: z.string(),
+  [EInputNames.email]: z.string().min(1),
+  [EInputNames.address]: z.string().min(1),
+  [EInputNames.apartment]: z.string().optional(),
+  [EInputNames.entrance]: z.string().optional(),
+  [EInputNames.floor]: z.string().optional(),
+  [EInputNames.phone]: z.string().min(1),
   [EInputNames.notes]: z.string().optional(),
-  [EInputNames.delivery_date]: z.string(),
-  [EInputNames.delivery_time]: z.string(),
-  [EInputNames.payment_method]: z.string(),
+  [EInputNames.delivery_date]: z.string().min(1),
+  [EInputNames.delivery_time]: z.string().min(1),
+  [EInputNames.payment_method]: z.string().min(1),
 });
 
 const deliveryDates = [
@@ -68,6 +70,7 @@ const OrderDetails = () => {
   const formId = useId();
   const form = useForm<z.infer<typeof formSchema>>({
     defaultValues: {
+      email: "",
       address: "",
       apartment: "",
       entrance: "",
@@ -166,7 +169,10 @@ const OrderDetails = () => {
       <fieldset className="flex flex-col gap-4 lg:max-w-[500px] w-full">
         <div className="flex flex-col gap-5">
           <h1 className="text-primary font-bold text-xl leading-tight">Առաքման տվյալներ</h1>
-          <FormItem label="Հասցե" name={EInputNames.address}>
+          <FormItem label="Էլ. Հասցե" requiredAsterisk name={EInputNames.address}>
+            <Input placeholder="example@gmail.com"/>
+          </FormItem>
+          <FormItem label="Հասցե" requiredAsterisk name={EInputNames.address}>
             <Input placeholder="Մամիկոնյանց 47"/>
           </FormItem>
           <div className="flex w-full gap-4">
@@ -181,7 +187,7 @@ const OrderDetails = () => {
             <FormItem className="flex-1" label="Հարկ" name={EInputNames.floor}>
               <Input placeholder="Հարկի համար"/>
             </FormItem>
-            <FormItem className="flex-1" label="Հեռախոսահամար" name={EInputNames.phone}>
+            <FormItem className="flex-1" label="Հեռախոսահամար" requiredAsterisk name={EInputNames.phone}>
               <Input placeholder="Հեռախոսահամար"/>
             </FormItem>
           </div>
@@ -295,7 +301,7 @@ const OrderDetails = () => {
           </div>
         )}
         <Button type="submit">
-          Վճարել 1880 դր.
+          Վճարել {generalInfo?.[0].price ?? 0} դր.
         </Button>
       </div>
     </Form>
