@@ -1,4 +1,4 @@
-import { ReactElement } from "react";
+import { ReactElement, ReactNode } from "react";
 import { useFormContext } from "react-hook-form";
 import FormControlWrapper from "@/components/ui/form-control-wrapper";
 import FormItemErrorMessage from "@/components/ui/form-error-message";
@@ -7,10 +7,11 @@ import { FormItem, FormLabel, FormField, FormDescription } from "@/components/ui
 interface IFormItemWrapperProps {
   children: ReactElement;
   name: string;
-  label?: string;
+  label?: ReactNode;
   className?: string;
   description?: string;
   valuePropName?: string;
+  requiredAsterisk?: boolean;
   customFields?: { key: string; value: string }[];
 }
 
@@ -21,7 +22,8 @@ const FormItemWrapper = ({
   className,
   description,
   customFields,
-  valuePropName
+  valuePropName,
+  requiredAsterisk = false,
 }: IFormItemWrapperProps) => {
   const { control } = useFormContext();
 
@@ -31,7 +33,12 @@ const FormItemWrapper = ({
       control={control}
       render={({ field }) => (
         <FormItem className={className}>
-          {label && <FormLabel className="text-primary font-semibold text-sm leading-tight">{label}</FormLabel>}
+          {label && (
+            <FormLabel className="text-primary font-semibold text-sm leading-tight flex gap-1">
+              {label}
+              {requiredAsterisk && <span className="text-destructive">*</span>}
+            </FormLabel>
+          )}
           <FormControlWrapper
             field={field}
             customFields={customFields}
