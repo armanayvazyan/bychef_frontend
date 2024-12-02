@@ -42,7 +42,7 @@ const NotificationsWrapper = ({ children }: PropsWithChildren) => {
     requestNotificationPermission();
   }, []);
 
-  return <>{children}</>;
+  return children;
 };
 
 export default NotificationsWrapper;
