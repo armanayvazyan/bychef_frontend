@@ -17,7 +17,6 @@ ENV VITE_IDRAM_ORDER_ID_URL_PREFIX=$VITE_IDRAM_ORDER_ID_URL_PREFIX
 COPY package*.json ./
 RUN npm install
 COPY . .
-
 RUN npm run build
 
 FROM nginx:stable-alpine
