@@ -106,5 +106,17 @@
     "total": "Total",
     "order": "Order now",
     "empty-cart": "Your cart is empty"
+  },
+  "order-status": {
+    "success": {
+      "title": "Your order has been successfully placed",
+      "details": "Your order number is #{{orderId}}. Soon you’ll receive an email with a link to track your order.",
+      "button": "Back to orders"
+    },
+    "failure": {
+      "title": "Your order has not been confirmed",
+      "details": "Your order number is #{{orderId}}. Soon you’ll receive an email with a link to track your order.",
+      "button": "Back to orders"
+    }
   }
 }
