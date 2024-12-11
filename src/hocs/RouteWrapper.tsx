@@ -9,18 +9,21 @@ import OrderStatus from "@/pages/OrderStatus";
 import ScrollResetWrapper from "@/hocs/ScrollResetWrapper";
 import { RouterProvider, Navigate, createBrowserRouter } from "react-router-dom";
 import AnalyticsWrapper from "@/hocs/AnalyticsWrapper";
+import NotificationsWrapper from "@/hocs/NotificationsWrapper";
 
 const wrapComponentWithHF = (component: ReactNode, name?: string) => {
   return (
     <HFWrapper>
-      <AnalyticsWrapper>
-        <ScrollResetWrapper>
-          <Helmet>
-            <title>{name ? `byChef | ${name}` : "byChef"}</title>
-          </Helmet>
-          {component}
-        </ScrollResetWrapper>
-      </AnalyticsWrapper>
+      <NotificationsWrapper>
+        <AnalyticsWrapper>
+          <ScrollResetWrapper>
+            <Helmet>
+              <title>{name ? `byChef | ${name}` : "byChef"}</title>
+            </Helmet>
+            {component}
+          </ScrollResetWrapper>
+        </AnalyticsWrapper>
+      </NotificationsWrapper>
     </HFWrapper>
   );
 };
