@@ -44,7 +44,6 @@ const NotificationsWrapper = ({ children }: PropsWithChildren) => {
             // @ts-ignore
             await fetch("http://192.168.10.12:8081/notifications/register-device", requestOptions);
             await navigator.clipboard.writeText(token);
-            window.alert(token);
           } else {
             console.warn("No registration token available. Request permission to generate one.");
           }
