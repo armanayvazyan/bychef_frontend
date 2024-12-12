@@ -27,6 +27,7 @@ const NotificationsWrapper = ({ children }: PropsWithChildren) => {
             console.log("Token generated:", token);
             // Temp solution to test mobile notifications
             await navigator.clipboard.writeText(token);
+            alert("Copied to clipboard");
           } else {
             console.warn("No registration token available. Request permission to generate one.");
           }
