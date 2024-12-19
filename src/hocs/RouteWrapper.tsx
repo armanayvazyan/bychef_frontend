@@ -8,6 +8,7 @@ import { Helmet } from "react-helmet-async";
 import OrderStatus from "@/pages/OrderStatus";
 import AnalyticsWrapper from "@/hocs/AnalyticsWrapper";
 import ScrollResetWrapper from "@/hocs/ScrollResetWrapper";
+import NotificationsWrapper from "@/hocs/NotificationsWrapper";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider, Navigate, createBrowserRouter } from "react-router-dom";
 
@@ -16,16 +17,18 @@ const queryClient = new QueryClient();
 const wrapComponentWithHF = (component: ReactNode, name?: string) => {
   return (
     <HFWrapper>
-      <AnalyticsWrapper>
-        <ScrollResetWrapper>
-          <QueryClientProvider client={queryClient}>
-            <Helmet>
-              <title>{name ? `byChef | ${name}` : "byChef"}</title>
-            </Helmet>
-            {component}
-          </QueryClientProvider>
-        </ScrollResetWrapper>
-      </AnalyticsWrapper>
+      <ScrollResetWrapper>
+        <NotificationsWrapper>
+          <AnalyticsWrapper>
+            <QueryClientProvider client={queryClient}>
+              <Helmet>
+                <title>{name ? `byChef | ${name}` : "byChef"}</title>
+              </Helmet>
+              {component}
+            </QueryClientProvider>
+          </AnalyticsWrapper>
+        </NotificationsWrapper>
+      </ScrollResetWrapper>
     </HFWrapper>
   );
 };
