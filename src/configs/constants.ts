@@ -28,19 +28,38 @@ export const chefInfo = {
 
 export const chefs = [
   {
-    id: 2,
-    name: "Alice",
-    businessName: "Alice Kitchen",
-    img: chef,
-    dishes: ["healthy food", "salads", "fish", "meat", "desert", "healthy food", "salads", "fish", "meat", "desert", "healthy food", "salads", "fish", "meat", "desert", "healthy food", "salads", "fish", "meat", "desert"],
+    phoneNumber: "+37410100287",
+    email: "8@mail.com",
+    state: "WORKING",
+    avatarUrl: "avatarUrl",
+    bannerUrl: "bannerUrl",
+    status: "ACTIVE",
+    telegramId: "1",
+    chefAvailableDtoList: [
+      {
+        dayOfTheWeek: 4,
+        isAvailable: true
+      }
+    ],
+    fullNameEn: "Marine Petrosyan",
+    fullNameAm: "Մարինե Պետրոսյան",
+    fullNameRu: "Марине Петросян",
+    descriptionEn: "Masters in italian cuisine",
+    descriptionRu: "Мастер итальянской кухни",
+    descriptionAm: "Վարպետ իտալական խոհանոցում",
+    kitchenEn: "Italian",
+    kitchenRu: "итальянский",
+    kitchenAm: "Իտալական",
+    type: "myType",
+    rating: 4.0
   },
-  ...(new Array(20).fill({
-    id: 1,
-    name: "Alice",
-    businessName: "Alice Kitchen",
-    img: chef,
-    dishes: ["healthy food", "salads", "fish", "meat", "desert"],
-  }))
+  // ...(new Array(20).fill({
+  //   id: 1,
+  //   name: "Alice",
+  //   businessName: "Alice Kitchen",
+  //   img: chef,
+  //   dishes: ["healthy food", "salads", "fish", "meat", "desert"],
+  // }))
 ];
 
 export const dishes = [

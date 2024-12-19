@@ -22,7 +22,7 @@ const HeroTemp = () => {
     phone: ""
   });
 
-  const { fetchData } = useFetchData("waitlist");
+  const { fetchData } = useFetchData("api/waitlist");
   const { toast } = useToast();
 
   const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {

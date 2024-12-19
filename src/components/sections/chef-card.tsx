@@ -1,20 +1,29 @@
-import { CalendarCheck2 } from "lucide-react";
+import { useMemo } from "react";
+import { IChefGenericInfo } from "@/types";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import GridCard from "@/components/ui/grid-card";
-import Separator from "@/components/ui/separator";
 
-interface IChefCard {
-  id: number,
-  img: string,
-  name: string,
-  dishes: string[],
-  businessName: string,
-}
-
-const ChefCard = ({ chefInfo }: { chefInfo: IChefCard }) => {
+const ChefCard = ({ chefInfo }: { chefInfo: IChefGenericInfo }) => {
   const navigate = useNavigate();
-  const { t } = useTranslation("translation");
+  const { i18n } = useTranslation();
+
+  const kitchenName = useMemo(() => {
+    switch (i18n.language) {
+      case "en":
+        return chefInfo.kitchenEn;
+      case "ru":
+        return chefInfo.kitchenRu;
+      case "hy":
+        return chefInfo.kitchenAm;
+    }
+  }, [chefInfo.kitchenAm, chefInfo.kitchenEn, chefInfo.kitchenRu, i18n.language]);
+
+  const chefLabels = useMemo(() => {
+    return chefInfo.chefLabelDtos?.map((label) => (
+      label.chefLabelTranslationSet.find((content) => content.languageCode === i18n.language)?.value
+    )).join(" • ");
+  }, [chefInfo.chefLabelDtos, i18n.language]);
 
   const handleNavigate = () => {
     navigate(`/chef/${chefInfo.id}`);
@@ -24,25 +33,25 @@ const ChefCard = ({ chefInfo }: { chefInfo: IChefCard }) => {
     <GridCard
       onClick={handleNavigate}
       className="px-4 py-3 cursor-pointer"
-      footer={
-        <>
-          <Separator/>
-          <div className="flex items-center gap-2 text-[#15803D]">
-            <CalendarCheck2 size={14}/>
-            <p className="text-sm font-medium">{t("status.available", { day: t("generic.weekdays.today") })}</p>
-          </div>
-        </>
-      }
+      // footer={
+      //   <>
+      //     <Separator/>
+      //     <div className="flex items-center gap-2 text-[#15803D]">
+      //       <CalendarCheck2 size={14}/>
+      //       <p className="text-sm font-medium">{t("status.available", { day: t("generic.weekdays.today") })}</p>
+      //     </div>
+      //   </>
+      // }
     >
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col flex-wrap gap-4">
         <div className="flex items-center gap-3">
           <div className="min-w-[84px] min-h-[84px] w-[84px] h-[84px]">
-            <img src={chefInfo.img} alt="chef image" className="w-full h-full rounded-full object-cover"/>
+            <img src={chefInfo.avatarUrl} alt="chef image" className="w-full h-full rounded-full object-cover"/>
           </div>
-          <p className="text-zinc-900 text-lg font-bold">{chefInfo.businessName}</p>
+          <p className="text-zinc-900 text-lg font-bold">{kitchenName}</p>
         </div>
         <p className="text-zinc-400 text-sm font-medium">
-          {chefInfo.dishes.join(" • ")}
+          {chefLabels}
         </p>
       </div>
     </GridCard>

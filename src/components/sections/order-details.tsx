@@ -1,4 +1,4 @@
-import { useCallback, useId, useState } from "react";
+import { useCallback, useId, useMemo, useState } from "react";
 import { z } from "zod";
 import { db, ICartItem } from "@/db";
 import { ChevronUp } from "lucide-react";
@@ -60,12 +60,6 @@ const deliveryHours = [
   "16:30",
 ];
 
-const paymentMethods = [
-  "Ավելացնել նոր քարտ",
-  "Վճարել Idram-ով",
-  "Վճարել կանխիկ"
-];
-
 const OrderDetails = () => {
   const formId = useId();
   const form = useForm<z.infer<typeof formSchema>>({
@@ -86,7 +80,7 @@ const OrderDetails = () => {
   const [isCollapsed, setIsCollapsed] = useState(true);
 
   const navigate = useNavigate();
-  const { t } = useTranslation("translation");
+  const { t } = useTranslation("translation", { keyPrefix: "checkout" });
   const products = useLiveQuery(async () => {
     const products = await db.products.reverse().toArray();
 
@@ -103,6 +97,16 @@ const OrderDetails = () => {
   const handleSubmitOrder = (formData: z.infer<typeof formSchema>) => {
     console.log("formData", formData);
   };
+
+  const paymentMethods = useMemo(() => {
+    const paymentMethods = [
+      "card",
+      "idram",
+      "cash"
+    ];
+
+    return paymentMethods.filter(method => generalInfo && generalInfo[0].price >= 20000 ? method === "cash" : true);
+  }, [generalInfo]);
 
   const handleSelectDeliveryDate = (date: string) => {
     form.setValue(EInputNames.delivery_date, date);
@@ -169,35 +173,35 @@ const OrderDetails = () => {
       <fieldset className="flex flex-col gap-4 lg:max-w-[500px] w-full">
         <div className="flex flex-col gap-5">
           <h1 className="text-primary font-bold text-xl leading-tight">Առաքման տվյալներ</h1>
-          <FormItem label="Էլ. Հասցե" requiredAsterisk name={EInputNames.address}>
-            <Input placeholder="example@gmail.com"/>
+          <FormItem label={t("email")} requiredAsterisk name={EInputNames.address}>
+            <Input placeholder="example@gmail.com" />
           </FormItem>
-          <FormItem label="Հասցե" requiredAsterisk name={EInputNames.address}>
-            <Input placeholder="Մամիկոնյանց 47"/>
+          <FormItem label={t("address")} requiredAsterisk name={EInputNames.address}>
+            <Input placeholder={t("address")} />
           </FormItem>
           <div className="flex w-full gap-4">
-            <FormItem className="flex-1" label="Բնակարան" name={EInputNames.apartment}>
-              <Input placeholder="Բնակարանի համար"/>
+            <FormItem className="flex-1" label={t("home")} name={EInputNames.apartment}>
+              <Input placeholder={t("home")} />
             </FormItem>
-            <FormItem className="flex-1" label="Մուտք" name={EInputNames.entrance}>
-              <Input placeholder="Մուտքի համար"/>
+            <FormItem className="flex-1" label={t("entrance")} name={EInputNames.entrance}>
+              <Input placeholder={t("entrance")} />
             </FormItem>
           </div>
           <div className="flex w-full gap-4">
-            <FormItem className="flex-1" label="Հարկ" name={EInputNames.floor}>
-              <Input placeholder="Հարկի համար"/>
+            <FormItem className="flex-1" label={t("floor")} name={EInputNames.floor}>
+              <Input placeholder={t("floor")} />
             </FormItem>
-            <FormItem className="flex-1" label="Հեռախոսահամար" requiredAsterisk name={EInputNames.phone}>
-              <Input placeholder="Հեռախոսահամար"/>
+            <FormItem className="flex-1" label={t("phone")} requiredAsterisk name={EInputNames.phone}>
+              <Input placeholder={t("phone")} />
             </FormItem>
           </div>
-          <FormItem label="հավելյալ նշումներ առաքիչի համար" name={EInputNames.notes}>
-            <Textarea placeholder="Հավելյալ նշումներ"/>
+          <FormItem label={t("deliveryNotes")} name={EInputNames.notes}>
+            <Textarea placeholder={t("notes")} />
           </FormItem>
         </div>
         <Separator />
         <div className="flex flex-col gap-5">
-          <h1 className="text-primary font-bold text-xl leading-tight">Առաքման օր և ժամ</h1>
+          <h1 className="text-primary font-bold text-xl leading-tight">{t("deliveryTime")}</h1>
           <div className="flex w-full gap-4">
             <FormItem className="flex-1" name={EInputNames.delivery_date}>
               <Select onValueChange={handleSelectDeliveryDate}>
@@ -206,7 +210,7 @@ const OrderDetails = () => {
                     {selectedDeliveryDate ? (
                       <span className="flex gap-2">{selectedDeliveryDate}</span>
                     ) : (
-                      "Ընտրեք օր"
+                      t("selectDay")
                     )}
                   </div>
                 </SelectTrigger>
@@ -228,7 +232,7 @@ const OrderDetails = () => {
                     {selectedDeliveryTime ? (
                       <span className="flex gap-2">{selectedDeliveryTime}</span>
                     ) : (
-                      "Ընտրեք ժամ"
+                      t("selectTime")
                     )}
                   </div>
                 </SelectTrigger>
@@ -247,7 +251,7 @@ const OrderDetails = () => {
         </div>
         <Separator />
         <div className="flex flex-col gap-5">
-          <h1 className="text-primary font-bold text-xl leading-tight">Վճարման եղանակ</h1>
+          <h1 className="text-primary font-bold text-xl leading-tight">{t("paymentMethod")}</h1>
           <FormItem name={EInputNames.payment_method}>
             <Select onValueChange={handleSelectPaymentMethod}>
               <SelectTrigger>
@@ -255,15 +259,23 @@ const OrderDetails = () => {
                   {selectedPaymentMethod ? (
                     <span className="flex gap-2">{selectedPaymentMethod}</span>
                   ) : (
-                    "Ընտրեք վճարման եղանակը"
+                    t("choosePaymentMethod")
                   )}
                 </div>
               </SelectTrigger>
               <SelectContent className="max-h-[240px] overflow-y-scroll">
                 {paymentMethods.map((method) => (
                   <SelectItem key={method} value={method} className="p-2">
-                    <div className="flex gap-2 text-sm leading-tight text-foreground cursor-pointer">
-                      {method}
+                    <div className="flex flex-col gap-2 text-sm leading-tight text-foreground cursor-pointer">
+                      {t(method)}
+                      {method === "cash" && (
+                        <div className="bg-muted-foreground max-w-[350px] w-full">
+                          <p>
+                            20.000 դրամ և ավել գնումներ կատարելուց վճարումը
+                            կկատարվի կանխիկ։
+                          </p>
+                        </div>
+                      )}
                     </div>
                   </SelectItem>
                 ))}
@@ -274,11 +286,11 @@ const OrderDetails = () => {
       </fieldset>
       <div className="flex flex-col p-6 border-[1px] lg:max-w-[424px] max-h-max w-full rounded-xl border-border group" data-collapsed={isCollapsed}>
         <div className="flex justify-between cursor-pointer" onClick={() => { setIsCollapsed(isCollapsed => !isCollapsed); }}>
-          <h1 className="text-xl font-bold text-primary mb-4">Ձեր պատվերը</h1>
+          <h1 className="text-xl font-bold text-primary mb-4">{t("yourOrder")}</h1>
           <ChevronUp className="group-data-[collapsed=false]:-rotate-180 transition-all duration-500" />
         </div>
         <div className="grid group-data-[collapsed=false]:grid-rows-[0fr] grid-rows-[1fr] transition-all duration-300">
-          <div data-collapsed={isCollapsed} className="overflow-hidden">
+          <div data-collapsed={isCollapsed} className="overflow-hidden flex flex-col gap-6">
             {!!products?.length && products.map(product => (
               <CartItem
                 key={product.date}
@@ -291,17 +303,17 @@ const OrderDetails = () => {
         </div>
         <Separator className="my-3" />
         <div className="flex w-full justify-between my-4">
-          <p>Առաքման գումար</p>
+          <p>{t("delivery")}</p>
           <p>880 դր.</p>
         </div>
         {generalInfo?.length && (
           <div className="flex justify-between text-base font-bold text-zinc-800 mb-8">
-            <p>{t("user-cart.total")}</p>
+            <p>{t("total")}</p>
             <p>{generalInfo[0].price} դր.</p>
           </div>
         )}
         <Button type="submit">
-          Վճարել {generalInfo?.[0].price ?? 0} դր.
+          {t("pay", { amount: generalInfo?.[0].price ?? 0 })}
         </Button>
       </div>
     </Form>

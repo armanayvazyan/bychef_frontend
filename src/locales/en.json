@@ -118,5 +118,27 @@
       "details": "Your order number is #{{orderId}}. Soon you’ll receive an email with a link to track your order.",
       "button": "Back to orders"
     }
+  },
+  "checkout": {
+    "address": "Address",
+    "email": "Email",
+    "floor": "Floor",
+    "entrance": "Entrance",
+    "phone": "Phone number",
+    "home": "Apartment/House",
+    "notes": "Additional notes",
+    "deliveryTime": "Delivery date and time",
+    "selectDay": "Select day",
+    "selectTime": "Select time",
+    "choosePaymentMethod": "Choose payment method",
+    "paymentMethod": "Payment method",
+    "yourOrder": "Your order",
+    "delivery": "Delivery",
+    "total": "Total",
+    "pay": "Pay {{amount}} դր.",
+    "cash": "Pay cash",
+    "idram": "Pay with Idram",
+    "card": "Pay with card",
+    "deliveryNotes": "Additional notes for the delivery"
   }
 }

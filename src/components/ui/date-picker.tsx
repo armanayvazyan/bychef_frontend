@@ -16,13 +16,20 @@ import { useTranslation } from "react-i18next";
 
 const DatePicker = ({
   className,
-}: HTMLAttributes<HTMLDivElement>) => {
+  onSubmitDate,
+}: HTMLAttributes<HTMLDivElement> & { onSubmitDate: (from: Date, to: Date) => void }) => {
   const { t } = useTranslation("translation");
 
   // format:
   // from: new Date(2022, 0, 20),
   // to: addDays(new Date(2022, 0, 20), 20),
   const [date, setDate] = useState<DateRange | undefined>();
+
+  const handleSelectDate = () => {
+    if (date?.from && date.to) {
+      onSubmitDate(date.from, date.to);
+    }
+  };
 
   return (
     <div className={cn("grid gap-2", className)}>
@@ -59,10 +66,13 @@ const DatePicker = ({
             selected={date}
             onSelect={setDate}
             numberOfMonths={2}
+            disabled={{
+              before: new Date(),
+            }}
           />
           <div className="flex justify-end w-full gap-2 px-4 my-2">
             <Button disabled={!date} onClick={() => { setDate(undefined); }}>{t("generic.clear")}</Button>
-            <Button disabled={!date}>{t("generic.show")}</Button>
+            <Button disabled={!date} onClick={handleSelectDate}>{t("generic.show")}</Button>
           </div>
         </PopoverContent>
       </Popover>

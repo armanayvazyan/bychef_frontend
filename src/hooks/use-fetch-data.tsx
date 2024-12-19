@@ -5,6 +5,7 @@ import constructFinalUrl from "@/helpers/constructFinalUrl";
 
 interface IFetchData {
   url?: string;
+  initialPath?: string,
   pathExtension?: string,
   method?: "GET" | "POST" | "DELETE",
   headerParams?: Record<string, string | number>,
@@ -34,62 +35,70 @@ const processErrorResponse = (status?: number) => {
   }
 };
 
-const useFetchData = (initialPath = "") => {
-  const fetchData = useCallback(async ({
-    url = "",
-    pathExtension = "",
-    method = "GET",
-    headerParams = {},
-    bodyParams = {},
-    options = {},
-    hasAT = true,
-    injectErrorMessage = false,
-  }: IFetchData = {}) => {
-    try {
-      const endPoint = initialPath + pathExtension;
+export const fetchApi = async ({
+  url = "",
+  initialPath = "",
+  pathExtension = "",
+  method = "GET",
+  headerParams = {},
+  bodyParams = {},
+  options = {},
+  hasAT = true,
+  injectErrorMessage = false,
+}: IFetchData = {}) => {
+  try {
+    const endPoint = initialPath + pathExtension;
 
-      if (!endPoint) return;
+    if (!endPoint) return;
 
-      const reqUrl = url ? url + pathExtension : constructFinalUrl(endPoint);
+    const reqUrl = url ? url + pathExtension : constructFinalUrl(endPoint);
 
-      const body = !isEmpty(bodyParams) ? JSON.stringify(bodyParams) : null;
-      const headers = {
-        "content-type": "application/json",
-        ...(hasAT && SB_KEY && { authorization: `Bearer ${SB_KEY}` }),
-        ...headerParams,
-        ...options,
-      };
+    const body = !isEmpty(bodyParams) ? JSON.stringify(bodyParams) : null;
+    const headers = {
+      "content-type": "application/json",
+      ...(hasAT && SB_KEY && { authorization: `Bearer ${SB_KEY}` }),
+      ...headerParams,
+      ...options,
+    };
 
-      const response = await fetch(
-        reqUrl,
-        {
-          credentials: "include",
-          method,
-          headers,
-          body,
-        }
-      );
+    const response = await fetch(
+      reqUrl,
+      {
+        credentials: "include",
+        method,
+        headers,
+        body,
+      }
+    );
 
-      if (!response.ok) {
-        if (injectErrorMessage && response) {
-          const res = await response.json();
-          return { error: res.error, isInjected: true };
-        }
-
-        return { ...processErrorResponse(response.status), isInjected: false };
+    if (!response.ok) {
+      if (injectErrorMessage && response) {
+        const res = await response.json();
+        return { error: res.error, isInjected: true };
       }
 
-      if (response.status === 201) {
-        return {};
-      }
-
-      const res = await response.json();
-      return { result: res.data };
-    } catch (e) {
-      console.error(e);
-      return { ...processErrorResponse(), isInjected: false };
+      return { ...processErrorResponse(response.status), isInjected: false };
     }
-  }, [initialPath]);
+
+    if (response.status === 201) {
+      return {};
+    }
+
+    const res = await response.json();
+    return { result: res };
+  } catch (e) {
+    console.error(e);
+    return { ...processErrorResponse(), isInjected: false };
+  }
+};
+
+const useFetchData = (initialPath = "") => {
+  const fetchData = useCallback((props: IFetchData) =>
+    fetchApi({
+      ...props,
+      initialPath
+    }),
+  [initialPath]);
 
   return {
     fetchData,
