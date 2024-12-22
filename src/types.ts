@@ -46,13 +46,15 @@ export interface IChefInfo {
   chefAvailabilityExceptionDayDtoList: [],
 }
 
+export interface ILocalizedData {
+  languageCode: string;
+  value: string;
+}
+
 export interface IChefLabelsDto {
   id: number,
   name: string,
-  chefLabelTranslationSet: {
-    languageCode: string,
-    value: string
-  }[],
+  chefLabelTranslationSet: ILocalizedData[],
 }
 
 export interface IChefGenericInfo {
@@ -63,15 +65,9 @@ export interface IChefGenericInfo {
   bannerUrl: string,
   status: string,
   telegramId: string,
-  fullNameAm: string | null,
-  fullNameEn: string | null,
-  fullNameRu: string | null,
-  descriptionEn: string | null,
-  descriptionAm: string | null,
-  descriptionRu: string | null,
-  kitchenEn: string | null,
-  kitchenAm: string | null,
-  kitchenRu: string | null,
+  nameDto: ILocalizedData[],
+  descriptionDto: ILocalizedData[],
+  kitchenDto: ILocalizedData[],
   type: string | null,
   rating: number,
   chefAvailableDates: string[],

@@ -3,25 +3,23 @@ import { IChefGenericInfo } from "@/types";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import GridCard from "@/components/ui/grid-card";
+import getDataByLocale from "@/helpers/getDataByLocale";
 
-const ChefCard = ({ chefInfo }: { chefInfo: IChefGenericInfo }) => {
+interface IChefCardProps {
+  chefInfo: IChefGenericInfo
+}
+
+const ChefCard = ({ chefInfo }: IChefCardProps) => {
   const navigate = useNavigate();
   const { i18n } = useTranslation();
 
-  const kitchenName = useMemo(() => {
-    switch (i18n.language) {
-      case "en":
-        return chefInfo.kitchenEn;
-      case "ru":
-        return chefInfo.kitchenRu;
-      case "hy":
-        return chefInfo.kitchenAm;
-    }
-  }, [chefInfo.kitchenAm, chefInfo.kitchenEn, chefInfo.kitchenRu, i18n.language]);
+  const kitchenName = useMemo(() =>
+    getDataByLocale(chefInfo.kitchenDto, i18n.language),
+  [chefInfo.kitchenDto, i18n.language]);
 
   const chefLabels = useMemo(() => {
     return chefInfo.chefLabelDtos?.map((label) => (
-      label.chefLabelTranslationSet.find((content) => content.languageCode === i18n.language)?.value
+      getDataByLocale(label.chefLabelTranslationSet, i18n.language)
     )).join(" • ");
   }, [chefInfo.chefLabelDtos, i18n.language]);
 
