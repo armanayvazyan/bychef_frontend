@@ -14,14 +14,14 @@ const ChefCard = ({ chefInfo }: IChefCardProps) => {
   const { i18n } = useTranslation();
 
   const kitchenName = useMemo(() =>
-    getDataByLocale(chefInfo.kitchenDto, i18n.language),
-  [chefInfo.kitchenDto, i18n.language]);
+    getDataByLocale(chefInfo.kitchen, i18n.language),
+  [chefInfo.kitchen, i18n.language]);
 
   const chefLabels = useMemo(() => {
-    return chefInfo.chefLabelDtos?.map((label) => (
+    return chefInfo.chefLabels?.map((label) => (
       getDataByLocale(label.chefLabelTranslationSet, i18n.language)
     )).join(" • ");
-  }, [chefInfo.chefLabelDtos, i18n.language]);
+  }, [chefInfo.chefLabels, i18n.language]);
 
   const handleNavigate = () => {
     navigate(`/chef/${chefInfo.id}`);
@@ -31,15 +31,6 @@ const ChefCard = ({ chefInfo }: IChefCardProps) => {
     <GridCard
       onClick={handleNavigate}
       className="px-4 py-3 cursor-pointer"
-      // footer={
-      //   <>
-      //     <Separator/>
-      //     <div className="flex items-center gap-2 text-[#15803D]">
-      //       <CalendarCheck2 size={14}/>
-      //       <p className="text-sm font-medium">{t("status.available", { day: t("generic.weekdays.today") })}</p>
-      //     </div>
-      //   </>
-      // }
     >
       <div className="flex flex-col flex-wrap gap-4">
         <div className="flex items-center gap-3">
