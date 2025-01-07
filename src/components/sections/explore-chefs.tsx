@@ -36,7 +36,6 @@ const fetchChefs = async ({ pageParam, dateFrom, dateTo }: IFetchChefsProps) => 
 const ExploreChefs = () => {
   const { t } = useTranslation("translation");
   const observerTargetRef = useRef<HTMLDivElement | null>(null);
-  // const [selectedDate, setSelectedDate] = useState<{ dateFrom: string; dateTo: string } | undefined>();
   const {
     data,
     error,
@@ -46,33 +45,21 @@ const ExploreChefs = () => {
     isFetchingNextPage,
   } = useInfiniteQuery({
     queryKey: [
-      "projects",
-      // selectedDate
+      "chefs",
     ],
     queryFn: (props) => fetchChefs({
       ...props,
-      // dateFrom: selectedDate?.dateFrom,
-      // dateTo: selectedDate?.dateTo
     }),
     initialPageParam: 0,
     getNextPageParam: (lastPage: IChefsPage, allPages: IChefsPage[]) => {
       const totalFetched = allPages.reduce((acc, page) => {
-        return Number(acc) + Number(page.activeChefResponseDtoList.length);
+        return Number(acc) + Number(page.exploreChefResponseDtoList.length);
       }, 0);
 
       return totalFetched < lastPage.count ? totalFetched : undefined;
     },
     refetchOnWindowFocus: false,
   });
-
-  // const handleSubmitDate = (from: Date, to: Date) => {
-  //   setSelectedDate({
-  //     dateFrom: new Date(from).toISOString().split("T")[0],
-  //     dateTo: new Date(to).toISOString().split("T")[0],
-  //   });
-  //
-  //   refetch();
-  // };
 
   const handleFN = useCallback(() => {
     if (hasNextPage) fetchNextPage();
@@ -96,11 +83,10 @@ const ExploreChefs = () => {
   return (
     <section className="flex flex-col gap-4 px-6 md:px-[10%] pt-6 pb-[104px]">
       <h1 className="text-2xl font-bold text-zinc-800">{t("explore.title")}</h1>
-      {/*<DatePicker onSubmitDate={handleSubmitDate}/>*/}
       {data && (
         <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
           {data.pages.map((chefsGroup) => (
-            chefsGroup.activeChefResponseDtoList.map((chef: IChefGenericInfo) => (
+            chefsGroup.exploreChefResponseDtoList.map((chef: IChefGenericInfo) => (
               <ChefCard key={chef.id} chefInfo={chef} />
             ))
           ))}
@@ -108,7 +94,7 @@ const ExploreChefs = () => {
       )}
       {!data && !isFetchingNextPage && !isFetching && !error && (
         <div className="w-full grid place-items-center min-h-[50dvh]">
-          <h2 className="text-2xl font-bold">No chefs found</h2>
+          <h2 className="text-2xl font-bold">{t("generic.noChefsFound")}</h2>
         </div>
       )}
       {(isFetchingNextPage || isFetching) && (

@@ -1,5 +1,9 @@
 {
   "generic": {
+    "noDishFound": "No dishes are available",
+    "noChefsFound": "No chefs are available",
+    "menu": "Menu",
+    "add": "Add",
     "weekdays": {
       "monday": "Monday",
       "tuesday": "Tuesday",

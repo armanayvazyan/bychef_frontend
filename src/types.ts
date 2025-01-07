@@ -93,6 +93,6 @@ export interface IDishInfo {
 }
 
 export interface IChefsPage {
-  activeChefResponseDtoList: IChefGenericInfo[];
+  exploreChefResponseDtoList: IChefGenericInfo[];
   count: number;
 }
