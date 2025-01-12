@@ -32,6 +32,7 @@ const NotificationsWrapper = ({ children }: PropsWithChildren) => {
               method: "POST",
               body: JSON.stringify({
                 token,
+                location: "Yerevan"
               })
             });
           } else {
