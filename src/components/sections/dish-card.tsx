@@ -1,20 +1,30 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { IDishInfo } from "@/types";
 import Button from "@/components/ui/button";
+import { useTranslation } from "react-i18next";
 import GridCard from "@/components/ui/grid-card";
 import Separator from "@/components/ui/separator";
-import { Leaf, ShoppingCart, X } from "lucide-react";
+import { X } from "lucide-react";
 import DishModal from "@/components/sections/dish-modal";
+import getDataByLocale, { getDataStringByLocale } from "@/helpers/getDataByLocale";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface IDishCard {
   dishInfo: IDishInfo;
-  selectedDate: string;
 }
 
-const DishCard = ({ dishInfo, selectedDate }: IDishCard) => {
+const DishCard = ({ dishInfo }: IDishCard) => {
+  const { i18n, t } = useTranslation();
+
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const name = getDataStringByLocale(dishInfo, "name", i18n.language);
+
+  const dishLabels = useMemo(() => {
+    return dishInfo.dishTagDtos.map((label) => (
+      getDataByLocale(label.translations, i18n.language)
+    )).join(" • ");
+  }, [dishInfo.dishTagDtos, i18n.language]);
 
   const handleCloseDialog = () => {
     setIsDialogOpen(false);
@@ -27,11 +37,15 @@ const DishCard = ({ dishInfo, selectedDate }: IDishCard) => {
           className="h-full"
           footer={
             <div className="flex flex-col w-full px-4 pb-3 gap-4">
+              <p className="text-zinc-400 text-sm font-medium">
+                {dishLabels}
+              </p>
+              <p className="text-zinc-900 text-lg font-bold">{name}</p>
               <Separator/>
-              <div className="flex justify-between items-baseline">
-                <p className="text-xl font-semibold text-zinc-800">{`${dishInfo.price} դր.`}</p>
-                <Button className="rounded-full w-10 h-10">
-                  <ShoppingCart />
+              <div className="flex flex-col gap-4">
+                <p className="text-lg font-semibold text-zinc-800">{`${dishInfo.price} դր.`}</p>
+                <Button variant="secondary" className="w-full h-10 text-primary text-sm font-semibold">
+                  {t("generic.add")}
                 </Button>
               </div>
             </div>
@@ -39,29 +53,7 @@ const DishCard = ({ dishInfo, selectedDate }: IDishCard) => {
         >
           <div className="flex flex-col gap-4">
             <div className="w-full relative">
-              <img src={dishInfo.img} alt="chef image" className="w-full h-full object-cover" />
-              {dishInfo.isVegan && (
-                <div className="absolute top-4 right-4">
-                  <TooltipProvider>
-                    <Tooltip delayDuration={1000}>
-                      <TooltipTrigger>
-                        <div className="bg-zinc-50 p-2 rounded-md">
-                          <Leaf size={16} className="text-[#15803D]"/>
-                        </div>
-                      </TooltipTrigger>
-                      <TooltipContent side="bottom" className="text-[#15803D] font-semibold bg-background p-2">
-                        <p>Vegan friendly</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                </div>
-              )}
-            </div>
-            <div className="flex flex-col gap-4 px-4">
-              <p className="text-zinc-400 text-sm font-medium">
-                {dishInfo.dishes.join(" • ")}
-              </p>
-              <p className="text-zinc-900 text-lg font-bold">{dishInfo.name}</p>
+              <img src={dishInfo.url} alt="chef image" className="w-full h-full object-cover max-h-[200px]" />
             </div>
           </div>
         </GridCard>
@@ -72,7 +64,10 @@ const DishCard = ({ dishInfo, selectedDate }: IDishCard) => {
           <X size={24} />
         }
       >
-        <DishModal dishInfo={dishInfo} selectedDate={selectedDate} onCloseDialog={handleCloseDialog} />
+        <DishModal
+          id={dishInfo.id}
+          onCloseDialog={handleCloseDialog}
+        />
       </DialogContent>
     </Dialog>
   );

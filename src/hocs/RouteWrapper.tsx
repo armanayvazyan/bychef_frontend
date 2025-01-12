@@ -16,20 +16,20 @@ const queryClient = new QueryClient();
 
 const wrapComponentWithHF = (component: ReactNode, name?: string) => {
   return (
-    <HFWrapper>
-      <ScrollResetWrapper>
-        <NotificationsWrapper>
-          <AnalyticsWrapper>
-            <QueryClientProvider client={queryClient}>
+    <ScrollResetWrapper>
+      <NotificationsWrapper>
+        <AnalyticsWrapper>
+          <QueryClientProvider client={queryClient}>
+            <HFWrapper>
               <Helmet>
                 <title>{name ? `byChef | ${name}` : "byChef"}</title>
               </Helmet>
               {component}
-            </QueryClientProvider>
-          </AnalyticsWrapper>
-        </NotificationsWrapper>
-      </ScrollResetWrapper>
-    </HFWrapper>
+            </HFWrapper>
+          </QueryClientProvider>
+        </AnalyticsWrapper>
+      </NotificationsWrapper>
+    </ScrollResetWrapper>
   );
 };
 

@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { db, ICartItem } from "@/db";
 import Button from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
@@ -16,54 +16,38 @@ const UserCart = () => {
   const [open, setOpen] = useState(false);
 
   const products = useLiveQuery(() => db.products.reverse().toArray());
-  const generalInfo = useLiveQuery(() => db.generalInfo ? db.generalInfo.toArray() : []);
 
-  const handleChangeQuantity = useCallback(async (date: string, targetItem: ICartItem, diff: -1 | 1) => {
-    const cardItem = products?.find(product => product.date === date);
+  const totalCartPrice = useMemo(() => {
+    return products?.reduce((acc: number, product: ICartItem) => acc + (product.price * product.quantity), 0) ?? 0;
+  }, [products]);
 
-    if (targetItem.quantity == 1 && diff == -1) return;
+  const handleChangeQuantity = useCallback(
+    async (id: string | number, targetItem: ICartItem & { price: number }, diff: -1 | 1, callbackFn: () => void) => {
+      const cartItem = products?.find(product => product.id === id);
 
-    const quantity = targetItem.quantity + diff;
-    const modifiedItems = cardItem?.items.map((item) => item.id == targetItem.id ? { ...item, quantity } : item);
+      if (targetItem.quantity == 1 && diff == -1) return;
 
-    if (cardItem && modifiedItems) {
-      await db.products.put({
-        ...cardItem,
-        items: modifiedItems,
-      }, date);
-    }
+      const quantity = targetItem.quantity + diff;
 
-    if (generalInfo) {
-      await db.generalInfo?.put({
-        id: "1",
-        price: generalInfo[0].price + (diff * targetItem.price),
-      }, "1");
-    }
-  }, [generalInfo, products]);
+      if (cartItem) {
+        await db.products.put({
+          ...cartItem,
+          quantity,
+          price: targetItem.price,
+        }, id);
 
-  const handleDeleteCartItem = useCallback(async (date: string, targetItem: ICartItem) => {
-    const cardItem = products?.find(product => product.date === date);
-    const modifiedItems = cardItem?.items.filter((item) => item.id !== targetItem.id);
-
-    if (cardItem && modifiedItems) {
-      if (generalInfo) {
-        await db.generalInfo?.put({
-          id: "1",
-          price: generalInfo[0].price - (targetItem.quantity * targetItem.price),
-        }, "1");
+        callbackFn();
       }
+    }, [products]);
 
-      if (!modifiedItems.length) {
-        await db.products.delete(date);
-        return;
-      }
+  const handleDeleteCartItem = useCallback(async (id: string | number) => {
+    const cartItem = products?.find(product => product.id === id);
 
-      db.products.put({
-        ...cardItem,
-        items: modifiedItems,
-      }, date);
+    if (cartItem) {
+      await db.products.delete(id);
+      return;
     }
-  }, [generalInfo, products]);
+  }, [products]);
 
   const handleCheckout = () => {
     setOpen(false);
@@ -93,20 +77,21 @@ const UserCart = () => {
           {products?.length ? (
             <>
               <div className="max-h-[500px] overflow-y-scroll">
-                {products.map(product => (
+                {products.map((product, index) => (
                   <CartItem
-                    key={product.date}
+                    key={product.id}
                     product={product}
                     onDeleteItem={handleDeleteCartItem}
                     onChangeQuantity={handleChangeQuantity}
+                    isLastItem={products.length === index + 1}
                   />
                 ))}
               </div>
               <Separator />
-              {generalInfo?.length && (
+              {products.length && (
                 <div className="flex justify-between text-base font-bold text-zinc-800">
                   <p>{t("user-cart.total")}</p>
-                  <p>{generalInfo[0].price} դր.</p>
+                  <p>{totalCartPrice} դր.</p>
                 </div>
               )}
               <Button onClick={handleCheckout}>

@@ -81,6 +81,7 @@ const OrderDetails = () => {
 
   const navigate = useNavigate();
   const { t } = useTranslation("translation", { keyPrefix: "checkout" });
+
   const products = useLiveQuery(async () => {
     const products = await db.products.reverse().toArray();
 
@@ -88,7 +89,10 @@ const OrderDetails = () => {
 
     return products;
   });
-  const generalInfo = useLiveQuery(() => db.generalInfo ? db.generalInfo.toArray() : []);
+
+  const totalCartPrice = useMemo(() => {
+    return products?.reduce((acc: number, product: ICartItem) => acc + (product.price * product.quantity), 0);
+  }, [products]);
 
   const selectedDeliveryDate = form.watch(EInputNames.delivery_date);
   const selectedDeliveryTime = form.watch(EInputNames.delivery_time);
@@ -105,8 +109,8 @@ const OrderDetails = () => {
       "cash"
     ];
 
-    return paymentMethods.filter(method => generalInfo && generalInfo[0].price >= 20000 ? method === "cash" : true);
-  }, [generalInfo]);
+    return paymentMethods.filter(method => (totalCartPrice || 0) >= 20000 ? method === "cash" : true);
+  }, [totalCartPrice]);
 
   const handleSelectDeliveryDate = (date: string) => {
     form.setValue(EInputNames.delivery_date, date);
@@ -120,52 +124,33 @@ const OrderDetails = () => {
     form.setValue(EInputNames.payment_method, method);
   };
 
-  const handleChangeQuantity = useCallback(async (date: string, targetItem: ICartItem, diff: -1 | 1) => {
-    const cardItem = products?.find(product => product.date === date);
+  const handleChangeQuantity = useCallback(
+    async (id: string | number, targetItem: ICartItem & { price: number }, diff: -1 | 1, callbackFn: () => void) => {
+      const cartItem = products?.find(product => product.id === id);
 
-    if (targetItem.quantity == 1 && diff == -1) return;
+      if (targetItem.quantity == 1 && diff == -1) return;
 
-    const quantity = targetItem.quantity + diff;
-    const modifiedItems = cardItem?.items.map((item) => item.id == targetItem.id ? { ...item, quantity } : item);
+      const quantity = targetItem.quantity + diff;
 
-    if (cardItem && modifiedItems) {
-      await db.products.put({
-        ...cardItem,
-        items: modifiedItems,
-      }, date);
-    }
+      if (cartItem) {
+        await db.products.put({
+          ...cartItem,
+          quantity,
+          price: targetItem.price,
+        }, id);
 
-    if (generalInfo) {
-      await db.generalInfo?.put({
-        id: "1",
-        price: generalInfo[0].price + (diff * targetItem.price),
-      }, "1");
-    }
-  }, [generalInfo, products]);
-
-  const handleDeleteCartItem = useCallback(async (date: string, targetItem: ICartItem) => {
-    const cardItem = products?.find(product => product.date === date);
-    const modifiedItems = cardItem?.items.filter((item) => item.id !== targetItem.id);
-
-    if (cardItem && modifiedItems) {
-      if (generalInfo) {
-        await db.generalInfo?.put({
-          id: "1",
-          price: generalInfo[0].price - (targetItem.quantity * targetItem.price),
-        }, "1");
+        callbackFn();
       }
+    }, [products]);
 
-      if (!modifiedItems.length) {
-        await db.products.delete(date);
-        return;
-      }
+  const handleDeleteCartItem = useCallback(async (id: string | number) => {
+    const cartItem = products?.find(product => product.id === id);
 
-      db.products.put({
-        ...cardItem,
-        items: modifiedItems,
-      }, date);
+    if (cartItem) {
+      await db.products.delete(id);
+      return;
     }
-  }, [generalInfo, products]);
+  }, [products]);
 
   return (
     // @ts-expect-error zod problem (temp solution)
@@ -195,13 +180,13 @@ const OrderDetails = () => {
               <Input placeholder={t("phone")} />
             </FormItem>
           </div>
-          <FormItem label={t("deliveryNotes")} name={EInputNames.notes}>
+          <FormItem label={t("delivery-notes")} name={EInputNames.notes}>
             <Textarea placeholder={t("notes")} />
           </FormItem>
         </div>
         <Separator />
         <div className="flex flex-col gap-5">
-          <h1 className="text-primary font-bold text-xl leading-tight">{t("deliveryTime")}</h1>
+          <h1 className="text-primary font-bold text-xl leading-tight">{t("delivery-time")}</h1>
           <div className="flex w-full gap-4">
             <FormItem className="flex-1" name={EInputNames.delivery_date}>
               <Select onValueChange={handleSelectDeliveryDate}>
@@ -210,7 +195,7 @@ const OrderDetails = () => {
                     {selectedDeliveryDate ? (
                       <span className="flex gap-2">{selectedDeliveryDate}</span>
                     ) : (
-                      t("selectDay")
+                      t("select-day")
                     )}
                   </div>
                 </SelectTrigger>
@@ -232,7 +217,7 @@ const OrderDetails = () => {
                     {selectedDeliveryTime ? (
                       <span className="flex gap-2">{selectedDeliveryTime}</span>
                     ) : (
-                      t("selectTime")
+                      t("select-time")
                     )}
                   </div>
                 </SelectTrigger>
@@ -251,7 +236,7 @@ const OrderDetails = () => {
         </div>
         <Separator />
         <div className="flex flex-col gap-5">
-          <h1 className="text-primary font-bold text-xl leading-tight">{t("paymentMethod")}</h1>
+          <h1 className="text-primary font-bold text-xl leading-tight">{t("payment-method")}</h1>
           <FormItem name={EInputNames.payment_method}>
             <Select onValueChange={handleSelectPaymentMethod}>
               <SelectTrigger>
@@ -259,7 +244,7 @@ const OrderDetails = () => {
                   {selectedPaymentMethod ? (
                     <span className="flex gap-2">{selectedPaymentMethod}</span>
                   ) : (
-                    t("choosePaymentMethod")
+                    t("choose-payment-method")
                   )}
                 </div>
               </SelectTrigger>
@@ -286,17 +271,18 @@ const OrderDetails = () => {
       </fieldset>
       <div className="flex flex-col p-6 border-[1px] lg:max-w-[424px] max-h-max w-full rounded-xl border-border group" data-collapsed={isCollapsed}>
         <div className="flex justify-between cursor-pointer" onClick={() => { setIsCollapsed(isCollapsed => !isCollapsed); }}>
-          <h1 className="text-xl font-bold text-primary mb-4">{t("yourOrder")}</h1>
+          <h1 className="text-xl font-bold text-primary mb-4">{t("your-order")}</h1>
           <ChevronUp className="group-data-[collapsed=false]:-rotate-180 transition-all duration-500" />
         </div>
         <div className="grid group-data-[collapsed=false]:grid-rows-[0fr] grid-rows-[1fr] transition-all duration-300">
           <div data-collapsed={isCollapsed} className="overflow-hidden flex flex-col gap-6">
-            {!!products?.length && products.map(product => (
+            {!!products?.length && products.map((product, index) => (
               <CartItem
-                key={product.date}
+                key={product.id}
                 product={product}
                 onDeleteItem={handleDeleteCartItem}
                 onChangeQuantity={handleChangeQuantity}
+                isLastItem={products.length === index + 1}
               />
             ))}
           </div>
@@ -306,14 +292,14 @@ const OrderDetails = () => {
           <p>{t("delivery")}</p>
           <p>880 դր.</p>
         </div>
-        {generalInfo?.length && (
+        {products?.length && (
           <div className="flex justify-between text-base font-bold text-zinc-800 mb-8">
             <p>{t("total")}</p>
-            <p>{generalInfo[0].price} դր.</p>
+            <p>{totalCartPrice} դր.</p>
           </div>
         )}
         <Button type="submit">
-          {t("pay", { amount: generalInfo?.[0].price ?? 0 })}
+          {t("pay", { amount: totalCartPrice })}
         </Button>
       </div>
     </Form>

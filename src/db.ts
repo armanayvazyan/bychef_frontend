@@ -1,37 +1,21 @@
 import Dexie, { EntityTable } from "dexie";
 
 interface ICartItem {
-  id: string;
-  img: string;
-  name: string;
-  price: number;
+  id: string | number;
   quantity: number;
-  notices?: {
-    key: "orderDaysAhead" | "orderHoursAhead";
-    time: number;
-  }[];
-}
-
-export interface ICart {
-  date: string;
-  items: ICartItem[];
+  price: number
 }
 
 const db = new Dexie("UserCart") as Dexie & {
-  generalInfo?: EntityTable<{
-    id: string,
-    price: number,
-  }, "id">;
   products: EntityTable<
-    ICart,
-    "date"
+    ICartItem,
+    "id"
   >;
 };
 
 // Schema declaration:
 db.version(1).stores({
-  generalInfo: "id, price",
-  products: "date, items"
+  products: "id"
 });
 
 export type { ICartItem };

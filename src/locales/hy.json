@@ -1,7 +1,7 @@
 {
   "generic": {
-    "noDishFound": "Հասանելի ուտեստներ չեն գտնվել",
-    "noChefsFound": "Հասանելի խոհարարներ չեն գտնվել",
+    "no-dish-found": "Հասանելի ուտեստներ չեն գտնվել",
+    "no-chefs-found": "Հասանելի խոհարարներ չեն գտնվել",
     "menu": "Մենյու",
     "add": "Ավելացնել",
     "weekdays": {
@@ -31,18 +31,18 @@
     "show": "Ցուցադրել",
     "clear": "Մաքրել",
     "back": "Վերադառնալ",
-    "orderDaysAhead": "Պատվիրել {{timeAhead}} օր առաջ",
-    "orderHoursAhead": "Պատվիրել {{timeAhead}} ժամ առաջ"
+    "order-daysAhead": "Պատվիրել {{timeAhead}} օր առաջ",
+    "order-hours-ahead": "Պատվիրել {{timeAhead}} ժամ առաջ"
   },
   "home-page": {
     "subscribe": {
       "title": "Գրանցվել նախապես",
       "details": "Գրանցվեք նախապես և եղեք առաջիններից, ով կստեղծի իր սեփական բիզնեսը մեր օգնությամբ։",
-      "nameInput": "Անուն Ազգանուն",
-      "phoneInput": "Հեռախոսահամար",
+      "name-input": "Անուն Ազգանուն",
+      "phone-input": "Հեռախոսահամար",
       "button": "Գրանցվել",
-      "successTitle": "Գրանցումը հաջողությամբ կատարված է։",
-      "successDetails": "Մենք շուտով կկապնվենք Ձեզ հետ հետագա քայլերի համար:"
+      "success-title": "Գրանցումը հաջողությամբ կատարված է։",
+      "success-details": "Մենք շուտով կկապնվենք Ձեզ հետ հետագա քայլերի համար:"
     },
     "illustration1": {
       "title": "Իրական, տնական ուտեստներ",
@@ -131,18 +131,18 @@
     "phone": "Հեռախոսահամար",
     "home": "Բնակարան/Տուն",
     "notes": "Հավելյալ նշումներ",
-    "deliveryTime": "Առաքման օր և ժամ",
-    "selectDay": "Ընտրեք օր",
-    "selectTime": "Ընտրեք ժամ",
-    "choosePaymentMethod": "Ընտրեք վճարման եղանակը",
-    "paymentMethod": "Վճարման եղանակ",
-    "yourOrder": "Ձեր պատվերը",
+    "delivery-time": "Առաքման օր և ժամ",
+    "select-day": "Ընտրեք օր",
+    "select-time": "Ընտրեք ժամ",
+    "choose-payment-method": "Ընտրեք վճարման եղանակը",
+    "payment-method": "Վճարման եղանակ",
+    "your-order": "Ձեր պատվերը",
     "delivery": "Առաքում",
     "total": "Ընդհանուր",
     "pay": "Վճարել {{amount}} դր.",
     "cash": "Վճարել կանխիկ",
     "idram": "Վճարել Idram-ով",
     "card": "Վճարել բանկային քարտով",
-    "deliveryNotes": "Հավելյալ նշումներ առաքման համար"
+    "delivery-notes": "Հավելյալ նշումներ առաքման համար"
   }
 }

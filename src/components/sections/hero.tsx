@@ -22,7 +22,7 @@ const HeroTemp = () => {
     phone: ""
   });
 
-  const { fetchData } = useFetchData("api/waitlist");
+  const { fetchData } = useFetchData("waitlist");
   const { toast } = useToast();
 
   const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
@@ -65,8 +65,8 @@ const HeroTemp = () => {
           <div className="bg-white flex flex-col items-center pl-8 p-6 gap-3">
             <h1 className="text-2xl font-extrabold">{t("subscribe.title")}</h1>
             <p className="text-center text-zinc-600">{t("subscribe.details")}</p>
-            <Input type="text" placeholder={t("subscribe.nameInput")} value={info.name} onChange={handleChange} name="name" id="nameInput" />
-            <Input type="tel" placeholder={t("subscribe.phoneInput")} value={info.phone} onChange={handleChange} name="phone" id="phoneInput" />
+            <Input type="text" placeholder={t("subscribe.name-input")} value={info.name} onChange={handleChange} name="name" id="nameInput" />
+            <Input type="tel" placeholder={t("subscribe.phone-input")} value={info.phone} onChange={handleChange} name="phone" id="phoneInput" />
             <Button type="submit" disabled={!info.name || !info.phone}>{t("subscribe.button")}</Button>
           </div>
         </div>

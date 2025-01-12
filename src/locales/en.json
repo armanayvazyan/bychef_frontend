@@ -1,7 +1,7 @@
 {
   "generic": {
-    "noDishFound": "No dishes are available",
-    "noChefsFound": "No chefs are available",
+    "no-dish-found": "No dishes are available",
+    "no-chefs-found": "No chefs are available",
     "menu": "Menu",
     "add": "Add",
     "weekdays": {
@@ -31,18 +31,18 @@
     "show": "Show",
     "clear": "Clear",
     "back": "Go back",
-    "orderDaysAhead": "Order {{timeAhead}} days in advance",
-    "orderHoursAhead": "Order {{timeAhead}} hours in advance"
+    "order-days-ahead": "Order {{timeAhead}} days in advance",
+    "order-hours-ahead": "Order {{timeAhead}} hours in advance"
   },
   "home-page": {
     "subscribe": {
       "title": "Pre-sign up",
       "details": "Sign up now to be among the first to launch your business with our support.",
-      "nameInput": "Full Name",
-      "phoneInput": "Phone number",
+      "name-input": "Full Name",
+      "phone-input": "Phone number",
       "button": "Sign Up",
-      "successTitle": "You have successfully registered.",
-      "successDetails": "We will contact you shortly to discuss the next steps."
+      "success-title": "You have successfully registered.",
+      "success-details": "We will contact you shortly to discuss the next steps."
     },
     "illustration1": {
       "title": "Authentic, homemade food",
@@ -131,18 +131,31 @@
     "phone": "Phone number",
     "home": "Apartment/House",
     "notes": "Additional notes",
-    "deliveryTime": "Delivery date and time",
-    "selectDay": "Select day",
-    "selectTime": "Select time",
-    "choosePaymentMethod": "Choose payment method",
-    "paymentMethod": "Payment method",
-    "yourOrder": "Your order",
+    "delivery-time": "Delivery date and time",
+    "select-day": "Select day",
+    "select-time": "Select time",
+    "choose-payment-method": "Choose payment method",
+    "payment-method": "Payment method",
+    "your-order": "Your order",
     "delivery": "Delivery",
     "total": "Total",
     "pay": "Pay {{amount}} դր.",
     "cash": "Pay cash",
     "idram": "Pay with Idram",
     "card": "Pay with card",
-    "deliveryNotes": "Additional notes for the delivery"
+    "delivery-notes": "Additional notes for the delivery"
+  },
+  "spice-levels": {
+    "not-spicy": "Not spicy",
+    "mild-spicy": "Mild spicy",
+    "medium-spicy": "Medium spicy",
+    "spicy": "Spicy"
+  },
+  "dietary-options": {
+    "gluten-free": "Gluten free",
+    "diary-free": "Diary free",
+    "vegan": "Vegan",
+    "vegetarian": "Vegetarian",
+    "halal": "Halal"
   }
 }

@@ -1,25 +1,61 @@
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { db } from "@/db";
 import { IDishInfo } from "@/types";
 import Button from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { Label } from "@/components/ui/label";
+// import { Label } from "@/components/ui/label";
 import { useTranslation } from "react-i18next";
+import { useQuery } from "@tanstack/react-query";
+import { fetchApi } from "@/hooks/use-fetch-data";
 import Separator from "@/components/ui/separator";
 import { Minus, Plus, TriangleAlert } from "lucide-react";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+// import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import getDataByLocale, { getDataStringByLocale } from "@/helpers/getDataByLocale";
 import { DialogDescription, DialogFooter, DialogTitle } from "@/components/ui/dialog";
 
+const fetchDish = async (id: string | number): Promise<IDishInfo | undefined> => {
+  const data = await fetchApi(
+    {
+      initialPath: "dish/",
+      pathExtension: id.toString()
+    }
+  );
+
+  return data?.result;
+};
+
 interface IDishModal {
-  dishInfo?: IDishInfo;
-  selectedDate?: string;
+  id: number | string;
   onCloseDialog: () => void;
 }
 
-const DishModal = ({ selectedDate, dishInfo, onCloseDialog }: IDishModal) => {
+const DishModal = ({ id, onCloseDialog }: IDishModal) => {
   const { toast } = useToast();
-  const { t } = useTranslation();
+  const { i18n, t } = useTranslation();
 
+  const {
+    data: dishInfo,
+  } = useQuery({
+    queryKey: ["dish", id],
+    queryFn: () => fetchDish(id),
+    refetchOnWindowFocus: false
+  });
+
+  const name = getDataStringByLocale(dishInfo ?? {}, "name", i18n.language);
+
+  const dishLabels = useMemo(() => {
+    return dishInfo?.dishTagDtos.map((label) => (
+      getDataByLocale(label.translations, i18n.language)
+    )).join(" • ");
+  }, [dishInfo?.dishTagDtos, i18n.language]);
+
+  const dishIngredients = useMemo(() => {
+    return dishInfo?.ingridientsDto.map((label) => (
+      getDataByLocale(label.translations, i18n.language)
+    )).join(", ");
+  }, [dishInfo?.ingridientsDto, i18n.language]);
+
+  // TODO: this should store only quantity and options
   const [product, setProduct] = useState<{ quantity: number; }>({
     quantity: 1,
   });
@@ -36,47 +72,32 @@ const DishModal = ({ selectedDate, dishInfo, onCloseDialog }: IDishModal) => {
     });
   };
 
-  const handleOptionSelect = (name: string, value: string) => {
-    setProduct(prevState => ({ ...prevState, [name]: value }));
-  };
+  // const handleOptionSelect = (name: string, value: string) => {
+  //   setProduct(prevState => ({ ...prevState, [name]: value }));
+  // };
 
   const handleAddToCart = useCallback(async () => {
-    if (!dishInfo || !selectedDate) return;
+    if (!dishInfo?.id) return;
 
     try {
-      const selectedDateExistsInCart = await db.products.get(selectedDate);
+      const selectedItemExistsInCart = await db.products.get(dishInfo.id);
 
-      const updatedCartList = selectedDateExistsInCart?.items ?? [];
-      const itemIndexInCart = updatedCartList.findIndex(item => item.id === dishInfo.id);
-      const isAlreadyInTheCart = itemIndexInCart !== -1;
+      let updatedCart = selectedItemExistsInCart;
 
-      if (selectedDateExistsInCart && isAlreadyInTheCart) {
-        updatedCartList[itemIndexInCart].quantity += product.quantity;
+      console.log(updatedCart);
+
+      if (updatedCart) {
+        updatedCart.quantity += product.quantity;
       } else {
-        updatedCartList.push({
-          id: dishInfo.id,
-          img: dishInfo.img,
-          name: dishInfo.name,
-          price: dishInfo.price,
-          notices: dishInfo.notices,
+        // TODO: optimization (store only quantity and id of item)
+        updatedCart = {
           ...product,
-        });
+          id: dishInfo.id,
+          price: dishInfo.price,
+        };
       }
 
-      await db.products.put({
-        date: selectedDate,
-        items: updatedCartList,
-      }, selectedDate);
-
-      if (db.generalInfo) {
-        const generalInfo = await db.generalInfo.toArray();
-        const totalPrice = generalInfo[0]?.price || 0;
-
-        await db.generalInfo.put({
-          id: "1",
-          price: totalPrice + (dishInfo.price * product.quantity),
-        }, "1");
-      }
+      await db.products.put(updatedCart, dishInfo.id);
 
       onCloseDialog();
 
@@ -93,82 +114,85 @@ const DishModal = ({ selectedDate, dishInfo, onCloseDialog }: IDishModal) => {
   }, [
     toast,
     product,
-    dishInfo?.id,
-    dishInfo?.img,
-    selectedDate,
+    dishInfo,
     onCloseDialog,
-    dishInfo?.name,
-    dishInfo?.price,
-    dishInfo?.notices,
   ]);
 
-  if (!dishInfo || !selectedDate) return null;
+  if (!dishInfo) return null;
 
   return (
     <>
-      <img src={dishInfo.img} alt="dish image" className="w-full max-h-[282px] object-cover rounded-xl"/>
+      <img src={dishInfo.url} alt="dish image" className="w-full max-h-[282px] object-cover rounded-xl"/>
       <div className="max-h-[calc(90dvh-282px-88px-16px-36px-0px)] overflow-y-scroll">
-        <p className="text-base text-zinc-400 font-medium mt-4">{dishInfo.dishes.join(" • ")}</p>
+        <p className="text-base text-zinc-400 font-medium mt-4">{dishLabels}</p>
+        {/* TODO: add dietary list */}
         <DialogTitle className="mt-4">
-          <p className="text-zinc-900 text-lg font-bold">{dishInfo.name}</p>
+          <p className="text-zinc-900 text-lg font-bold">{name}</p>
         </DialogTitle>
         <DialogDescription className="mt-3">
-          <p className="text-zinc-500 text-base font-medium">{dishInfo.ingredients.join(", ")}</p>
+          <p className="text-zinc-500 text-base font-medium">{dishIngredients}</p>
         </DialogDescription>
-        <div className="flex gap-3 items-center mt-8">
-          <Button
-            size="icon"
-            onClick={handleDecrement}
-            className="bg-muted hover:bg-muted"
-          >
-            <Minus size={16} className="text-foreground"/>
-          </Button>
-          <p className="text-xl font-extrabold text-zinc-950">{product.quantity}</p>
-          <Button
-            size="icon"
-            onClick={handleIncrement}
-            className="bg-muted hover:bg-muted"
-          >
-            <Plus size={16} className="text-foreground"/>
-          </Button>
-        </div>
-        <div className="flex flex-col gap-3 mt-6">
-          {dishInfo.notices?.map(notice => (
-            <div key={notice.key} className="flex gap-3">
-              <TriangleAlert size={24} className="text-destructive"/>
-              <p className="text-destructive font-normal text-base">
-                {t(`generic.${notice.key}`, { timeAhead: notice.time })}
-              </p>
-            </div>
-          ))}
-        </div>
         <Separator className="my-4"/>
         <div className="flex flex-col gap-4">
-          {dishInfo.options?.map(({ id, question }) => (
-            <div key={id} className="flex flex-col gap-2">
-              {question}
-              <RadioGroup
-                defaultValue="option-one"
-                className="flex items-end space-y-1"
-                onValueChange={(value: string) => {
-                  handleOptionSelect(question, value);
-                }}
-              >
-                <div className="flex gap-2 items-center">
-                  <RadioGroupItem value="option-one" id="option-one"/>
-                  <Label className="text-sm font-medium text-zinc-900" htmlFor="option-one">Այո</Label>
-                </div>
-                <div className="flex gap-2 items-center">
-                  <RadioGroupItem value="option-two" id="option-two"/>
-                  <Label className="text-sm font-medium text-zinc-900" htmlFor="option-two">Ոչ</Label>
-                </div>
-              </RadioGroup>
-            </div>
-          ))}
+          {/* TODO: add spice level options list */}
+          {/*{dishInfo.options?.map(({ id, question }) => (*/}
+          {/*  <div key={id} className="flex flex-col gap-2">*/}
+          {/*    {question}*/}
+          {/*    <RadioGroup*/}
+          {/*      defaultValue="option-one"*/}
+          {/*      className="flex items-end space-y-1"*/}
+          {/*      onValueChange={(value: string) => {*/}
+          {/*        handleOptionSelect(question, value);*/}
+          {/*      }}*/}
+          {/*    >*/}
+          {/*      <div className="flex gap-2 items-center">*/}
+          {/*        <RadioGroupItem value="option-one" id="option-one"/>*/}
+          {/*        <Label className="text-sm font-medium text-zinc-900" htmlFor="option-one">Այո</Label>*/}
+          {/*      </div>*/}
+          {/*      <div className="flex gap-2 items-center">*/}
+          {/*        <RadioGroupItem value="option-two" id="option-two"/>*/}
+          {/*        <Label className="text-sm font-medium text-zinc-900" htmlFor="option-two">Ոչ</Label>*/}
+          {/*      </div>*/}
+          {/*    </RadioGroup>*/}
+          {/*  </div>*/}
+          {/*))}*/}
+          {/* TODO: add dish extras list */}
         </div>
       </div>
       <DialogFooter className="sticky">
-        <Button className="w-full" onClick={handleAddToCart} type="submit">Ավելացնել</Button>
+        <div className="flex flex-col gap-6 w-full">
+          {dishInfo.orderBefore && (
+            <div className="flex gap-3">
+              <TriangleAlert size={24} className="text-destructive"/>
+              <p className="text-destructive font-normal text-base">
+                {t("generic.order-days-ahead", { timeAhead: dishInfo.orderBefore })}
+              </p>
+            </div>
+          )}
+          <div className="flex gap-4 w-full">
+            <div className="flex gap-3 items-center">
+              <Button
+                size="icon"
+                onClick={handleDecrement}
+                className="bg-muted hover:bg-muted"
+              >
+                <Minus size={16} className="text-foreground"/>
+              </Button>
+              <p className="text-xl font-extrabold text-zinc-950">{product.quantity}</p>
+              <Button
+                size="icon"
+                onClick={handleIncrement}
+                className="bg-muted hover:bg-muted"
+              >
+                <Plus size={16} className="text-foreground"/>
+              </Button>
+            </div>
+            <Button className="flex gap-2 w-full" onClick={handleAddToCart} type="submit">
+              <span>{t("generic.add")}</span>
+              <span className="font-bold">({dishInfo.price} դր.)</span>
+            </Button>
+          </div>
+        </div>
       </DialogFooter>
     </>
   );

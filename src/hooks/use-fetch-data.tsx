@@ -74,10 +74,10 @@ export const fetchApi = async ({
     if (!response.ok) {
       if (injectErrorMessage && response) {
         const res = await response.json();
-        return { error: res.error, isInjected: true };
+        return { error: res.error, status: response.status, isInjected: true };
       }
 
-      return { ...processErrorResponse(response.status), isInjected: false };
+      return { ...processErrorResponse(response.status), status: response.status, isInjected: false };
     }
 
     if (response.status === 201) {

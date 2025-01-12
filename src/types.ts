@@ -26,24 +26,24 @@ export interface IChefInfo {
   id: number,
   phoneNumber: string,
   email: string,
-  chefLegalDto: IChefLegalInfo,
+  chefLegals: IChefLegalInfo,
   avatarUrl: string,
   bannerUrl: string,
   status: string,
   telegramId: string,
-  fullNameAm: string | null,
-  fullNameEn: string | null,
-  fullNameRu: string | null,
-  descriptionEn: string | null,
-  descriptionAm: string | null,
-  descriptionRu: string | null,
-  kitchenEn: string | null,
-  kitchenAm: string | null,
-  kitchenRu: string | null,
+  name: ILocalizedData[],
+  description: ILocalizedData[],
+  kitchen: ILocalizedData[],
   rating: number,
-  chefAvailableDtoList: IChefAvailableDates,
-  socialLinkDtos: []
-  chefAvailabilityExceptionDayDtoList: [],
+  dishes: IDishInfo[],
+  chefAvailableDates: string[],
+  chefLabels?: IChefLabelsDto[],
+  socialLinks: {
+    id: number;
+    link: string;
+    socialType: string | null;
+  }[],
+  chefAvailabilityExceptionDays: { id: number; exceptionDate: string, isAvailable: boolean }[],
 }
 
 export interface ILocalizedData {
@@ -65,34 +65,68 @@ export interface IChefGenericInfo {
   bannerUrl: string,
   status: string,
   telegramId: string,
-  nameDto: ILocalizedData[],
-  descriptionDto: ILocalizedData[],
-  kitchenDto: ILocalizedData[],
+  name: ILocalizedData[],
+  description: ILocalizedData[],
+  kitchen: ILocalizedData[],
   type: string | null,
   rating: number,
   chefAvailableDates: string[],
-  chefLegalDto: IChefLegalInfo,
-  chefLabelDtos?: IChefLabelsDto[]
-}
-
-export interface IDishInfo {
-  id: string;
-  img: string,
-  name: string,
-  price: number,
-  isVegan: boolean,
-  dishes: string[],
-  isAvailable: boolean,
-  ingredients: string[],
-  onAddToCard: () => void;
-  options?: { id: number, question: string }[],
-  notices?: {
-    key: "orderDaysAhead" | "orderHoursAhead",
-    time: number
-  }[],
+  chefLegals: IChefLegalInfo,
+  chefLabels?: IChefLabelsDto[]
 }
 
 export interface IChefsPage {
   exploreChefResponseDtoList: IChefGenericInfo[];
   count: number;
+}
+
+export interface IAdjustableSpiceLevelDtoList {
+  id: number
+  spiceLevel: string
+}
+
+export interface IDietaryOptionDtoList {
+  id: number
+  dietaryOptionValue: string
+}
+
+export interface IIngredientsDto {
+  id: number
+  ingredient: string
+  translations: ILocalizedData[]
+}
+
+export interface IDishTagDto {
+  id: number
+  tag: string
+  translations: ILocalizedData[]
+}
+
+export interface IDishCuisineTagDto {
+  id: number
+  cuisineTag: string
+  translations: ILocalizedData[]
+}
+
+export interface IDishInfo {
+  id: number
+  nameEn: string
+  nameAm: string
+  nameRu: string
+  price: number
+  type: string
+  portionAm: string
+  portionRu: string
+  portionEn: string
+  status: string
+  url: string
+  orderBefore: number
+  spiceLevel: string
+  expirationDate: number
+  adjustableSpiceLevelDtoList: IAdjustableSpiceLevelDtoList[]
+  dietaryOptionDtoList: IDietaryOptionDtoList[]
+  ingridientsDto: IIngredientsDto[]
+  extraAdditionsDto: string[]
+  dishTagDtos: IDishTagDto[]
+  dishCuisineTagDto: IDishCuisineTagDto
 }

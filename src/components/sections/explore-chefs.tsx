@@ -94,13 +94,13 @@ const ExploreChefs = () => {
       )}
       {!data && !isFetchingNextPage && !isFetching && !error && (
         <div className="w-full grid place-items-center min-h-[50dvh]">
-          <h2 className="text-2xl font-bold">{t("generic.noChefsFound")}</h2>
+          <h2 className="text-2xl font-bold">{t("generic.no-chefs-found")}</h2>
         </div>
       )}
       {(isFetchingNextPage || isFetching) && (
-        <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pb-[104px]">
+        <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pb-[104px]">
           {new Array(limit).fill(1).map((_, index) => (
-            <Skeleton key={index} className="min-h-[210px] rounded-xl"/>
+            <Skeleton key={index} className="min-h-[140px] rounded-xl"/>
           ))}
         </div>
       )}

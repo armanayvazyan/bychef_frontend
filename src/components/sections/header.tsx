@@ -9,7 +9,12 @@ const Header = () => {
       <Link to="/">
         <img src={logo} alt="logo" className="h-8 md:h-auto" />
       </Link>
-      <UserCart />
+      <div className="flex gap-4 items-center font-medium">
+        <Link to="/explore">
+          Explore
+        </Link>
+        <UserCart />
+      </div>
     </NavigationMenu>
   );
 };

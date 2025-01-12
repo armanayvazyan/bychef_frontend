@@ -1,77 +1,149 @@
-import { ICart, ICartItem } from "@/db";
+import { useEffect, useState } from "react";
+import { db, ICartItem } from "@/db";
+import { IDishInfo } from "@/types";
 import Button from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
 import Separator from "@/components/ui/separator";
-import { Minus, Plus, Trash2, TriangleAlert, X } from "lucide-react";
-import { useState } from "react";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { fetchApi } from "@/hooks/use-fetch-data";
+import { Skeleton } from "@/components/ui/skeleton";
 import DishModal from "@/components/sections/dish-modal";
-import { dishes } from "@/configs/constants";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { getDataStringByLocale } from "@/helpers/getDataByLocale";
+import { Minus, Plus, Trash2, TriangleAlert, X } from "lucide-react";
+
+const fetchCartItem = async (id: string | number, deleteItemCb: () => void) => {
+  const data = await fetchApi({
+    initialPath: "dish/",
+    pathExtension: id.toString()
+  });
+
+  if (data && data.status === 404) {
+    deleteItemCb();
+  }
+
+  return data?.result as IDishInfo;
+};
+
+const useCartItem = (itemId: string | number, deleteItemCb: () => void) => {
+  return useQuery({
+    queryKey: ["cart-item", itemId],
+    queryFn: () => fetchCartItem(itemId, deleteItemCb),
+    refetchOnWindowFocus: false,
+  });
+};
 
 interface ICartItemProps {
-  product: ICart;
-  onDeleteItem: (date: string, targetItem: ICartItem) => void;
-  onChangeQuantity: (date: string, targetItem: ICartItem, diff: -1 | 1) => void;
+  product: ICartItem;
+  onDeleteItem: (id: string | number) => void;
+  onChangeQuantity: (
+    id: string | number,
+    targetItem: ICartItem & { price: number },
+    diff: -1 | 1,
+    callbackFn: () => void
+  ) => void;
+  isLastItem?: boolean;
 }
 
-const CartItem = ({ product, onChangeQuantity, onDeleteItem }: ICartItemProps) => {
-  const { t } = useTranslation("translation");
+const CartItem = ({ product, onChangeQuantity, onDeleteItem, isLastItem = false }: ICartItemProps) => {
+  const queryClient = useQueryClient();
+  const { t, i18n } = useTranslation("translation");
 
-  const [selectedDish, setSelectedDish] = useState<{ id: string; date: string } | null>(null);
+  const [selectedDish, setSelectedDish] = useState<{ id: string | number } | null>(null);
 
-  const handleSelectDish = (id: string, date: string) => {
-    setSelectedDish({ id, date });
+  const { data } = useCartItem(product.id, () => { onDeleteItem(product.id); });
+
+  const name = data ? getDataStringByLocale(data, "name", i18n.language) : null;
+
+  const handleSelectDish = (id: string | number) => {
+    setSelectedDish({ id });
   };
+
+  useEffect(() => {
+    (async function() {
+      const cartItem = await db.products.get(product.id);
+
+      if (data && cartItem && data.price !== cartItem.price) {
+        await db.products.put({
+          ...cartItem,
+          price: data.price,
+        }, product.id);
+      }
+    })();
+  }, [data, product.id]);
+
+  if (!data) {
+    return (
+      <>
+        <Skeleton className="w-full min-w-[344px] h-[180px] rounded-xl" />
+        {!isLastItem && <Separator className="my-4" />}
+      </>
+    );
+  }
 
   return (
     <div className="flex flex-col">
-      {product.items.map((item, index) => (
-        <div key={item.id} className="cursor-pointer" onClick={() => { handleSelectDish(item.id, product.date); }}>
-          <div className="flex items-center gap-4">
-            <img src={item.img} alt="cart product image" className="w-[136px] h-[136px] object-cover rounded-xl"/>
-            <div>
-              <h1 className="text-xl font-extrabold text-zinc-800">{item.name}</h1>
-              <p className="text-lg font-semibold text-zinc-800">{`${item.price} դր.`}</p>
-              <div className="flex gap-3 items-center mt-8">
-                <Button
-                  size="icon"
-                  className="bg-muted hover:bg-muted"
-                  onClick={(event) => { event.stopPropagation(); onChangeQuantity(product.date, item, -1); }}
-                >
-                  <Minus size={16} className="text-foreground"/>
-                </Button>
-                <p className="text-xl font-extrabold text-zinc-950">{item.quantity}</p>
-                <Button
-                  size="icon"
-                  className="bg-muted hover:bg-muted"
-                  onClick={(event) => { event.stopPropagation(); onChangeQuantity(product.date, item, 1); }}
-                >
-                  <Plus size={16} className="text-foreground"/>
-                </Button>
-              </div>
+      <div key={product.id} className="cursor-pointer" onClick={() => { handleSelectDish(product.id); }}>
+        <div className="flex items-center gap-4">
+          <img src={data.url} alt="cart product image" className="w-[136px] h-[136px] object-cover rounded-xl"/>
+          <div>
+            <h1 className="text-xl font-extrabold text-zinc-800">{name}</h1>
+            <p className="text-lg font-semibold text-zinc-800">{`${data.price} դր.`}</p>
+            <div className="flex gap-3 items-center mt-8">
+              <Button
+                size="icon"
+                className="bg-muted hover:bg-muted"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  onChangeQuantity(
+                    product.id,
+                    { ...product, price: data.price },
+                    -1,
+                    () => queryClient.invalidateQueries({ queryKey: ["cart-item", product.id ] })
+                  );
+                }}
+              >
+                <Minus size={16} className="text-foreground"/>
+              </Button>
+              <p className="text-xl font-extrabold text-zinc-950">{product.quantity}</p>
+              <Button
+                size="icon"
+                className="bg-muted hover:bg-muted"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  onChangeQuantity(
+                    product.id,
+                    { ...product, price: data.price },
+                    1,
+                    () => queryClient.invalidateQueries({ queryKey: ["cart-item", product.id ] })
+                  );
+                }}
+              >
+                <Plus size={16} className="text-foreground"/>
+              </Button>
             </div>
-            <Button
-              size="icon"
-              variant="ghost2"
-              className="bg-muted hover:bg-muted"
-              onClick={(event) => { event.stopPropagation(); onDeleteItem(product.date, item); }}
-            >
-              <Trash2 />
-            </Button>
           </div>
-          <div className="flex flex-col gap-3 mt-6">
-            {item.notices?.map(notice => (
-              <div key={notice.key} className="flex items-center gap-2">
-                <TriangleAlert size={14} className="text-destructive"/>
-                <p className="text-destructive font-normal text-sm">
-                  {t(`generic.${notice.key}`, { timeAhead: notice.time })}
-                </p>
-              </div>
-            ))}
-          </div>
-          {(index !== product.items.length - 1) && <Separator className="my-4" />}
+          <Button
+            size="icon"
+            variant="ghost2"
+            className="bg-muted hover:bg-muted"
+            onClick={(event) => { event.stopPropagation(); onDeleteItem(product.id); }}
+          >
+            <Trash2 />
+          </Button>
         </div>
-      ))}
+        <div className="flex flex-col gap-3 mt-6">
+          {data.orderBefore && (
+            <div className="flex items-center gap-3">
+              <TriangleAlert size={14} className="text-destructive"/>
+              <p className="text-destructive font-normal text-sm">
+                {t("generic.order-days-ahead", { timeAhead: data.orderBefore })}
+              </p>
+            </div>
+          )}
+        </div>
+        {!isLastItem && <Separator className="my-4" />}
+      </div>
       <Dialog open={!!selectedDish} onOpenChange={(open) => {
         if (!open) setSelectedDish(null);
       }}>
@@ -83,9 +155,8 @@ const CartItem = ({ product, onChangeQuantity, onDeleteItem }: ICartItemProps) =
         >
           {selectedDish && (
             <DishModal
-              selectedDate={selectedDish.date}
+              id={selectedDish.id}
               onCloseDialog={() => { setSelectedDish(null); }}
-              dishInfo={dishes.find(dish => dish.id === selectedDish.id)}
             />
           )}
         </DialogContent>
