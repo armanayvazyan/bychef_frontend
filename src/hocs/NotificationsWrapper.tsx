@@ -1,6 +1,6 @@
 import { PropsWithChildren, useEffect } from "react";
 import { getToken, onMessage } from "firebase/messaging";
-import { FIREBASE_VAPID_KEY } from "@/configs/constants";
+import { BASE_API_URL, FIREBASE_VAPID_KEY } from "@/configs/constants";
 import { messaging } from "@/firebase/firebaseConfig";
 
 const NotificationsWrapper = ({ children }: PropsWithChildren) => {
@@ -27,10 +27,13 @@ const NotificationsWrapper = ({ children }: PropsWithChildren) => {
 
           if (token) {
             console.log("Token generated:", token);
-            // Temp solution to test mobile notifications
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-            await navigator.clipboard.writeText(token);
-            alert("Copied to clipboard");
+
+            await fetch(`${BASE_API_URL}/notifications/register-device`, {
+              method: "POST",
+              body: JSON.stringify({
+                token,
+              })
+            });
           } else {
             console.warn("No registration token available. Request permission to generate one.");
           }
