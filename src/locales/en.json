@@ -145,6 +145,8 @@
     "card": "Pay with card",
     "delivery-notes": "Additional notes for the delivery"
   },
+  "additions": "Additions",
+  "spice-level": "Spice level",
   "spice-levels": {
     "not-spicy": "Not spicy",
     "mild-spicy": "Mild spicy",

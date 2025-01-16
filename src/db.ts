@@ -2,20 +2,22 @@ import Dexie, { EntityTable } from "dexie";
 
 interface ICartItem {
   id: string | number;
+  uid: string;
   quantity: number;
-  price: number
+  price: number;
+  spiceLevel?: number;
 }
 
 const db = new Dexie("UserCart") as Dexie & {
   products: EntityTable<
     ICartItem,
-    "id"
+    "uid"
   >;
 };
 
 // Schema declaration:
 db.version(1).stores({
-  products: "id"
+  products: "uid"
 });
 
 export type { ICartItem };

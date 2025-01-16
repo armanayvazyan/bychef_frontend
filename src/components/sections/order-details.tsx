@@ -125,8 +125,8 @@ const OrderDetails = () => {
   };
 
   const handleChangeQuantity = useCallback(
-    async (id: string | number, targetItem: ICartItem & { price: number }, diff: -1 | 1, callbackFn: () => void) => {
-      const cartItem = products?.find(product => product.id === id);
+    async (uid: string, targetItem: ICartItem & { price: number }, diff: -1 | 1, callbackFn: () => void) => {
+      const cartItem = products?.find(product => product.uid === uid);
 
       if (targetItem.quantity == 1 && diff == -1) return;
 
@@ -137,17 +137,17 @@ const OrderDetails = () => {
           ...cartItem,
           quantity,
           price: targetItem.price,
-        }, id);
+        }, uid);
 
         callbackFn();
       }
     }, [products]);
 
-  const handleDeleteCartItem = useCallback(async (id: string | number) => {
-    const cartItem = products?.find(product => product.id === id);
+  const handleDeleteCartItem = useCallback(async (uid: string) => {
+    const cartItem = products?.find(product => product.uid === uid);
 
     if (cartItem) {
-      await db.products.delete(id);
+      await db.products.delete(uid);
       return;
     }
   }, [products]);

@@ -35,9 +35,9 @@ const useCartItem = (itemId: string | number, deleteItemCb: () => void) => {
 
 interface ICartItemProps {
   product: ICartItem;
-  onDeleteItem: (id: string | number) => void;
+  onDeleteItem: (uid: string) => void;
   onChangeQuantity: (
-    id: string | number,
+    uid: string,
     targetItem: ICartItem & { price: number },
     diff: -1 | 1,
     callbackFn: () => void
@@ -51,7 +51,7 @@ const CartItem = ({ product, onChangeQuantity, onDeleteItem, isLastItem = false 
 
   const [selectedDish, setSelectedDish] = useState<{ id: string | number } | null>(null);
 
-  const { data } = useCartItem(product.id, () => { onDeleteItem(product.id); });
+  const { data } = useCartItem(product.id, () => { onDeleteItem(product.uid); });
 
   const name = data ? getDataStringByLocale(data, "name", i18n.language) : null;
 
@@ -61,16 +61,16 @@ const CartItem = ({ product, onChangeQuantity, onDeleteItem, isLastItem = false 
 
   useEffect(() => {
     (async function() {
-      const cartItem = await db.products.get(product.id);
+      const cartItem = await db.products.get(product.uid);
 
       if (data && cartItem && data.price !== cartItem.price) {
         await db.products.put({
           ...cartItem,
           price: data.price,
-        }, product.id);
+        }, product.uid);
       }
     })();
-  }, [data, product.id]);
+  }, [data, product.uid]);
 
   if (!data) {
     return (
@@ -96,7 +96,7 @@ const CartItem = ({ product, onChangeQuantity, onDeleteItem, isLastItem = false 
                 onClick={(event) => {
                   event.stopPropagation();
                   onChangeQuantity(
-                    product.id,
+                    product.uid,
                     { ...product, price: data.price },
                     -1,
                     () => queryClient.invalidateQueries({ queryKey: ["cart-item", product.id ] })
@@ -112,7 +112,7 @@ const CartItem = ({ product, onChangeQuantity, onDeleteItem, isLastItem = false 
                 onClick={(event) => {
                   event.stopPropagation();
                   onChangeQuantity(
-                    product.id,
+                    product.uid,
                     { ...product, price: data.price },
                     1,
                     () => queryClient.invalidateQueries({ queryKey: ["cart-item", product.id ] })
@@ -127,7 +127,7 @@ const CartItem = ({ product, onChangeQuantity, onDeleteItem, isLastItem = false 
             size="icon"
             variant="ghost2"
             className="bg-muted hover:bg-muted"
-            onClick={(event) => { event.stopPropagation(); onDeleteItem(product.id); }}
+            onClick={(event) => { event.stopPropagation(); onDeleteItem(product.uid); }}
           >
             <Trash2 />
           </Button>

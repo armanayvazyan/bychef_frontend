@@ -28,20 +28,20 @@ const Chef = () => {
   const {
     data: chefInfo,
     error,
-    status,
+    isFetching,
   } = useQuery({
     queryKey: ["chef"],
     queryFn: () => fetchChef(id ?? ""),
     refetchOnWindowFocus: false
   });
 
-  const handleNavigateBack = () => { navigate(-1); };
+  const handleNavigateBack = () => { navigate("/explore"); };
 
   return (
     <ChefInfoContext.Provider value={{
       info: chefInfo,
       error,
-      isLoading: status === "pending"
+      isLoading: isFetching
     }}>
       <section className="px-6 md:px-[10%]">
         <Button

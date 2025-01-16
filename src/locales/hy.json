@@ -31,7 +31,7 @@
     "show": "Ցուցադրել",
     "clear": "Մաքրել",
     "back": "Վերադառնալ",
-    "order-daysAhead": "Պատվիրել {{timeAhead}} օր առաջ",
+    "order-days-ahead": "Պատվիրել {{timeAhead}} օր առաջ",
     "order-hours-ahead": "Պատվիրել {{timeAhead}} ժամ առաջ"
   },
   "home-page": {
@@ -144,5 +144,20 @@
     "idram": "Վճարել Idram-ով",
     "card": "Վճարել բանկային քարտով",
     "delivery-notes": "Հավելյալ նշումներ առաքման համար"
+  },
+  "Additions": "Հավելումներ",
+  "spice-level": "Կծվության աստիճան",
+  "spice-levels": {
+    "not-spicy": "Ոչ կծու",
+    "mild-spicy": "Մեղմ կծվության",
+    "medium-spicy": "Միջին կծվության",
+    "spicy": "Կծու"
+  },
+  "dietary-options": {
+    "gluten-free": "Առանց գլյուտենի",
+    "diary-free": "Առանց կաթնամթերքի",
+    "vegan": "Վեգան",
+    "vegetarian": "Վեգետարիան",
+    "halal": "Հալալ"
   }
 }

@@ -19,7 +19,7 @@ const ChefDetails = () => {
   const chefLabels = useMemo(() => {
     return details?.chefLabels?.map((label) => (
       getDataByLocale(label.chefLabelTranslationSet, i18n.language)
-    )) as string[];
+    ));
   }, [details?.chefLabels, i18n.language]);
 
   return (
@@ -42,35 +42,43 @@ const ChefDetails = () => {
           {isLoading && (
             <Skeleton className="w-full h-[30px] rounded-xl" />
           )}
-          <div className="flex items-center gap-3">
-            {details?.socialLinks.map((social) => (
-              <a className="flex gap-2 items-center" key={social.link} href={social.link} target="_blank" rel="noopener noreferrer">
-                <img
-                  className="w-[16px] h-[16px]"
-                  src={`https://static.bychef.am/icons/${social.socialType?.toLowerCase()}.svg`}
-                  alt="chef social page icon"
-                />
-                <p className="text-xs font-semibold text-primary">
-                  {((social.socialType ?? "")[0]) + (social.socialType ?? "").toLowerCase().slice(1)}
-                </p>
-              </a>
-            ))}
-            {isLoading && (
-              new Array(3).fill(0).map((_, index) =>
-                <Skeleton key={index} className="w-[108px] h-[36px] rounded-xl" />
-              )
-            )}
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {chefLabels.map(dish => (
-              <Chip key={dish} label={dish} />
-            ))}
-            {isLoading && (
-              new Array(3).fill(0).map((_, index) =>
-                <Skeleton key={index} className="w-[108px] h-[36px] rounded-xl" />
-              )
-            )}
-          </div>
+          {details?.socialLinks && (
+            <div className="flex items-center gap-3 flex-wrap">
+              {details.socialLinks.map((social) => (
+                <a className="flex gap-2 items-center" key={social.link} href={social.link} target="_blank" rel="noopener noreferrer">
+                  <img
+                    className="w-[16px] h-[16px]"
+                    src={`https://static.bychef.am/icons/${social.socialType?.toLowerCase()}.svg`}
+                    alt="chef social page icon"
+                  />
+                  <p className="text-xs font-semibold text-primary">
+                    {((social.socialType ?? "")[0]) + (social.socialType ?? "").toLowerCase().slice(1)}
+                  </p>
+                </a>
+              ))}
+            </div>
+          )}
+          {isLoading && (
+            <div className="flex items-center gap-3 flex-wrap">
+              {new Array(3).fill(0).map((_, index) =>
+                <Skeleton key={index} className="w-[108px] h-[36px] rounded-md" />
+              )}
+            </div>
+          )}
+          {chefLabels && (
+            <div className="flex flex-wrap gap-3">
+              {chefLabels.map(dish => (
+                dish ? <Chip key={dish} label={dish} /> : null
+              ))}
+            </div>
+          )}
+          {isLoading && (
+            <div className="flex flex-wrap gap-3">
+              {new Array(3).fill(0).map((_, index) => (
+                <Skeleton key={index} className="w-[108px] h-[36px] rounded-md" />
+              ))}
+            </div>
+          )}
           {description && (
             <p className="text-zinc-500 text-xs md:text-base hidden md:block">{description}</p>
           )}
