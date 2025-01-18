@@ -6,6 +6,8 @@ import Checkout from "@/pages/Checkout";
 import HFWrapper from "@/hocs/HFWrapper";
 import { Helmet } from "react-helmet-async";
 import OrderStatus from "@/pages/OrderStatus";
+import PrivacyPolicy from "@/pages/PrivacyPolicy";
+import TermsConditions from "@/pages/TermsConditions";
 import AnalyticsWrapper from "@/hocs/AnalyticsWrapper";
 import ScrollResetWrapper from "@/hocs/ScrollResetWrapper";
 import NotificationsWrapper from "@/hocs/NotificationsWrapper";
@@ -57,6 +59,14 @@ const routes = [
   {
     path: "/order/failed",
     element: wrapComponentWithHF(<OrderStatus type="failure" />)
+  },
+  {
+    path: "/privacy",
+    element: wrapComponentWithHF(<PrivacyPolicy />)
+  },
+  {
+    path: "/terms",
+    element: wrapComponentWithHF(<TermsConditions />)
   },
   {
     path: "*",
