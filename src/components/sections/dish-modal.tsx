@@ -124,7 +124,7 @@ const DishModal = ({ id, onCloseDialog }: IDishModal) => {
   useEffect(() => {
     if (
       !product.spiceLevel &&
-      dishInfo?.adjustableSpiceLevelDtoList &&
+      dishInfo?.adjustableSpiceLevelDtoList.length &&
       product.spiceLevel !== dishInfo.adjustableSpiceLevelDtoList[0].id
     ) {
       setProduct(product => ({ ...product, spiceLevel: dishInfo.adjustableSpiceLevelDtoList[0].id }));
@@ -144,7 +144,7 @@ const DishModal = ({ id, onCloseDialog }: IDishModal) => {
         {isFetching && !dishLabels && (
           <Skeleton className="w-full h-[30px] rounded-md" />
         )}
-        {dishInfo?.dietaryOptionDtoList && (
+        {!!dishInfo?.dietaryOptionDtoList.length && (
           <div className="flex overflow-x-scroll mt-3">
             {dishInfo.dietaryOptionDtoList.map(dietaryInfo => (
               <div
@@ -180,7 +180,7 @@ const DishModal = ({ id, onCloseDialog }: IDishModal) => {
         </DialogDescription>
         <Separator className="my-4"/>
         <div className="flex flex-col gap-4">
-          {dishInfo?.adjustableSpiceLevelDtoList.length && (
+          {!!dishInfo?.adjustableSpiceLevelDtoList.length && (
             <div className="flex flex-col gap-3">
               <p className="text-primary text-base font-bold">{t("spice-level")}</p>
               <RadioGroup
