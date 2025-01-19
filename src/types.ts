@@ -126,7 +126,7 @@ export interface IDishInfo {
   adjustableSpiceLevelDtoList: IAdjustableSpiceLevelDtoList[]
   dietaryOptionDtoList: IDietaryOptionDtoList[]
   ingridientsDto: IIngredientsDto[]
-  extraAdditionsDto: {
+  dishAdditionDtoList: {
     id: number | string;
     nameEn: string;
     nameHy: string;

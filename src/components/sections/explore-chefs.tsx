@@ -83,25 +83,21 @@ const ExploreChefs = () => {
   return (
     <section className="flex flex-col gap-4 px-6 md:px-[10%] pt-6 pb-[104px]">
       <h1 className="text-2xl font-bold text-zinc-800">{t("explore.title")}</h1>
-      {data && (
-        <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
-          {data.pages.map((chefsGroup) => (
-            chefsGroup.exploreChefResponseDtoList.map((chef: IChefGenericInfo) => (
-              <ChefCard key={chef.id} chefInfo={chef} />
-            ))
-          ))}
-        </div>
-      )}
+      <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
+        {data?.pages.map((chefsGroup) => (
+          chefsGroup.exploreChefResponseDtoList.map((chef: IChefGenericInfo) => (
+            <ChefCard key={chef.id} chefInfo={chef} />
+          ))
+        ))}
+        {(isFetchingNextPage || isFetching) && (
+          new Array(limit).fill(1).map((_, index) => (
+            <Skeleton key={index} className="min-h-[140px] rounded-xl"/>
+          ))
+        )}
+      </div>
       {!data && !isFetchingNextPage && !isFetching && !error && (
         <div className="w-full grid place-items-center min-h-[50dvh]">
           <h2 className="text-2xl font-bold">{t("generic.no-chefs-found")}</h2>
-        </div>
-      )}
-      {(isFetchingNextPage || isFetching) && (
-        <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 pb-[104px]">
-          {new Array(limit).fill(1).map((_, index) => (
-            <Skeleton key={index} className="min-h-[140px] rounded-xl"/>
-          ))}
         </div>
       )}
       <div ref={observerTargetRef}/>

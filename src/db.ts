@@ -1,11 +1,12 @@
 import Dexie, { EntityTable } from "dexie";
 
 interface ICartItem {
-  id: string | number;
+  id: number;
   uid: string;
   quantity: number;
   price: number;
   spiceLevel?: number;
+  additions?: number[];
 }
 
 const db = new Dexie("UserCart") as Dexie & {

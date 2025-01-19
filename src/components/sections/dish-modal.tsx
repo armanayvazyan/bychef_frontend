@@ -18,7 +18,7 @@ import { DialogDescription, DialogFooter, DialogTitle } from "@/components/ui/di
 const fetchDish = async (id: string | number): Promise<IDishInfo | undefined> => {
   const data = await fetchApi(
     {
-      initialPath: "dish/",
+      initialPath: "dish/admin/",
       pathExtension: id.toString()
     }
   );
@@ -215,14 +215,14 @@ const DishModal = ({ id, onCloseDialog }: IDishModal) => {
               )}
             </div>
           )}
-          {!!dishInfo?.adjustableSpiceLevelDtoList.length && !!dishInfo.extraAdditionsDto.length && (
+          {!!dishInfo?.adjustableSpiceLevelDtoList.length && !!dishInfo.dishAdditionDtoList.length && (
             <Separator />
           )}
-          {dishInfo?.extraAdditionsDto && (
+          {!!dishInfo?.dishAdditionDtoList.length && (
             <div className="flex flex-col gap-3 mb-13">
               <p className="text-primary text-base font-bold">{t("additions")}</p>
-              {dishInfo.extraAdditionsDto.map(additionInfo => {
-                const additionName = getDataStringByLocale(dishInfo.extraAdditionsDto, "name", i18n.language);
+              {dishInfo.dishAdditionDtoList.map(additionInfo => {
+                const additionName = getDataStringByLocale(dishInfo.dishAdditionDtoList, "name", i18n.language);
 
                 return (
                   <div
