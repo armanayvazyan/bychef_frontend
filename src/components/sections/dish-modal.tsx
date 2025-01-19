@@ -10,7 +10,7 @@ import { fetchApi } from "@/hooks/use-fetch-data";
 import Separator from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Minus, Plus, TriangleAlert } from "lucide-react";
+import { Loader2, Minus, Plus, TriangleAlert } from "lucide-react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import getDataByLocale, { getDataStringByLocale } from "@/helpers/getDataByLocale";
 import { DialogDescription, DialogFooter, DialogTitle } from "@/components/ui/dialog";
@@ -153,7 +153,7 @@ const DishModal = ({ id, onCloseDialog }: IDishModal) => {
               >
                 <img
                   className="h-[20px]"
-                  alt="spice level icon"
+                  alt="dietary option icon"
                   src={`https://static.bychef.am/icons/${dietaryInfo.dietaryOptionValue}.svg`}
                 />
                 <p className="text-sm font-normal text-zinc-600">
@@ -279,8 +279,15 @@ const DishModal = ({ id, onCloseDialog }: IDishModal) => {
               </Button>
             </div>
             <Button className="flex gap-2 w-full" onClick={handleAddToCart} type="submit">
-              <span>{t("generic.add")}</span>
-              <span className="font-bold">({dishInfo?.price} դր.)</span>
+              {dishInfo && (
+                <>
+                  <span>{t("generic.add")}</span>
+                  <span className="font-bold">({dishInfo.price * product.quantity} դր.)</span>
+                </>
+              )}
+              {isFetching && !dishInfo && (
+                <Loader2 className="animate-spin" />
+              )}
             </Button>
           </div>
         </div>
