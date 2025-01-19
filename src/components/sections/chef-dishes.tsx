@@ -11,7 +11,7 @@ const ChefDishes = () => {
   return (
     <div className="flex flex-col gap-7">
       <p className="text-xl font-bold text-primary my-6">{t("generic.menu")}</p>
-      <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-4 pb-[104px]">
+      <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4 pb-[104px]">
         {!!info?.dishes.length && info.dishes.map((dish) => (
           <DishCard
             key={dish.id}

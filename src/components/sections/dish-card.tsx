@@ -51,10 +51,8 @@ const DishCard = ({ dishInfo }: IDishCard) => {
             </div>
           }
         >
-          <div className="flex flex-col gap-4">
-            <div className="w-full relative">
-              <img src={dishInfo.url} alt="chef image" className="w-full h-full object-cover max-h-[200px]" />
-            </div>
+          <div className="w-full relative">
+            <img src={dishInfo.url} alt="chef image" className="w-full object-cover h-[200px]" />
           </div>
         </GridCard>
       </DialogTrigger>
