@@ -24,7 +24,7 @@ const PrivacyPolicy = () => {
 
   const { data, isLoading } = useQuery({
     queryKey: ["terms", i18n.language],
-    queryFn: () => fetchPrivacyContent(i18n.language as LOCALES),
+    queryFn: () => fetchPrivacyContent(i18n.language.split("-")[0] as LOCALES),
     refetchOnWindowFocus: false,
   });
 
