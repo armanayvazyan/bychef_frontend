@@ -222,7 +222,7 @@ const DishModal = ({ id, onCloseDialog }: IDishModal) => {
             <div className="flex flex-col gap-3 mb-13">
               <p className="text-primary text-base font-bold">{t("additions")}</p>
               {dishInfo.dishAdditionDtoList.map(additionInfo => {
-                const additionName = getDataStringByLocale(dishInfo.dishAdditionDtoList, "name", i18n.language);
+                const additionName = getDataStringByLocale(additionInfo, "name", i18n.language);
 
                 return (
                   <div
@@ -232,9 +232,9 @@ const DishModal = ({ id, onCloseDialog }: IDishModal) => {
                     <Checkbox id="terms"/>
                     <label
                       htmlFor="terms"
-                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      className="flex gap-2 items-center text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     >
-                      {additionName} {" "} <span className="font-bold text-base">{`+ ${additionInfo.price}`}</span>
+                      <p>{additionName}</p><p className="font-bold text-base">{`(+${additionInfo.price} դր.)`}</p>
                     </label>
                   </div>
                 );

@@ -5,7 +5,8 @@ const getDataByLocale = (collection: ILocalizedData[], locale: string) => {
 };
 
 export const getDataStringByLocale = (obj: object, key: string, locale: string) => {
-  const keyLocale = locale.charAt(0).toUpperCase() + locale.slice(1);
+  const refinedLocale = locale.split("-")[0];
+  const keyLocale = refinedLocale.charAt(0).toUpperCase() + refinedLocale.slice(1);
   return obj[(key + keyLocale) as keyof typeof obj];
 };
 
