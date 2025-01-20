@@ -145,7 +145,7 @@ const DishModal = ({ id, onCloseDialog }: IDishModal) => {
           <Skeleton className="w-full h-[30px] rounded-md" />
         )}
         {!!dishInfo?.dietaryOptionDtoList.length && (
-          <div className="flex overflow-x-scroll mt-3">
+          <div className="flex overflow-x-scroll gap-2 mt-3">
             {dishInfo.dietaryOptionDtoList.map(dietaryInfo => (
               <div
                 key={dietaryInfo.id}
@@ -156,7 +156,7 @@ const DishModal = ({ id, onCloseDialog }: IDishModal) => {
                   alt="dietary option icon"
                   src={`https://static.bychef.am/icons/${dietaryInfo.dietaryOptionValue}.svg`}
                 />
-                <p className="text-sm font-normal text-zinc-600">
+                <p className="text-nowrap text-sm text-center font-normal text-zinc-600 w-[100px]">
                   {t(`dietary-options.${dietaryInfo.dietaryOptionValue}`)}
                 </p>
               </div>
@@ -183,26 +183,26 @@ const DishModal = ({ id, onCloseDialog }: IDishModal) => {
           {!!dishInfo?.adjustableSpiceLevelDtoList.length && (
             <div className="flex flex-col gap-3">
               <p className="text-primary text-base font-bold">{t("spice-level")}</p>
-              <RadioGroup
-                value={product.spiceLevel?.toString()}
-                onValueChange={handleChangeSpiceLevel}
-              >
+              <RadioGroup value={product.spiceLevel?.toString()}>
                 {dishInfo.adjustableSpiceLevelDtoList.map(spiceLevelInfo => (
                   <div
                     key={spiceLevelInfo.id}
-                    className="flex gap-4 items-center px-4 py-2 border-border border-[1px] rounded-md hover:bg-secondary"
+                    onClick={() => { handleChangeSpiceLevel(spiceLevelInfo.id.toString()); }}
+                    className="flex gap-4 cursor-pointer items-center px-4 py-2 border-border border-[1px] rounded-md hover:bg-secondary"
                   >
-                    <img
-                      className="h-[28px]"
-                      alt="spice level icon"
-                      src={`https://static.bychef.am/icons/${spiceLevelInfo.spiceLevel}.svg`}
-                    />
                     <RadioGroupItem
                       id={spiceLevelInfo.id.toString()}
                       value={spiceLevelInfo.id.toString()}
                       className="w-[20px] h-[20px]" circleSize={10}
                     />
-                    <Label htmlFor="option-one">{t(`spice-levels.${spiceLevelInfo.spiceLevel}`)}</Label>
+                    <img
+                      className="h-[28px]"
+                      alt="spice level icon"
+                      src={`https://static.bychef.am/icons/${spiceLevelInfo.spiceLevel}.svg`}
+                    />
+                    <Label className="cursor-pointer" htmlFor="option-one">
+                      {t(`spice-levels.${spiceLevelInfo.spiceLevel}`)}
+                    </Label>
                   </div>
                 ))}
               </RadioGroup>
