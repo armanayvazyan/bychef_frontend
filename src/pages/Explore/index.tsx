@@ -1,10 +1,13 @@
-import hero from "@/assets/explore-hero.png";
 import ExploreChefs from "@/components/sections/explore-chefs";
 
 const Explore = () => {
   return (
     <section>
-      <img src={hero} alt="hero" className="w-full" />
+      <img
+        src="https://static.bychef.am/explore_banner.webp"
+        alt="hero"
+        className="hidden md:block w-full max-h-[240px] object-cover"
+      />
       <ExploreChefs />
     </section>
   );

@@ -88,7 +88,14 @@
     }
   },
   "footer": {
-    "copyright": "© 2024 ByCHEF, All rights reserved"
+    "privacy": "Privacy policy",
+    "terms": "Terms & Conditions",
+    "copyright": "© 2024 ByCHEF, All rights reserved",
+    "locales": {
+      "AM": "Հայերեն",
+      "RU": "Русский",
+      "EN": "English"
+    }
   },
   "header": {
     "change-address": "Change delivery address",

@@ -17,28 +17,20 @@ import {
 } from "@/components/ui/navigation-menu";
 import Button from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
-import facebookLogo from "@/assets/facebook.svg";
 import Separator from "@/components/ui/separator";
-import instagramLogo from "@/assets/instagram.svg";
 import changeLanguage from "@/helpers/changeLanguage";
 import { NavigationMenuItem } from "@radix-ui/react-navigation-menu";
 
 const components: { title: string; href: string }[][] = [
-  // [
-  //   {
-  //     title: "Become a chef",
-  //     href: "/sign-in",
-  //   },
-  //   {
-  //     title: "About Us",
-  //     href: "/about",
-  //   }
-  // ],
   [
-    // {
-    //   title: "Privacy policy",
-    //   href: "/privacy",
-    // },
+    {
+      title: "privacy",
+      href: "/privacy",
+    },
+    {
+      title: "terms",
+      href: "/terms",
+    },
     {
       title: "support@bychef.am",
       href: "mailto:support@bychef.am",
@@ -48,11 +40,11 @@ const components: { title: string; href: string }[][] = [
 
 const socials = [
   {
-    logo: instagramLogo,
+    logo: "https://static.bychef.am/icons/footer-instagram.svg",
     href: "https://www.instagram.com/bychef.am",
   },
   {
-    logo: facebookLogo,
+    logo: "https://static.bychef.am/icons/footer-facebook.svg",
     href: "https://www.facebook.com/share/18kiaYPUia/?mibextid=JRoKGi",
   },
 ];
@@ -85,20 +77,20 @@ const Footer = () => {
     <footer className="flex flex-none flex-col items-center mt-16 px-4">
       <div className="w-full px-16 flex flex-col-reverse md:flex-row justify-between items-center py-6">
         <NavigationMenu>
-          <NavigationMenuList className="flex justify-between items-center text-zinc-700">
+          <NavigationMenuList className="flex flex-wrap justify-center items-center text-zinc-700 gap-3">
             {components.map(([component1, component2]) => (
               <div key={component1.href} className="flex flex-wrap justify-center">
                 {component1 && (
                   <NavigationMenuItem key={component1.title}>
                     <NavigationMenuLink href={component1.href} className={navigationMenuTriggerStyle()}>
-                      {component1.title}
+                      {t(component1.title)}
                     </NavigationMenuLink>
                   </NavigationMenuItem>
                 )}
                 {component2 && (
                   <NavigationMenuItem key={component2.title}>
                     <NavigationMenuLink href={component2.href} className={navigationMenuTriggerStyle()}>
-                      {component2.title}
+                      {t(component2.title)}
                     </NavigationMenuLink>
                   </NavigationMenuItem>
                 )}
