@@ -2,7 +2,6 @@ import Button from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { IDRAM_ORDER_ID_PREFIX } from "@/configs/constants";
-import { CircleCheck, CircleX, CreditCard } from "lucide-react";
 
 const OrderStatus = ({ type }: { type: "success" | "failure" }) => {
   const navigate = useNavigate();
@@ -19,11 +18,10 @@ const OrderStatus = ({ type }: { type: "success" | "failure" }) => {
       <div className="text-center flex flex-col gap-4 items-center justify-center max-w-[483px] w-full">
         <div className="bg-destructive group-data-[state='success']:bg-success w-[64px] h-[64px] rounded-full relative">
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-            <CreditCard size={30} className="text-white" />
             {type === "success" ? (
-              <CircleCheck size={14} className="absolute fill-white border-0 bottom-0 left-0 -translate-x-1/4" />
+              <img className="scale-[2]" src="https://static.bychef.am/icons/success.svg" alt="successful order icon" />
             ) : (
-              <CircleX size={14} className="absolute fill-white border-0 bottom-0 left-0 -translate-x-1/4" />
+              <img className="scale-[2]" src="https://static.bychef.am/icons/failed.svg" alt="rejected order icon" />
             )}
           </div>
         </div>
