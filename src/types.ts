@@ -127,7 +127,7 @@ export interface IDishInfo {
   dietaryOptionDtoList: IDietaryOptionDtoList[]
   ingridientsDto: IIngredientsDto[]
   dishAdditionDtoList: {
-    id: number | string;
+    id: number;
     nameEn: string;
     nameHy: string;
     nameRu: string;

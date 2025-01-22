@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { db, ICartItem } from "@/db";
 import { IDishInfo } from "@/types";
 import Button from "@/components/ui/button";
@@ -14,7 +14,7 @@ import { Minus, Plus, Trash2, TriangleAlert, X } from "lucide-react";
 
 const fetchCartItem = async (id: string | number, deleteItemCb: () => void) => {
   const data = await fetchApi({
-    initialPath: "dish/",
+    initialPath: "dish/admin/",
     pathExtension: id.toString()
   });
 
@@ -55,6 +55,37 @@ const CartItem = ({ product, onChangeQuantity, onDeleteItem, isLastItem = false 
 
   const name = data ? getDataStringByLocale(data, "name", i18n.language) : null;
 
+  const totalCartItemPrice = useMemo(() => {
+    const additionsTotalPrice = product.additions?.reduce((acc, additionId) => {
+      const additionInfo = data?.dishAdditionDtoList.find(info => info.id === additionId);
+      const additionPrice = additionInfo ? Number(additionInfo.price) : 0;
+
+      return acc + additionPrice;
+    }, 0) ?? 0;
+
+    return (product.price + additionsTotalPrice) * product.quantity;
+  }, [data?.dishAdditionDtoList, product.additions, product.price, product.quantity]);
+
+  const details = useMemo(() => {
+    let spiceLevel = null;
+    let additions = null;
+
+    if (product.spiceLevel) {
+      spiceLevel = data?.adjustableSpiceLevelDtoList.find(spiceLevelInfo => product.spiceLevel === spiceLevelInfo.id)?.spiceLevel;
+    }
+
+    if (product.additions?.length) {
+      additions = product.additions.map(additionId => {
+        const additionInfo = data?.dishAdditionDtoList.find(info => info.id === additionId);
+        const additionName = additionInfo ? getDataStringByLocale(additionInfo, "name", i18n.language) : "";
+
+        return additionName;
+      }).join(", ");
+    }
+
+    return [t(`spice-levels.${spiceLevel}`), additions].join(", ");
+  }, [data?.adjustableSpiceLevelDtoList, data?.dishAdditionDtoList, i18n.language, product.additions, product.spiceLevel, t]);
+
   const handleSelectDish = (id: string | number) => {
     setSelectedDish({ id });
   };
@@ -88,39 +119,42 @@ const CartItem = ({ product, onChangeQuantity, onDeleteItem, isLastItem = false 
           <img src={data.url} alt="cart product image" className="w-[136px] h-[136px] object-cover rounded-xl"/>
           <div>
             <h1 className="text-xl font-extrabold text-zinc-800">{name}</h1>
-            <p className="text-lg font-semibold text-zinc-800">{`${data.price} դր.`}</p>
-            <div className="flex gap-3 items-center mt-8">
-              <Button
-                size="icon"
-                className="bg-muted hover:bg-muted"
-                onClick={(event) => {
-                  event.stopPropagation();
-                  onChangeQuantity(
-                    product.uid,
-                    { ...product, price: data.price },
-                    -1,
-                    () => queryClient.invalidateQueries({ queryKey: ["cart-item", product.id ] })
-                  );
-                }}
-              >
-                <Minus size={16} className="text-foreground"/>
-              </Button>
-              <p className="text-xl font-extrabold text-zinc-950">{product.quantity}</p>
-              <Button
-                size="icon"
-                className="bg-muted hover:bg-muted"
-                onClick={(event) => {
-                  event.stopPropagation();
-                  onChangeQuantity(
-                    product.uid,
-                    { ...product, price: data.price },
-                    1,
-                    () => queryClient.invalidateQueries({ queryKey: ["cart-item", product.id ] })
-                  );
-                }}
-              >
-                <Plus size={16} className="text-foreground"/>
-              </Button>
+            <p className="text-zinc-400 text-sm my-4">{details}</p>
+            <div>
+              <p className="text-lg font-semibold text-zinc-800">{`${totalCartItemPrice} դր.`}</p>
+              <div className="flex gap-3 items-center mt-2">
+                <Button
+                  size="icon"
+                  className="bg-muted hover:bg-muted"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    onChangeQuantity(
+                      product.uid,
+                      { ...product, price: data.price },
+                      -1,
+                      () => queryClient.invalidateQueries({ queryKey: ["cart-item", product.id ] })
+                    );
+                  }}
+                >
+                  <Minus size={16} className="text-foreground"/>
+                </Button>
+                <p className="text-xl font-extrabold text-zinc-950">{product.quantity}</p>
+                <Button
+                  size="icon"
+                  className="bg-muted hover:bg-muted"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    onChangeQuantity(
+                      product.uid,
+                      { ...product, price: data.price },
+                      1,
+                      () => queryClient.invalidateQueries({ queryKey: ["cart-item", product.id ] })
+                    );
+                  }}
+                >
+                  <Plus size={16} className="text-foreground"/>
+                </Button>
+              </div>
             </div>
           </div>
           <Button

@@ -9,7 +9,6 @@ const fetchTermsContent = async (locale: LOCALES) => {
     initialPath: `https://static.bychef.am/docs/terms/${locale}_latest.html`
   });
 
-  console.log(response);
   if (response && !response.error) {
     const html = await response.result.text();
 
