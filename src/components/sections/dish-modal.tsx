@@ -169,7 +169,7 @@ const DishModal = ({ id, onCloseDialog }: IDishModal) => {
       dishInfo?.adjustableSpiceLevelDtoList.length &&
       product.spiceLevelId !== dishInfo.adjustableSpiceLevelDtoList[0].id
     ) {
-      setProduct(product => ({ ...product, spiceLevel: dishInfo.adjustableSpiceLevelDtoList[0].id }));
+      setProduct(product => ({ ...product, spiceLevelId: dishInfo.adjustableSpiceLevelDtoList[0].id }));
     }
   }, [dishInfo?.adjustableSpiceLevelDtoList, product.spiceLevelId]);
 
