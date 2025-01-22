@@ -274,10 +274,14 @@ const DishModal = ({ id, onCloseDialog }: IDishModal) => {
                     onClick={handleSelectAddition}
                     className="flex gap-4 items-center px-4 py-2 border-border border-[1px] rounded-md hover:bg-secondary"
                   >
-                    <Checkbox id="terms" checked={product.additionIds?.includes(additionInfo.id)} />
+                    <Checkbox
+                      id="terms"
+                      className="pointer-events-none"
+                      checked={product.additionIds?.includes(additionInfo.id)}
+                    />
                     <label
                       htmlFor="terms"
-                      className="flex gap-2 items-center text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      className="flex pointer-events-none gap-2 items-center text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     >
                       <p>{additionName}</p>
                       <p className="font-bold text-base">{`(+${additionInfo.price} դր.)`}</p>
