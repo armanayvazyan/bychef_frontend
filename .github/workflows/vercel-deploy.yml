@@ -1,10 +1,10 @@
-name: Manual Trigger
+name: Vercel Deploy
 
 on:
   workflow_dispatch:
 
 jobs:
-  modify-vercel-json:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -27,7 +27,10 @@ jobs:
           git config user.email "manchayvazyan@gmail.com"
 
       - name: Commit and Push Changes
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git add vercel.json
           git commit -m "Deploy vercel"
+          git remote set-url origin https://x-access-token:${TOKEN}@github.com/armanayvazyan/bychef_frontend.git
           git push origin $(git rev-parse --abbrev-ref HEAD)
