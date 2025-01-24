@@ -1,0 +1,33 @@
+name: Manual Trigger
+
+on:
+  workflow_dispatch:
+
+jobs:
+  modify-vercel-json:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Add a blank line to vercel.json
+        run: |
+          if [ -f vercel.json ]; then
+            echo "" >> vercel.json
+            echo "Added a blank line to vercel.json."
+          else
+            echo "vercel.json not found, exiting..."
+            exit 1
+          fi
+
+      - name: Configure Git
+        run: |
+          git config user.name "Arman Ayvazyan"
+          git config user.email "manchayvazyan@gmail.com"
+
+      - name: Commit and Push Changes
+        run: |
+          git add vercel.json
+          git commit -m "Deploy vercel"
+          git push origin $(git rev-parse --abbrev-ref HEAD)
