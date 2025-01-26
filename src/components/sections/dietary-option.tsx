@@ -9,7 +9,7 @@ const DietaryOption = ({ value }: IDietaryOptionProps) => {
 
   return (
     <div
-      className="flex flex-nowrap gap-3 px-4 py-2 bg-secondary border-transparent border-[1px] rounded-md items-center"
+      className="flex flex-nowrap gap-2 px-4 py-2 bg-secondary border-transparent border-[1px] rounded-md items-center"
     >
       <img
         className="h-[20px]"

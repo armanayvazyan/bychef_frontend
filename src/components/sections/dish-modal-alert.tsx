@@ -7,7 +7,7 @@ const DishModalAlert = ({ date }: { date: number }) => {
   return (
     <div className="flex gap-3">
       <TriangleAlert size={24} className="text-destructive"/>
-      <p className="text-destructive font-normal text-base">
+      <p className="text-destructive font-normal text-sm">
         {t("generic.order-days-ahead", { timeAhead: date })}
       </p>
     </div>

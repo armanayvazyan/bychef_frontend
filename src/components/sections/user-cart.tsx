@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { db, ICartItem } from "@/db";
 import Button from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
@@ -64,6 +64,14 @@ const UserCart = () => {
     setOpen(prevState => !prevState);
   };
 
+  useEffect(() => {
+    return () => {
+      if (document.body.classList.contains("overflow-y-hidden")) {
+        document.body.classList.toggle("overflow-y-hidden");
+      }
+    };
+  }, []);
+
   return (
     <Popover open={open} onOpenChange={handleToggleCart}>
       <PopoverTrigger>
@@ -105,11 +113,13 @@ const UserCart = () => {
           ) : (
             <div className="flex flex-col items-center justify-center w-full min-w-[314px] md:min-w-[408px] h-[300px] md:h-[348px]">
               <div className="flex flex-col items-center max-w-[233px] gap-2">
-                <div className="relative">
-                  <ShoppingCart className="w-[20px] h-[20px] md:w-[32px] md:h-[32px]"/>
-                  <CircleX
-                    className="absolute top-0 right-0 fill-destructive text-white w-[8px] h-[8px] md:w-[14px] md:h-[14px]"
-                  />
+                <div className="flex justify-center items-center w-[40px] h-[40px] md:w-[64px] md:h-[64px] rounded-full bg-secondary relative">
+                  <div className="relative">
+                    <ShoppingCart className="w-[20px] h-[20px] md:w-[32px] md:h-[32px]"/>
+                    <CircleX
+                      className="absolute top-0 right-0 fill-destructive text-white w-[8px] h-[8px] md:w-[14px] md:h-[14px]"
+                    />
+                  </div>
                 </div>
                 <p className="text-base font-normal text-primary text-wrap text-center">
                   {t("user-cart.empty-cart")}

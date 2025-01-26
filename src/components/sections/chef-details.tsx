@@ -80,7 +80,7 @@ const ChefDetails = () => {
             </div>
           )}
           {description && (
-            <p className="text-zinc-500 text-xs md:text-base hidden md:block">{description}</p>
+            <p className="text-zinc-500 text-sm font-normal hidden md:block">{description}</p>
           )}
           {isLoading && (
             <Skeleton className="w-full h-[60px] rounded-xl hidden md:block" />
@@ -88,7 +88,7 @@ const ChefDetails = () => {
         </div>
       </div>
       {description && (
-        <p className="mt-2 text-zinc-500 text-xs md:text-base md:hidden">{description}</p>
+        <p className="mt-2 text-zinc-500 text-sm font-normal md:hidden">{description}</p>
       )}
       {isLoading && (
         <Skeleton className="w-full h-[30px] mt-4 rounded-xl md:hidden"/>

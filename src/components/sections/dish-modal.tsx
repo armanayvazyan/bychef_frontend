@@ -198,8 +198,8 @@ const DishModal = ({ id, onCloseDialog }: IDishModal) => {
           <Skeleton className="w-full h-[30px] rounded-md" />
         )}
         {!!dishInfo?.dietaryOptionDtoList.length && (
-          <div className="flex overflow-x-scroll gap-2 mt-3">
-            {dishInfo.dietaryOptionDtoList.map(dietaryInfo => (
+          <div className="flex overflow-x-scroll gap-1 mt-3">
+            {new Array(10).fill(dishInfo.dietaryOptionDtoList[0]).map(dietaryInfo => (
               <DietaryOption key={dietaryInfo.id} value={dietaryInfo.dietaryOptionValue} />
             ))}
           </div>
@@ -289,17 +289,17 @@ const DishModal = ({ id, onCloseDialog }: IDishModal) => {
               <Button
                 size="icon"
                 onClick={handleDecrement}
-                className="bg-muted hover:bg-muted"
+                className="bg-muted hover:bg-muted w-[32px] h-[32px]"
               >
-                <Minus size={16} className="text-foreground"/>
+                <Minus size={14} className="text-foreground"/>
               </Button>
-              <p className="text-xl font-extrabold text-zinc-950">{product.quantity}</p>
+              <p className="text-lg font-extrabold text-zinc-950">{product.quantity}</p>
               <Button
                 size="icon"
                 onClick={handleIncrement}
-                className="bg-muted hover:bg-muted"
+                className="bg-muted hover:bg-muted w-[32px] h-[32px]"
               >
-                <Plus size={16} className="text-foreground"/>
+                <Plus size={14} className="text-foreground"/>
               </Button>
             </div>
             <Button className="flex gap-2 w-full" onClick={handleAddToCart} type="submit">

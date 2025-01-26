@@ -138,7 +138,7 @@ const CartItem = ({ product, onChangeQuantity, onDeleteItem, isLastItem = false 
               <div className="flex gap-3 items-center mt-2">
                 <Button
                   size="icon"
-                  className="bg-muted hover:bg-muted"
+                  className="bg-muted hover:bg-muted w-[32px] h-[32px]"
                   onClick={(event) => {
                     event.stopPropagation();
                     onChangeQuantity(
@@ -149,12 +149,12 @@ const CartItem = ({ product, onChangeQuantity, onDeleteItem, isLastItem = false 
                     );
                   }}
                 >
-                  <Minus size={16} className="text-foreground"/>
+                  <Minus size={14} className="text-foreground"/>
                 </Button>
-                <p className="text-xl font-extrabold text-zinc-950">{product.quantity}</p>
+                <p className="text-lg font-extrabold text-zinc-950">{product.quantity}</p>
                 <Button
                   size="icon"
-                  className="bg-muted hover:bg-muted"
+                  className="bg-muted hover:bg-muted w-[32px] h-[32px]"
                   onClick={(event) => {
                     event.stopPropagation();
                     onChangeQuantity(
@@ -165,7 +165,7 @@ const CartItem = ({ product, onChangeQuantity, onDeleteItem, isLastItem = false 
                     );
                   }}
                 >
-                  <Plus size={16} className="text-foreground"/>
+                  <Plus size={14} className="text-foreground"/>
                 </Button>
               </div>
             </div>
