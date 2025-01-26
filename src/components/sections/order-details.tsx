@@ -91,7 +91,11 @@ const OrderDetails = () => {
   });
 
   const totalCartPrice = useMemo(() => {
-    return products?.reduce((acc: number, product: ICartItem) => acc + (product.price * product.quantity), 0);
+    return products?.reduce((acc: number, product: ICartItem) => {
+      const additionsTotalPrice = product.additions ? Object.values(product.additions).reduce((acc, additionPrice) => acc + Number(additionPrice), 0) : 0;
+
+      return acc + ((product.price + additionsTotalPrice) * product.quantity);
+    }, 0);
   }, [products]);
 
   const selectedDeliveryDate = form.watch(EInputNames.delivery_date);

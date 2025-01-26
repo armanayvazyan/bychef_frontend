@@ -45,6 +45,7 @@ export default tseslint.config(
       "@typescript-eslint/no-unnecessary-condition": ["warn"],
       "@typescript-eslint/restrict-template-expressions": ["off"],
       "@typescript-eslint/no-floating-promises": ["warn"],
+      "@typescript-eslint/no-dynamic-delete": ["off"],
       "@stylistic/comma-spacing": ["error", { before: false, after: true }],
       "@stylistic/quotes": ["error", "double"],
       "@stylistic/quote-props": ["error", "consistent-as-needed"],

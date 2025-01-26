@@ -8,9 +8,11 @@ import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
 import { fetchApi } from "@/hooks/use-fetch-data";
 import Separator from "@/components/ui/separator";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Loader2, Minus, Plus, TriangleAlert } from "lucide-react";
+import { Loader2, Minus, Plus } from "lucide-react";
+import Addition from "@/components/sections/addition";
+import DietaryOption from "@/components/sections/dietary-option";
+import DishModalAlert from "@/components/sections/dish-modal-alert";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import getDataByLocale, { getDataStringByLocale } from "@/helpers/getDataByLocale";
 import { DialogDescription, DialogFooter, DialogTitle } from "@/components/ui/dialog";
@@ -34,7 +36,7 @@ interface IDishModal {
 interface ISelectedProductInfo {
   quantity: number;
   spiceLevelId?: number,
-  additionIds?: number[]
+  additions?: Record<string, number>
 }
 
 const DishModal = ({ id, onCloseDialog }: IDishModal) => {
@@ -70,18 +72,13 @@ const DishModal = ({ id, onCloseDialog }: IDishModal) => {
 
   const totalCartItemPrice = useMemo(() => {
     if (dishInfo) {
-      const additionsTotalPrice = product.additionIds?.reduce((acc, additionId) => {
-        const additionInfo = dishInfo.dishAdditionDtoList.find(info => info.id === additionId);
-        const additionPrice = additionInfo ? Number(additionInfo.price) : 0;
-
-        return acc + additionPrice;
-      }, 0) ?? 0;
+      const additionsTotalPrice = product.additions ? Object.values(product.additions).reduce((acc, additionPrice) => acc + additionPrice, 0) : 0;
 
       return (dishInfo.price + additionsTotalPrice) * product.quantity;
     } else {
       return 0;
     }
-  }, [dishInfo, product.additionIds, product.quantity]);
+  }, [dishInfo, product.additions, product.quantity]);
 
   const handleIncrement = () => {
     setProduct((prevState) => {
@@ -100,17 +97,28 @@ const DishModal = ({ id, onCloseDialog }: IDishModal) => {
   };
 
   const handleSelectAddition = (e: MouseEvent<HTMLDivElement>) => {
-    const id = e.currentTarget.getAttribute("data-value");
+    const id = e.currentTarget.getAttribute("data-id");
 
-    if (product.additionIds?.includes(Number(id))) {
+    if (!id) return;
+
+    const price = e.currentTarget.getAttribute("data-price");
+    const hasAddition = product.additions ? Object.keys(product.additions).find(additionId => additionId === id) : false;
+
+    if (hasAddition) {
+      const filteredAdditions = { ...product.additions };
+      delete filteredAdditions[id];
+
       setProduct(prevState => ({
         ...prevState,
-        additionIds: prevState.additionIds?.filter(additionId => additionId !== Number(id))
+        additions: filteredAdditions
       }));
     } else {
       setProduct(prevState => ({
         ...product,
-        additionIds: [...(prevState.additionIds ?? []), Number(id)].sort((a, b) => a - b)
+        additions: {
+          ...(prevState.additions ?? {}),
+          [id]: Number(price),
+        }
       }));
     }
   };
@@ -122,7 +130,10 @@ const DishModal = ({ id, onCloseDialog }: IDishModal) => {
       // item id consists from 3 parts (product id, spice level id, selected addition ids)
       const id1 = dishInfo.id;
       const id2 = product.spiceLevelId ?? "-";
-      const id3 = product.additionIds ? product.additionIds.join("/") : "-";
+      const id3 = product.additions
+        ? Object.keys(product.additions).sort((id1, id2) => Number(id1) - Number(id2)).join("/")
+        : "-";
+      console.log(id2, id3);
       const itemId = [id1, id2, id3].join("/");
       const selectedItemExistsInCart = await db.products.get(itemId);
 
@@ -137,7 +148,7 @@ const DishModal = ({ id, onCloseDialog }: IDishModal) => {
           price: dishInfo.price,
           quantity: product.quantity,
           ...(product.spiceLevelId && { spiceLevel: product.spiceLevelId }),
-          ...(!!product.additionIds?.length && { additions: product.additionIds })
+          ...(!!product.additions && { additions: product.additions })
         };
       }
 
@@ -189,19 +200,7 @@ const DishModal = ({ id, onCloseDialog }: IDishModal) => {
         {!!dishInfo?.dietaryOptionDtoList.length && (
           <div className="flex overflow-x-scroll gap-2 mt-3">
             {dishInfo.dietaryOptionDtoList.map(dietaryInfo => (
-              <div
-                key={dietaryInfo.id}
-                className="flex flex-nowrap gap-3 px-4 py-2 bg-secondary border-transparent border-[1px] rounded-md items-center"
-              >
-                <img
-                  className="h-[20px]"
-                  alt="dietary option icon"
-                  src={`https://static.bychef.am/icons/${dietaryInfo.dietaryOptionValue}.svg`}
-                />
-                <p className="text-nowrap text-sm text-center font-normal text-zinc-600 w-[100px]">
-                  {t(`dietary-options.${dietaryInfo.dietaryOptionValue}`)}
-                </p>
-              </div>
+              <DietaryOption key={dietaryInfo.id} value={dietaryInfo.dietaryOptionValue} />
             ))}
           </div>
         )}
@@ -263,32 +262,14 @@ const DishModal = ({ id, onCloseDialog }: IDishModal) => {
           {!!dishInfo?.dishAdditionDtoList.length && (
             <div className="flex flex-col gap-3 mb-13">
               <p className="text-primary text-base font-bold">{t("additions")}</p>
-              {dishInfo.dishAdditionDtoList.map(additionInfo => {
-                const additionName = getDataStringByLocale(additionInfo, "name", i18n.language);
-
-                return (
-                  <div
-                    role="button"
-                    key={additionInfo.id}
-                    data-value={additionInfo.id}
-                    onClick={handleSelectAddition}
-                    className="flex gap-4 items-center px-4 py-2 border-border border-[1px] rounded-md hover:bg-secondary"
-                  >
-                    <Checkbox
-                      id="terms"
-                      className="pointer-events-none"
-                      checked={product.additionIds?.includes(additionInfo.id)}
-                    />
-                    <label
-                      htmlFor="terms"
-                      className="flex pointer-events-none gap-2 items-center text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    >
-                      <p>{additionName}</p>
-                      <p className="font-bold text-base">{`(+${additionInfo.price} դր.)`}</p>
-                    </label>
-                  </div>
-                );
-              })}
+              {dishInfo.dishAdditionDtoList.map(additionInfo => (
+                <Addition
+                  key={additionInfo.id}
+                  additionInfo={additionInfo}
+                  onSelectAddition={handleSelectAddition}
+                  isActive={product.additions ? !!product.additions[additionInfo.id] : false}
+                />
+              ))}
             </div>
           )}
           {isFetching && !dishInfo && (
@@ -302,14 +283,7 @@ const DishModal = ({ id, onCloseDialog }: IDishModal) => {
       </div>
       <DialogFooter className="sticky">
         <div className="flex flex-col gap-6 w-full">
-          {dishInfo?.orderBefore && (
-            <div className="flex gap-3">
-              <TriangleAlert size={24} className="text-destructive"/>
-              <p className="text-destructive font-normal text-base">
-                {t("generic.order-days-ahead", { timeAhead: dishInfo.orderBefore })}
-              </p>
-            </div>
-          )}
+          {dishInfo?.orderBefore && <DishModalAlert date={dishInfo.orderBefore} />}
           <div className="flex gap-4 w-full">
             <div className="flex gap-3 items-center">
               <Button

@@ -108,6 +108,14 @@ export interface IDishCuisineTagDto {
   translations: ILocalizedData[]
 }
 
+export interface IDishAddition {
+  id: number;
+  nameEn: string;
+  nameHy: string;
+  nameRu: string;
+  price: number;
+}
+
 export interface IDishInfo {
   id: number
   nameEn: string
@@ -126,13 +134,7 @@ export interface IDishInfo {
   adjustableSpiceLevelDtoList: IAdjustableSpiceLevelDtoList[]
   dietaryOptionDtoList: IDietaryOptionDtoList[]
   ingridientsDto: IIngredientsDto[]
-  dishAdditionDtoList: {
-    id: number;
-    nameEn: string;
-    nameHy: string;
-    nameRu: string;
-    price: number;
-  }[]
+  dishAdditionDtoList: IDishAddition[]
   dishTagDtos: IDishTagDto[]
   dishCuisineTagDto: IDishCuisineTagDto
 }

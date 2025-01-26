@@ -6,7 +6,7 @@ interface ICartItem {
   quantity: number;
   price: number;
   spiceLevel?: number;
-  additions?: number[];
+  additions?: Record<string, number>;
 }
 
 const db = new Dexie("UserCart") as Dexie & {

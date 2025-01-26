@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { db, ICartItem } from "@/db";
 import { IDishInfo } from "@/types";
+import { db, ICartItem } from "@/db";
 import Button from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
 import Separator from "@/components/ui/separator";
@@ -56,15 +56,10 @@ const CartItem = ({ product, onChangeQuantity, onDeleteItem, isLastItem = false 
   const name = data ? getDataStringByLocale(data, "name", i18n.language) : null;
 
   const totalCartItemPrice = useMemo(() => {
-    const additionsTotalPrice = product.additions?.reduce((acc, additionId) => {
-      const additionInfo = data?.dishAdditionDtoList.find(info => info.id === additionId);
-      const additionPrice = additionInfo ? Number(additionInfo.price) : 0;
-
-      return acc + additionPrice;
-    }, 0) ?? 0;
+    const additionsTotalPrice = product.additions ? Object.values(product.additions).reduce((acc, additionPrice) => acc + Number(additionPrice), 0) : 0;
 
     return (product.price + additionsTotalPrice) * product.quantity;
-  }, [data?.dishAdditionDtoList, product.additions, product.price, product.quantity]);
+  }, [product.additions, product.price, product.quantity]);
 
   const details = useMemo(() => {
     let spiceLevel = null;
@@ -74,10 +69,10 @@ const CartItem = ({ product, onChangeQuantity, onDeleteItem, isLastItem = false 
       spiceLevel = data?.adjustableSpiceLevelDtoList.find(spiceLevelInfo => product.spiceLevel === spiceLevelInfo.id)?.spiceLevel;
     }
 
-    if (product.additions?.length) {
-      additions = product.additions.map(additionId => {
-        const additionInfo = data?.dishAdditionDtoList.find(info => info.id === additionId);
-        const additionName = additionInfo ? getDataStringByLocale(additionInfo, "name", i18n.language) : "";
+    if (product.additions) {
+      additions = Object.keys(product.additions).map(additionId => {
+        const currentAddition = data?.dishAdditionDtoList.find(info => String(info.id) === additionId);
+        const additionName = currentAddition ? getDataStringByLocale(currentAddition, "name", i18n.language) : "";
 
         return additionName;
       }).join(", ");
@@ -90,14 +85,32 @@ const CartItem = ({ product, onChangeQuantity, onDeleteItem, isLastItem = false 
     setSelectedDish({ id });
   };
 
+  // sync the product and additions' prices with current price mentioned in local db
   useEffect(() => {
     (async function() {
+      const changedParams = {} as ICartItem;
       const cartItem = await db.products.get(product.uid);
 
-      if (data && cartItem && data.price !== cartItem.price) {
+      if (data && cartItem) {
+        if (data.price !== cartItem.price) {
+          changedParams.price = data.price;
+        }
+
+        if (cartItem.additions) {
+          for (const addition of data.dishAdditionDtoList) {
+            if (cartItem.additions[addition.id]) {
+              if (changedParams.additions) {
+                changedParams.additions[addition.id] = addition.price;
+              } else {
+                changedParams.additions = { [addition.id]: addition.price };
+              }
+            }
+          }
+        }
+
         await db.products.put({
           ...cartItem,
-          price: data.price,
+          ...changedParams
         }, product.uid);
       }
     })();
@@ -114,7 +127,7 @@ const CartItem = ({ product, onChangeQuantity, onDeleteItem, isLastItem = false 
 
   return (
     <div className="flex flex-col">
-      <div key={product.id} className="cursor-pointer" onClick={() => { handleSelectDish(product.id); }}>
+      <div className="cursor-pointer" onClick={() => { handleSelectDish(product.id); }}>
         <div className="flex items-center gap-4">
           <img src={data.url} alt="cart product image" className="w-[136px] h-[136px] object-cover rounded-xl"/>
           <div>
