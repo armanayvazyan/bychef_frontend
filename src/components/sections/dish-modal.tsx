@@ -199,7 +199,7 @@ const DishModal = ({ id, onCloseDialog }: IDishModal) => {
         )}
         {!!dishInfo?.dietaryOptionDtoList.length && (
           <div className="flex overflow-x-scroll gap-1 mt-3">
-            {new Array(10).fill(dishInfo.dietaryOptionDtoList[0]).map(dietaryInfo => (
+            {dishInfo.dietaryOptionDtoList.map(dietaryInfo => (
               <DietaryOption key={dietaryInfo.id} value={dietaryInfo.dietaryOptionValue} />
             ))}
           </div>
