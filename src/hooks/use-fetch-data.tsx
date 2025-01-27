@@ -49,7 +49,7 @@ export const fetchApi = async ({
   try {
     const endPoint = initialPath + pathExtension;
 
-    if (!endPoint) return;
+    if (!endPoint && !url) return;
 
     const reqUrl = url ? url + pathExtension : constructFinalUrl(endPoint);
 
