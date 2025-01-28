@@ -6,7 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 const fetchTermsContent = async (locale: LOCALES) => {
   const response = await fetchApi({
-    initialPath: `https://static.bychef.am/docs/terms/${locale}_latest.html`
+    url: `https://static.bychef.am/docs/terms/${locale}_latest.html`
   });
 
   if (response && !response.error) {
