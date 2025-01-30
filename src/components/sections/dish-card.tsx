@@ -8,7 +8,7 @@ import { X } from "lucide-react";
 import DishModal from "@/components/sections/dish-modal";
 import getDataByLocale, { getDataStringByLocale } from "@/helpers/getDataByLocale";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import {logDishClickEvent} from "@/analytics/Events";
+import { logDishClickEvent } from "@/analytics/Events";
 
 interface IDishCard {
   dishInfo: IDishInfo;

@@ -20,7 +20,7 @@ import { useTranslation } from "react-i18next";
 import Separator from "@/components/ui/separator";
 import changeLanguage from "@/helpers/changeLanguage";
 import { NavigationMenuItem } from "@radix-ui/react-navigation-menu";
-import {logLanguageApplyEvent} from "@/analytics/Events";
+import { logLanguageApplyEvent } from "@/analytics/Events";
 
 const components: { title: string; href: string }[][] = [
   [

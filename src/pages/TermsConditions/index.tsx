@@ -3,6 +3,8 @@ import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
 import { fetchApi } from "@/hooks/use-fetch-data";
 import { Skeleton } from "@/components/ui/skeleton";
+import {useEffect} from "react";
+import {logPageOpenEvent} from "@/analytics/Events";
 
 const fetchTermsContent = async (locale: LOCALES) => {
   const response = await fetchApi({
@@ -27,7 +29,9 @@ const TermsConditions = () => {
     queryFn: () => fetchTermsContent(i18n.language.split("-")[0] as LOCALES),
     refetchOnWindowFocus: false,
   });
-
+  useEffect(() => {
+    logPageOpenEvent();
+  }, []);
   return (
     <section className="px-[10%] py-20">
       {data && <div className="leading-loose [&_li]:ms-3" dangerouslySetInnerHTML={{ __html: data }} />}

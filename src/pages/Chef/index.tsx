@@ -8,8 +8,8 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchApi } from "@/hooks/use-fetch-data";
 import ChefInfoContext from "@/context/chef-info-context";
 import { IChefInfo } from "@/types";
-import {useEffect} from "react";
-import {logPageOpenEvent} from "@/analytics/Events";
+import { useEffect } from "react";
+import { logPageOpenEvent } from "@/analytics/Events";
 
 const fetchChef = async (id: string): Promise<IChefInfo | undefined> => {
   const data = await fetchApi(

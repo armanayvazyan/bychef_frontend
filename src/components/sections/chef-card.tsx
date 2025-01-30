@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import GridCard from "@/components/ui/grid-card";
 import getDataByLocale from "@/helpers/getDataByLocale";
-import {logChefClickEvent} from "@/analytics/Events";
+import { logChefClickEvent } from "@/analytics/Events";
 
 interface IChefCardProps {
   chefInfo: IChefGenericInfo

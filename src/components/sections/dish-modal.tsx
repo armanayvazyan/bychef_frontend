@@ -16,7 +16,7 @@ import DishModalAlert from "@/components/sections/dish-modal-alert";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import getDataByLocale, { getDataStringByLocale } from "@/helpers/getDataByLocale";
 import { DialogDescription, DialogFooter, DialogTitle } from "@/components/ui/dialog";
-import {logCartAddEvent} from "@/analytics/Events";
+import { logCartAddEvent } from "@/analytics/Events";
 
 const fetchDish = async (id: string | number): Promise<IDishInfo | undefined> => {
   const data = await fetchApi(
@@ -63,14 +63,14 @@ const DishModal = ({ id, onCloseDialog }: IDishModal) => {
 
   const dishIngredients = useMemo(() => {
     return dishInfo?.ingridientsDto
-        .map((ingredient) => {
-          if (i18n.language === 'en') return ingredient.ingredientEn;
-          if (i18n.language === 'ru') return ingredient.ingredientRu;
-          if (i18n.language === 'hy') return ingredient.ingredientHy;
-          return ingredient.ingredientEn;
-        })
+      .map((ingredient) => {
+        if (i18n.language === "en") return ingredient.ingredientEn;
+        if (i18n.language === "ru") return ingredient.ingredientRu;
+        if (i18n.language === "hy") return ingredient.ingredientHy;
+        return ingredient.ingredientEn;
+      })
 
-        .join(", ");
+      .join(", ");
   }, [dishInfo?.ingridientsDto, i18n.language]);
 
   const [product, setProduct] = useState<ISelectedProductInfo>({
@@ -161,7 +161,7 @@ const DishModal = ({ id, onCloseDialog }: IDishModal) => {
 
       console.log(updatedCart);
       await db.products.put(updatedCart, itemId);
-      logCartAddEvent(updatedCart.id, updatedCart.quantity, "dish_details", updatedCart.spiceLevel === dishInfo.adjustableSpiceLevelDtoList[0].id)
+      logCartAddEvent(updatedCart.id, updatedCart.quantity, "dish_details", updatedCart.spiceLevel === dishInfo.adjustableSpiceLevelDtoList[0].id);
       onCloseDialog();
 
       toast({
