@@ -1,4 +1,5 @@
 import analyticManager from "./AnalyticsManager";
+import { IDishInfo } from "@/types";
 
 export const logPageOpenEvent = (additionalProperties?: Record<string, any>): void => {
   const properties: Record<string, string | null> = {
@@ -22,16 +23,26 @@ export const logLanguageApplyEvent = (language: string): void => {
 };
 
 export const logChefClickEvent = (chefId: number): void => {
-  const properties: Record<string, string | null> = {
-    chef_id: chefId.toString(),
+  const properties: Record<string, any> = {
+    chef_id: chefId,
     page: sessionStorage.getItem("currentPage"),
   };
   analyticManager.logEvent("chef_click", properties);
 };
 
+export const logDishClickEvent= (dishInfo: IDishInfo): void => {
+  const properties: Record<string, any> = {
+    dish_id: dishInfo.id,
+    dish_name: dishInfo.nameEn,
+    dish_type: dishInfo.type,
+    chef_id: Number(sessionStorage.getItem("currentChefId")),
+  };
+  analyticManager.logEvent("dish_click", properties);
+};
+
 export const logCartAddEvent = (dishId: number, count: number, source: string, spiceLevelChanged: boolean): void => {
   const properties: Record<string, any> = {
-    chef_id: sessionStorage.getItem("currentChefId"),
+    chef_id: Number(sessionStorage.getItem("currentChefId")),
     count: count,
     dish_id: dishId,
     source: source,
