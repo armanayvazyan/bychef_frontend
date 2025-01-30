@@ -20,6 +20,7 @@ import { useTranslation } from "react-i18next";
 import Separator from "@/components/ui/separator";
 import changeLanguage from "@/helpers/changeLanguage";
 import { NavigationMenuItem } from "@radix-ui/react-navigation-menu";
+import {logLanguageApplyEvent} from "@/analytics/Events";
 
 const components: { title: string; href: string }[][] = [
   [
@@ -66,6 +67,7 @@ const Footer = () => {
     if (name) {
       changeLanguage(name as LOCALES);
       setSelectedLocale(name as LOCALES);
+      logLanguageApplyEvent(name as LOCALES);
     }
   };
 

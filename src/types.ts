@@ -92,8 +92,9 @@ export interface IDietaryOptionDtoList {
 
 export interface IIngredientsDto {
   id: number
-  ingredient: string
-  translations: ILocalizedData[]
+  ingredientEn: string
+  ingredientRu: string
+  ingredientHy: string
 }
 
 export interface IDishTagDto {
