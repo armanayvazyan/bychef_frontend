@@ -31,8 +31,8 @@ const ChefCard = ({ chefInfo }: IChefCardProps) => {
   return (
     <GridCard
       onClick={()=>{
-        logChefClickEvent(chefInfo.id)
-        handleNavigate()
+        logChefClickEvent(chefInfo.id);
+        handleNavigate();
       }}
       className="px-4 py-3 cursor-pointer"
     >

@@ -28,7 +28,7 @@ const Chef = () => {
   const { id } = useParams();
   useEffect(() => {
     logPageOpenEvent({
-      "chef_id": id
+      chef_id: id
     });
   }, []);
   const {
