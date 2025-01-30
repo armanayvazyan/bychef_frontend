@@ -12,7 +12,16 @@ class AmplitudeService {
   init(): void {
     if (typeof window !== "undefined" && !this.amplitudeInstance) {
       this.amplitudeInstance = amplitude;
-      this.amplitudeInstance.init(ANALYTICS_AMPLITUDE_KEY as string);
+      this.amplitudeInstance.init(ANALYTICS_AMPLITUDE_KEY as string, {
+        autocapture: {
+          attribution: false,
+          pageViews: false,
+          sessions: true,
+          formInteractions: false,
+          fileDownloads: false,
+          elementInteractions: false,
+        },
+      });
       console.log("Amplitude initialized");
     }
   }
