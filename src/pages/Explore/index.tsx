@@ -1,6 +1,11 @@
 import ExploreChefs from "@/components/sections/explore-chefs";
+import { useEffect } from "react";
+import { logPageOpenEvent } from "@/analytics/Events";
 
 const Explore = () => {
+  useEffect(() => {
+    logPageOpenEvent();
+  }, []);
   return (
     <section>
       <img
