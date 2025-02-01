@@ -63,13 +63,7 @@ const DishModal = ({ id, onCloseDialog }: IDishModal) => {
 
   const dishIngredients = useMemo(() => {
     return dishInfo?.ingridientsDto
-      .map((ingredient) => {
-        if (i18n.language === "en") return ingredient.ingredientEn;
-        if (i18n.language === "ru") return ingredient.ingredientRu;
-        if (i18n.language === "hy") return ingredient.ingredientHy;
-        return ingredient.ingredientEn;
-      })
-
+      .map((ingredient) => getDataStringByLocale(ingredient, "ingredient", i18n.language))
       .join(", ");
   }, [dishInfo?.ingridientsDto, i18n.language]);
 
