@@ -1,5 +1,5 @@
 import Faq from "@/components/sections/faq";
-import HeroMap from "@/components/sections/hero-map";
+import Hero from "@/components/sections/hero";
 import FoodSafety from "@/components/sections/food-safety";
 import AboutSection from "@/components/sections/about-section";
 import Illustrations from "@/components/sections/illustrations";
@@ -13,7 +13,7 @@ const Home = () => {
   }, []);
   return (
     <>
-      <HeroMap />
+      <Hero />
       <Illustrations />
       <AboutSection />
       <ImageCollection />

@@ -13,6 +13,7 @@ import ScrollResetWrapper from "@/hocs/ScrollResetWrapper";
 import NotificationsWrapper from "@/hocs/NotificationsWrapper";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider, Navigate, createBrowserRouter } from "react-router-dom";
+import AddressSearchContextProvider from "@/context/address-search-context";
 import PageTrackWrapper from "@/hocs/PageTrackWrapper";
 
 const queryClient = new QueryClient();
@@ -23,14 +24,16 @@ const wrapComponentWithHF = (component: ReactNode, name?: string) => {
       <NotificationsWrapper>
         <AnalyticsWrapper>
           <PageTrackWrapper>
-            <QueryClientProvider client={queryClient}>
-              <HFWrapper>
-                <Helmet>
-                  <title>{name ? `byChef | ${name}` : "byChef"}</title>
-                </Helmet>
-                {component}
-              </HFWrapper>
-            </QueryClientProvider>
+            <AddressSearchContextProvider>
+              <QueryClientProvider client={queryClient}>
+                <HFWrapper>
+                  <Helmet>
+                    <title>{name ? `byChef | ${name}` : "byChef"}</title>
+                  </Helmet>
+                  {component}
+                </HFWrapper>
+              </QueryClientProvider>
+            </AddressSearchContextProvider>
           </PageTrackWrapper>
         </AnalyticsWrapper>
       </NotificationsWrapper>

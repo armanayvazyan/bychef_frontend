@@ -134,7 +134,6 @@ const DishModal = ({ id, onCloseDialog }: IDishModal) => {
       const id3 = product.additions
         ? Object.keys(product.additions).sort((id1, id2) => Number(id1) - Number(id2)).join("/")
         : "-";
-      console.log(id2, id3);
       const itemId = [id1, id2, id3].join("/");
       const selectedItemExistsInCart = await db.products.get(itemId);
 
