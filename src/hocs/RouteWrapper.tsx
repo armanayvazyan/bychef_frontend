@@ -14,6 +14,7 @@ import NotificationsWrapper from "@/hocs/NotificationsWrapper";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider, Navigate, createBrowserRouter } from "react-router-dom";
 import AddressSearchContextProvider from "@/context/address-search-context";
+import PageTrackWrapper from "@/hocs/PageTrackWrapper";
 
 const queryClient = new QueryClient();
 
@@ -22,57 +23,68 @@ const wrapComponentWithHF = (component: ReactNode, name?: string) => {
     <ScrollResetWrapper>
       <NotificationsWrapper>
         <AnalyticsWrapper>
-          <QueryClientProvider client={queryClient}>
+          <PageTrackWrapper>
             <AddressSearchContextProvider>
-              <HFWrapper>
-                <Helmet>
-                  <title>{name ? `byChef | ${name}` : "byChef"}</title>
-                </Helmet>
-                {component}
-              </HFWrapper>
+              <QueryClientProvider client={queryClient}>
+                <HFWrapper>
+                  <Helmet>
+                    <title>{name ? `byChef | ${name}` : "byChef"}</title>
+                  </Helmet>
+                  {component}
+                </HFWrapper>
+              </QueryClientProvider>
             </AddressSearchContextProvider>
-          </QueryClientProvider>
+          </PageTrackWrapper>
         </AnalyticsWrapper>
       </NotificationsWrapper>
     </ScrollResetWrapper>
   );
 };
 
-const routes = [
+export const routes = [
   {
     path: "/",
+    name: "home",
     element: wrapComponentWithHF(<Home />),
   },
   {
     path: "/explore",
+    name: "explore",
     element: wrapComponentWithHF(<Explore />)
   },
   {
     path: "/chef/:id",
+    name: "kitchen",
     element: wrapComponentWithHF(<Chef />)
   },
   {
     path: "/checkout",
+    name: "checkout",
     element: wrapComponentWithHF(<Checkout />)
   },
   {
     path: "/order/success",
+    name: "order_success",
     element: wrapComponentWithHF(<OrderStatus type="success" />)
   },
   {
     path: "/order/failed",
+    name: "order_failed",
     element: wrapComponentWithHF(<OrderStatus type="failure" />)
   },
   {
     path: "/privacy",
+    name: "privacy",
     element: wrapComponentWithHF(<PrivacyPolicy />)
   },
   {
     path: "/terms",
+    name: "terms",
     element: wrapComponentWithHF(<TermsConditions />)
   },
   {
     path: "*",
+    name: "404",
     element: <Navigate to="/" replace />
   },
 ];

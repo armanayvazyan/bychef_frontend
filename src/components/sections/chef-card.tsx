@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import GridCard from "@/components/ui/grid-card";
 import getDataByLocale from "@/helpers/getDataByLocale";
+import { logChefClickEvent } from "@/analytics/Events";
 
 interface IChefCardProps {
   chefInfo: IChefGenericInfo
@@ -29,7 +30,10 @@ const ChefCard = ({ chefInfo }: IChefCardProps) => {
 
   return (
     <GridCard
-      onClick={handleNavigate}
+      onClick={()=>{
+        logChefClickEvent(chefInfo.id);
+        handleNavigate();
+      }}
       className="px-4 py-3 cursor-pointer"
     >
       <div className="flex flex-col flex-wrap gap-4">

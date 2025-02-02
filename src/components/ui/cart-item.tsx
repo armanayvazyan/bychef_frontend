@@ -14,7 +14,7 @@ import { Minus, Plus, Trash2, TriangleAlert, X } from "lucide-react";
 
 const fetchCartItem = async (id: string | number, deleteItemCb: () => void) => {
   const data = await fetchApi({
-    initialPath: "dish/admin/",
+    initialPath: "dish/",
     pathExtension: id.toString()
   });
 
