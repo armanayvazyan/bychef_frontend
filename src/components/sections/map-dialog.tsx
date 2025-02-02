@@ -20,7 +20,7 @@ const MapDialog = ({ trigger }: { trigger: ReactNode }) => {
         <DialogTitle className="text-center text-xl font-semibold">Մուտքագրեք Ձեր հասցեն</DialogTitle>
         <div>
           <div className="flex gap-2 items-center mb-6">
-            <SearchInput/>
+            <SearchInput />
           </div>
           <YMaps query={{ lang: "en_US", apikey: import.meta.env.VITE_YMAP_KEY }}>
             <Map/>

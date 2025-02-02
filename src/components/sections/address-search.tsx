@@ -15,7 +15,7 @@ interface ISuggestion {
 const AddressSearch = () => {
   const { toast } = useToast();
   const { i18n } = useTranslation();
-  const { selectedAddress, onSelectAddress } = useContext(AddressSearchContext);
+  const { selectedAddress, onSelectAddress, onSetIsUserInteracting } = useContext(AddressSearchContext);
 
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
@@ -59,7 +59,7 @@ const AddressSearch = () => {
       <div className="relative flex-1">
         <Input
           placeholder="Մուտքագրեք հասցեն"
-          value={(selectedAddress && !value) ? selectedAddress : value}
+          value={(selectedAddress?.address && !value) ? selectedAddress.address : value}
           onChange={(e) => {
             setSuggestions([]);
             setValue(e.target.value);
@@ -67,7 +67,7 @@ const AddressSearch = () => {
           }}
           className="w-full"
         />
-        {(selectedAddress || value) && (
+        {(selectedAddress ?? value) && (
           <Button
             variant="ghost"
             size="lg"
@@ -76,7 +76,7 @@ const AddressSearch = () => {
               setValue("");
               setOpen(false);
               setSuggestions([]);
-              onSelectAddress("");
+              onSelectAddress(null);
             }}
           >
             <Cross2Icon />
@@ -96,7 +96,14 @@ const AddressSearch = () => {
                         setValue("");
                         setOpen(false);
                         setSuggestions([]);
-                        onSelectAddress(suggestion.address);
+                        onSetIsUserInteracting(false);
+                        onSelectAddress({
+                          address: suggestion.address,
+                          location: [
+                            Number(suggestion.location.split(" ")[0]),
+                            Number(suggestion.location.split(" ")[1])
+                          ]
+                        });
                       }}
                     >
                       <div className="flex items-center justify-between">

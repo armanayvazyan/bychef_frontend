@@ -1,24 +1,34 @@
+import { useContext, useEffect, useRef } from "react";
 import { MapPin } from "lucide-react";
 import { Map as YMap, useYMaps } from "@pbe/react-yandex-maps";
-import { useContext } from "react";
 import { AddressSearchContext } from "@/context/address-search-context";
 
 const Map = () => {
   const ymaps = useYMaps(["Map"]);
-  const { onSelectAddress } = useContext(AddressSearchContext);
+  const mapRef = useRef<ymaps.Map | null>(null);
+  const { selectedAddress, onSelectAddress, isUserInteracting, onSetIsUserInteracting } = useContext(AddressSearchContext);
 
   const getGeoLocation = async (e: any) => {
-    if (ymaps) {
+    if (ymaps && isUserInteracting) {
       const coord = e.get("target").getCenter() as number[];
       const response = await ymaps.geocode(coord);
       // @ts-expect-error remove error
       const currentAddress = response.geoObjects.get(0).getAddressLine() as string;
 
       if (currentAddress) {
-        onSelectAddress(currentAddress);
+        onSelectAddress({ address: currentAddress, location: coord });
       }
     }
   };
+
+  useEffect(() => {
+    (async () => {
+      if (selectedAddress && !isUserInteracting && mapRef.current) {
+        await mapRef.current.setCenter(selectedAddress.location.reverse(), 17);
+        onSetIsUserInteracting(true);
+      }
+    })();
+  }, [isUserInteracting, onSetIsUserInteracting, selectedAddress]);
 
   return (
     <div className="relative w-full h-[500px]">
@@ -26,6 +36,7 @@ const Map = () => {
         <MapPin width={30} height={30} color="red"/>
       </div>
       <YMap
+        instanceRef={(ref) => { mapRef.current = ref; }}
         defaultState={{
           center: [40.188508, 44.516095],
           zoom: 17
@@ -33,6 +44,7 @@ const Map = () => {
         className="w-full h-full"
         onBoundsChange={getGeoLocation}
         modules={["geolocation", "geocode"]}
+        onActionBegin={() => { onSetIsUserInteracting(true); }}
       />
     </div>
   );
