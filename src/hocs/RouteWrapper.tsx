@@ -63,12 +63,12 @@ export const routes = [
     element: wrapComponentWithHF(<Checkout />)
   },
   {
-    path: "/order/success",
+    path: "/orders/success",
     name: "order_success",
     element: wrapComponentWithHF(<OrderStatus type="success" />)
   },
   {
-    path: "/order/failed",
+    path: "/orders/failed",
     name: "order_failed",
     element: wrapComponentWithHF(<OrderStatus type="failure" />)
   },
