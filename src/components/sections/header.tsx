@@ -16,14 +16,16 @@ const Header = () => {
         <Link to="/">
           <img src={logo} alt="logo" className="h-8 md:h-auto"/>
         </Link>
-        <Map
-          trigger={
-            <div className="hidden gap-2 md:flex items-center">
-              <MapPin />
-              <p className="text-base font-bold text-primary underline">{sessionLocation?.[0].address}</p>
-            </div>
-          }
-        />
+        {!!sessionLocation?.length && (
+          <Map
+            trigger={
+              <div className="hidden gap-2 md:flex items-center">
+                <MapPin />
+                <p className="text-base font-bold text-primary underline">{sessionLocation[0].address}</p>
+              </div>
+            }
+          />
+        )}
         <div className="flex gap-4 items-center font-medium">
           <Link to="/explore">
             Explore
@@ -31,16 +33,18 @@ const Header = () => {
           <UserCart/>
         </div>
       </div>
-      <Map
-        trigger={
-          <div className="flex gap-2 md:hidden items-center">
-            <span className="flex-1">
-              <MapPin />
-            </span>
-            <p className="text-base font-bold text-primary underline">{sessionLocation?.[0].address}</p>
-          </div>
-        }
-      />
+      {!!sessionLocation?.length && (
+        <Map
+          trigger={
+            <div className="flex gap-2 md:hidden items-center">
+              <span className="flex-1">
+                <MapPin />
+              </span>
+              <p className="text-base font-bold text-primary underline">{sessionLocation[0].address}</p>
+            </div>
+          }
+        />
+      )}
     </NavigationMenu>
   );
 };
