@@ -1,9 +1,9 @@
+import { useEffect } from "react";
 import { LOCALES } from "@/types";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
-import {useEffect} from "react";
-import {logPageOpenEvent} from "@/analytics/Events";
+import { logPageOpenEvent } from "@/analytics/Events";
 
 const fetchPrivacyContent = async (locale: LOCALES) => {
   try {

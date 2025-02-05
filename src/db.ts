@@ -12,7 +12,7 @@ interface ICartItem {
 interface ILocation {
   id: string;
   address: string;
-  coordinates: { lng: string; lat: string };
+  coordinates: { lng: number; lat: number };
 }
 
 const db = new Dexie("UserCart") as Dexie & {
