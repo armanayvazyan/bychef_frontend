@@ -47,7 +47,7 @@ const AddressSearch = ({ callback }: { callback?: any }) => {
   const { selectedAddress, onSelectAddress, onSetIsUserInteracting } = useContext(AddressSearchContext);
 
   const [value, setValue] = useState("");
-  const [search] = useDebounce(value, 1000);
+  const search = useDebounce(value, 700);
 
   // TODO: handle error case
   const { data: suggestions, isLoading } = useQuery({
