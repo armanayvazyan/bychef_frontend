@@ -144,6 +144,8 @@ const DishModal = ({ id, onCloseDialog }: IDishModal) => {
       return;
     }
 
+    console.log();
+
     try {
       // item id consists from 3 parts (product id, spice level id, selected addition ids)
       const id1 = dishInfo.id;
@@ -171,7 +173,7 @@ const DishModal = ({ id, onCloseDialog }: IDishModal) => {
       }
 
       await db.products.put(updatedCart, itemId);
-      logCartAddEvent(updatedCart.id, updatedCart.quantity, "dish_details", updatedCart.spiceLevel === dishInfo.adjustableSpiceLevelDtoList[0].id);
+      logCartAddEvent(updatedCart.id, updatedCart.quantity, "dish_details", updatedCart.spiceLevel === dishInfo.adjustableSpiceLevelDtoList[0]?.id);
       onCloseDialog();
 
       toast({
