@@ -9,7 +9,7 @@ const MapDialog = ({ trigger }: { trigger: ReactNode }) => {
   const [open, setOpen] = useState(false);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger className="[&_button]:px-0 text-xs font-normal text-zinc-600">{trigger}</DialogTrigger>
+      <DialogTrigger className="text-xs font-normal text-zinc-600">{trigger}</DialogTrigger>
       <DialogContent
         className="rounded-lg"
         closeIcon={

@@ -13,12 +13,10 @@ const HeroTemp = () => {
           <div className="flex gap-2 w-full">
             <SearchInput />
           </div>
-          <div className="w-full">
+          <div className="flex justify-center w-full">
             <Map
               trigger={
-                <div className="flex justify-start w-full">
-                  <Button variant="ghost2">Գտնել քարտեզով այստեղ</Button>
-                </div>
+                <Button>Գտնել քարտեզով այստեղ</Button>
               }
             />
           </div>
