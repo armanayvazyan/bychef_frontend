@@ -1,4 +1,4 @@
-import { MouseEvent, useCallback, useEffect, useMemo, useState } from "react";
+import { MouseEvent, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { db } from "@/db";
 import { IDishInfo } from "@/types";
 import Button from "@/components/ui/button";
@@ -10,13 +10,15 @@ import { fetchApi } from "@/hooks/use-fetch-data";
 import Separator from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Loader2, Minus, Plus } from "lucide-react";
+import { logCartAddEvent } from "@/analytics/Events";
 import Addition from "@/components/sections/addition";
+import ChefInfoContext from "@/context/chef-info-context";
 import DietaryOption from "@/components/sections/dietary-option";
 import DishModalAlert from "@/components/sections/dish-modal-alert";
+import ClearCartModal from "@/components/sections/clear-cart-modal";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import getDataByLocale, { getDataStringByLocale } from "@/helpers/getDataByLocale";
 import { DialogDescription, DialogFooter, DialogTitle } from "@/components/ui/dialog";
-import { logCartAddEvent } from "@/analytics/Events";
 
 const fetchDish = async (id: string | number): Promise<IDishInfo | undefined> => {
   const data = await fetchApi(
@@ -43,6 +45,7 @@ interface ISelectedProductInfo {
 const DishModal = ({ id, onCloseDialog }: IDishModal) => {
   const { toast } = useToast();
   const { i18n, t } = useTranslation();
+  const { info } = useContext(ChefInfoContext);
 
   const {
     isFetching,
@@ -68,13 +71,16 @@ const DishModal = ({ id, onCloseDialog }: IDishModal) => {
       .join(", ");
   }, [dishInfo?.ingridientsDto, i18n.language]);
 
+  const [isClearCartOpen, setIsClearCartOpen] = useState(false);
   const [product, setProduct] = useState<ISelectedProductInfo>({
     quantity: 1,
   });
 
   const totalCartItemPrice = useMemo(() => {
     if (dishInfo) {
-      const additionsTotalPrice = product.additions ? Object.values(product.additions).reduce((acc, additionPrice) => acc + additionPrice, 0) : 0;
+      const additionsTotalPrice = product.additions
+        ? Object.values(product.additions).reduce((acc, additionPrice) => acc + additionPrice, 0)
+        : 0;
 
       return (dishInfo.price + additionsTotalPrice) * product.quantity;
     } else {
@@ -104,7 +110,9 @@ const DishModal = ({ id, onCloseDialog }: IDishModal) => {
     if (!id) return;
 
     const price = e.currentTarget.getAttribute("data-price");
-    const hasAddition = product.additions ? Object.keys(product.additions).find(additionId => additionId === id) : false;
+    const hasAddition = product.additions
+      ? Object.keys(product.additions).find(additionId => additionId === id)
+      : false;
 
     if (hasAddition) {
       const filteredAdditions = { ...product.additions };
@@ -126,7 +134,15 @@ const DishModal = ({ id, onCloseDialog }: IDishModal) => {
   };
 
   const handleAddToCart = useCallback(async () => {
-    if (!dishInfo?.id) return;
+    if (!dishInfo?.id || !info?.id) return;
+
+    const cartDishes = await db.products.toArray();
+    const chefDishesInCart = await db.products.where("chefId").equals(info.id).toArray();
+
+    if (cartDishes.length !== chefDishesInCart.length) {
+      setIsClearCartOpen(true);
+      return;
+    }
 
     try {
       // item id consists from 3 parts (product id, spice level id, selected addition ids)
@@ -146,6 +162,7 @@ const DishModal = ({ id, onCloseDialog }: IDishModal) => {
         updatedCart = {
           uid: itemId,
           id: dishInfo.id,
+          chefId: info.id,
           price: dishInfo.price,
           quantity: product.quantity,
           ...(product.spiceLevelId && { spiceLevel: product.spiceLevelId }),
@@ -153,7 +170,6 @@ const DishModal = ({ id, onCloseDialog }: IDishModal) => {
         };
       }
 
-      console.log(updatedCart);
       await db.products.put(updatedCart, itemId);
       logCartAddEvent(updatedCart.id, updatedCart.quantity, "dish_details", updatedCart.spiceLevel === dishInfo.adjustableSpiceLevelDtoList[0].id);
       onCloseDialog();
@@ -172,8 +188,18 @@ const DishModal = ({ id, onCloseDialog }: IDishModal) => {
     toast,
     product,
     dishInfo,
+    info?.id,
     onCloseDialog,
   ]);
+
+  const handleClearCartAcceptAction = async () => {
+    await db.products.clear();
+    handleAddToCart();
+  };
+
+  const handleClearCartDeclineAction = () => {
+    setIsClearCartOpen(false);
+  };
 
   // select first spice level item as default if no spice level is selected
   useEffect(() => {
@@ -188,6 +214,12 @@ const DishModal = ({ id, onCloseDialog }: IDishModal) => {
 
   return (
     <>
+      <ClearCartModal
+        open={isClearCartOpen}
+        setOpen={setIsClearCartOpen}
+        acceptAction={handleClearCartAcceptAction}
+        declineAction={handleClearCartDeclineAction}
+      />
       {dishInfo?.url && (
         <img src={dishInfo.url} alt="dish image" className="w-full max-h-[282px] object-cover rounded-xl" />
       )}

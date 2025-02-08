@@ -3,8 +3,9 @@ import Dexie, { EntityTable } from "dexie";
 interface ICartItem {
   id: number;
   uid: string;
-  quantity: number;
   price: number;
+  chefId?: number;
+  quantity: number;
   spiceLevel?: number;
   additions?: Record<string, number>;
 }
@@ -28,7 +29,7 @@ const db = new Dexie("UserCart") as Dexie & {
 
 // Schema declaration:
 db.version(1).stores({
-  products: "uid",
+  products: "uid, chefId",
   location: "id",
 });
 
