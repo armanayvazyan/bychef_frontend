@@ -54,6 +54,7 @@ const DishModal = ({ id, onCloseDialog }: IDishModal) => {
   });
 
   const name = dishInfo ? getDataStringByLocale(dishInfo, "name", i18n.language) : null;
+  const dishPortion = dishInfo ? getDataStringByLocale(dishInfo, "portion", i18n.language) : null;
 
   const dishLabels = useMemo(() => {
     return dishInfo?.dishTagDtos.map((label) => (
@@ -217,7 +218,7 @@ const DishModal = ({ id, onCloseDialog }: IDishModal) => {
           {isFetching && !name && <Skeleton className="w-full h-[20px] rounded-md" />}
         </DialogTitle>
         <DialogDescription className="mt-3">
-          {dishIngredients && <p className="text-zinc-500 text-base font-medium">{dishIngredients}</p>}
+          {dishIngredients && <p className="text-zinc-500 text-base font-medium">{[dishPortion, dishIngredients].join(", ")}</p>}
           {isFetching && !dishIngredients && <Skeleton className="w-full h-[60px] rounded-md" />}
         </DialogDescription>
         <Separator className="my-4"/>
