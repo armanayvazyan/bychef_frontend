@@ -62,23 +62,25 @@ const CartItem = ({ product, onChangeQuantity, onDeleteItem, isLastItem = false 
   }, [product.additions, product.price, product.quantity]);
 
   const details = useMemo(() => {
-    let spiceLevel = null;
-    let additions = null;
+    const details = [];
 
     if (product.spiceLevel) {
-      spiceLevel = data?.adjustableSpiceLevelDtoList.find(spiceLevelInfo => product.spiceLevel === spiceLevelInfo.id)?.spiceLevel;
+      const spiceLevel = data?.adjustableSpiceLevelDtoList.find(spiceLevelInfo => product.spiceLevel === spiceLevelInfo.id)?.spiceLevel;
+      details.unshift(t(`spice-levels.${spiceLevel}`));
     }
 
     if (product.additions) {
-      additions = Object.keys(product.additions).map(additionId => {
+      const additions = Object.keys(product.additions).map(additionId => {
         const currentAddition = data?.dishAdditionDtoList.find(info => String(info.id) === additionId);
         const additionName = currentAddition ? getDataStringByLocale(currentAddition, "name", i18n.language) : "";
 
         return additionName;
       }).join(", ");
+
+      details.push(additions);
     }
 
-    return [t(`spice-levels.${spiceLevel}`), additions].join(", ");
+    return details.join(", ");
   }, [data?.adjustableSpiceLevelDtoList, data?.dishAdditionDtoList, i18n.language, product.additions, product.spiceLevel, t]);
 
   const handleSelectDish = (id: string | number) => {
