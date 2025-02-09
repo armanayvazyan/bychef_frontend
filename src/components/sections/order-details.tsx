@@ -1,4 +1,4 @@
-import { useCallback, useId, useMemo, useState } from "react";
+import { useCallback, useEffect, useId, useMemo, useState } from "react";
 import { z } from "zod";
 import { db, ICartItem } from "@/db";
 import { ChevronUp } from "lucide-react";
@@ -26,20 +26,30 @@ enum EInputNames {
   notes = "notes",
   delivery_date = "delivery_date",
   delivery_time = "delivery_time",
-  payment_method = "payment_method"
+  payment_method = "payment_method",
+  coordinates = "coordinates"
 }
 
 const formSchema = z.object({
-  [EInputNames.email]: z.string().min(1),
-  [EInputNames.address]: z.string().min(1),
+  [EInputNames.email]: z
+    .string()
+    .min(1, { message: "form.email-required" })
+    .email({ message: "form.invalid-email" }),
+  [EInputNames.address]: z
+    .string()
+    .min(1, { message: "form.address-required" }),
   [EInputNames.apartment]: z.string().optional(),
   [EInputNames.entrance]: z.string().optional(),
   [EInputNames.floor]: z.string().optional(),
-  [EInputNames.phone]: z.string().min(1),
+  [EInputNames.phone]: z
+    .string()
+    .min(1, { message: "form.phone-required" })
+    .regex(/^[+]{1}(?:[0-9]){6,15}[0-9]{1}$/, { message: "form.invalid-phone" }),
   [EInputNames.notes]: z.string().optional(),
-  [EInputNames.delivery_date]: z.string().min(1),
-  [EInputNames.delivery_time]: z.string().min(1),
-  [EInputNames.payment_method]: z.string().min(1),
+  [EInputNames.delivery_date]: z.string().min(1, { message: "form.delivery-date-required" }),
+  [EInputNames.delivery_time]: z.string().min(1, { message: "form.delivery-time-required" }),
+  [EInputNames.payment_method]: z.string().min(1, { message: "form.payment-method-required" }),
+  [EInputNames.coordinates]: z.array(z.number()).optional(),
 });
 
 const deliveryDates = [
@@ -72,7 +82,8 @@ const OrderDetails = () => {
       phone: "",
       delivery_date: "",
       delivery_time: "",
-      payment_method: ""
+      payment_method: "",
+      coordinates: [],
     },
     resolver: zodResolver(formSchema)
   });
@@ -156,13 +167,24 @@ const OrderDetails = () => {
     }
   }, [products]);
 
+  useEffect(() => {
+    (async () => {
+      const sessionLocation = await db.location.toArray();
+
+      if (sessionLocation[0]) {
+        form.setValue(EInputNames.address, sessionLocation[0].address);
+        form.setValue(EInputNames.coordinates, [sessionLocation[0].coordinates.lat, sessionLocation[0].coordinates.lng]);
+      }
+    })();
+  }, [form]);
+
   return (
     // @ts-expect-error zod problem (temp solution)
     <Form id={formId} form={form} onSubmit={handleSubmitOrder} className="w-full flex flex-col-reverse lg:flex-row justify-around gap-3">
       <fieldset className="flex flex-col gap-4 lg:max-w-[500px] w-full">
         <div className="flex flex-col gap-5">
-          <h1 className="text-primary font-bold text-xl leading-tight">Առաքման տվյալներ</h1>
-          <FormItem label={t("email")} requiredAsterisk name={EInputNames.address}>
+          <h1 className="text-primary font-bold text-xl leading-tight">{t("delivery-details")}</h1>
+          <FormItem label={t("email")} requiredAsterisk name={EInputNames.email}>
             <Input placeholder="example@gmail.com" />
           </FormItem>
           <FormItem label={t("address")} requiredAsterisk name={EInputNames.address}>

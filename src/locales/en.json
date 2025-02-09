@@ -35,14 +35,12 @@
     "order-hours-ahead": "Order {{timeAhead}} hours in advance"
   },
   "home-page": {
-    "subscribe": {
-      "title": "Pre-sign up",
-      "details": "Sign up now to be among the first to launch your business with our support.",
-      "name-input": "Full Name",
-      "phone-input": "Phone number",
-      "button": "Sign Up",
-      "success-title": "You have successfully registered.",
-      "success-details": "We will contact you shortly to discuss the next steps."
+    "address": {
+      "address-not-found": "Address not found",
+      "select-address": "Enter delivery address",
+      "input-address": "Enter the address",
+      "confirm": "Confirm",
+      "find-with-map": "Find on the map"
     },
     "illustration1": {
       "title": "Authentic, homemade food",
@@ -131,6 +129,7 @@
     }
   },
   "checkout": {
+    "delivery-details": "Delivery details",
     "address": "Address",
     "email": "Email",
     "floor": "Floor",
@@ -167,5 +166,17 @@
     "vegetarian": "Vegetarian",
     "halal": "Halal",
     "kosher": "Kosher"
+  },
+  "errors": {
+    "form": {
+      "email-required": "The email is a required field",
+      "phone-required": "The phone number is a required field",
+      "address-required": "The address is a required field",
+      "payment-method-required": "A payment method is required",
+      "delivery-date-required": "Select a delivery date",
+      "delivery-time-required": "Select a delivery time",
+      "invalid-email": "Please enter a valid email address",
+      "invalid-phone": "Please enter a valid phone number"
+    }
   }
 }

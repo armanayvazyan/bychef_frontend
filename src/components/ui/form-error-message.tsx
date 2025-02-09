@@ -1,9 +1,11 @@
 import { forwardRef, HTMLAttributes } from "react";
 import { cn } from "@/lib/utils";
 import { useFormField } from "@/components/ui/form";
+import { useTranslation } from "react-i18next";
 
 const FormItemErrorMessage = forwardRef<HTMLParagraphElement, HTMLAttributes<HTMLParagraphElement>>(
   ({ className, children, ...props }, ref) => {
+    const { t } = useTranslation("translation");
     const { error, formMessageId } = useFormField();
     const errorMsg = error ? error.message : children;
 
@@ -17,7 +19,8 @@ const FormItemErrorMessage = forwardRef<HTMLParagraphElement, HTMLAttributes<HTM
         id={formMessageId}
         className={cn("typo-caption text-red-700", className)}
         {...props}>
-        {errorMsg}
+        {/* eslint-disable-next-line @typescript-eslint/no-base-to-string */}
+        {t(`errors.${errorMsg}`)}
       </p>
     );
   }

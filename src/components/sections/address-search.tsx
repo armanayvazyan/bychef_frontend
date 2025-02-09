@@ -43,7 +43,7 @@ const fetchSearchAddressSuggestions = async (search: string, locale: LOCALES): P
 
 const AddressSearch = ({ callback }: { callback?: any }) => {
   const navigate = useNavigate();
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation("translation");
   const { selectedAddress, onSelectAddress, onSetIsUserInteracting } = useContext(AddressSearchContext);
 
   const [value, setValue] = useState("");
@@ -94,7 +94,7 @@ const AddressSearch = ({ callback }: { callback?: any }) => {
       <div className="relative flex-1">
         <Input
           className="w-full"
-          placeholder="Մուտքագրեք հասցեն"
+          placeholder={t("home-page.address.input-address")}
           value={(selectedAddress?.address && !value) ? selectedAddress.address : value}
           onChange={(e) => {
             setValue(e.target.value);
@@ -114,8 +114,8 @@ const AddressSearch = ({ callback }: { callback?: any }) => {
           <div className="absolute top-full z-50 w-full rounded-lg border bg-background shadow-md mt-1">
             <Command>
               <CommandList>
-                {isLoading && <Skeleton className="w-full h-[30px] rounded-md" />}
-                {!isLoading && !suggestions?.length && <CommandEmpty>No results found.</CommandEmpty>}
+                {isLoading && <Skeleton className="w-full h-[44px] rounded-md" />}
+                {!isLoading && suggestions && !suggestions.length && <CommandEmpty>{t("home-page.address.address-not-found")}</CommandEmpty>}
                 {suggestions && (
                   <CommandGroup>
                     {suggestions.map((suggestion) => (
@@ -140,7 +140,7 @@ const AddressSearch = ({ callback }: { callback?: any }) => {
         disabled={!selectedAddress}
         onClick={handleApplyAddress}
       >
-        Փնտրել
+        {t("home-page.address.confirm")}
       </Button>
     </div>
   );

@@ -35,14 +35,12 @@
     "order-hours-ahead": "Պատվիրել {{timeAhead}} ժամ առաջ"
   },
   "home-page": {
-    "subscribe": {
-      "title": "Գրանցվել նախապես",
-      "details": "Գրանցվեք նախապես և եղեք առաջիններից, ով կստեղծի իր սեփական բիզնեսը մեր օգնությամբ։",
-      "name-input": "Անուն Ազգանուն",
-      "phone-input": "Հեռախոսահամար",
-      "button": "Գրանցվել",
-      "success-title": "Գրանցումը հաջողությամբ կատարված է։",
-      "success-details": "Մենք շուտով կկապնվենք Ձեզ հետ հետագա քայլերի համար:"
+    "address": {
+      "address-not-found": "Հասցեն չի գտնվել",
+      "select-address": "Նշեք առաքման հասցեն",
+      "input-address": "Մուտքագրեք հասցեն",
+      "confirm": "Հաստատել",
+      "find-with-map": "Գտնել քարտեզի վրա"
     },
     "illustration1": {
       "title": "Իրական, տնական ուտեստներ",
@@ -126,6 +124,7 @@
     }
   },
   "checkout": {
+    "delivery-details": "Առաքման տվյալներ",
     "address": "Հասցե",
     "email": "Էլ. Հասցե",
     "floor": "Հարկ",
@@ -162,5 +161,17 @@
     "vegetarian": "Վեգետարիան",
     "halal": "Հալալ",
     "kosher": "Կոշեր"
+  },
+  "errors": {
+    "form": {
+      "email-required": "Էլ. փոստի հասցեն պարտադիր լրացման դաշտ է",
+      "phone-required": "Հեռախոսահամարը պարտադիր լրացման դաշտ է",
+      "address-required": "Հասցեն պարտադիր լրացման դաշտ է",
+      "payment-method-required": "Վճարման եղանակը պարտադիր է",
+      "delivery-date-required": "Ընտրեք առաքման օր",
+      "delivery-time-required": "Ընտրեք առաքման օր",
+      "invalid-email": "Խնդրում ենք մուտքագրել վավեր էլփոստի հասցե",
+      "invalid-phone": "Խնդրում ենք մուտքագրել վավեր հեռախոսահամար"
+    }
   }
 }
