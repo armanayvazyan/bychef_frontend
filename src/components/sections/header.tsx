@@ -14,7 +14,7 @@ const Header = () => {
     <NavigationMenu className="w-full sticky top-0 bg-background flex-none flex-col md:flex max-w-full gap-5 border-b-2 border-zinc-100 px-4 md:px-16 py-2">
       <div className="w-full flex justify-between items-center gap-4">
         <Link to={sessionLocation?.[0] ? "/explore" : "/"} className="shrink-0">
-          <img src={logo} alt="logo" className="h-8 md:h-auto"/>
+          <img src={logo} alt="logo" className="h-8 md:h-10"/>
         </Link>
         {!!sessionLocation?.length && (
           <span className="hidden md:inline">
