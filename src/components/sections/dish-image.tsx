@@ -11,7 +11,7 @@ const DishImage = ({ url }: IDishImageProps) => {
 
   const loadImage = (src: string) => {
     const img = new Image();
-    img.onload = () => { setTimeout(() => { setIsLoaded(true); }, 1000); };
+    img.onload = () => { setIsLoaded(true); };
     img.src = src;
   };
 
