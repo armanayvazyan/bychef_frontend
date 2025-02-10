@@ -32,7 +32,11 @@
     "clear": "Մաքրել",
     "back": "Վերադառնալ",
     "order-days-ahead": "Պատվիրել {{timeAhead}} օր առաջ",
-    "order-hours-ahead": "Պատվիրել {{timeAhead}} ժամ առաջ"
+    "order-hours-ahead": "Պատվիրել {{timeAhead}} ժամ առաջ",
+    "clearCartTitle": "Փոխո՞ւմ եք խոհարարին",
+    "clearCartDescription": "Ձեր զամբյուղը պարունակում է այլ խոհարարի ուտեստներ: Մեկ այլ խոհարարի ուտեստը ավելացնելով ձեր ներկայիս զամբյուղը կմաքրվի: Շարունակե՞լ",
+    "keepCart": "Պահպանել զամբյուղը",
+    "clearCart": "Մաքրել և ավելացնել"
   },
   "home-page": {
     "address": {

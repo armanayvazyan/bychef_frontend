@@ -32,7 +32,11 @@
     "clear": "Clear",
     "back": "Go back",
     "order-days-ahead": "Order {{timeAhead}} days in advance",
-    "order-hours-ahead": "Order {{timeAhead}} hours in advance"
+    "order-hours-ahead": "Order {{timeAhead}} hours in advance",
+    "clearCartTitle": "Switching Chefs?",
+    "clearCartDescription": "Your cart contains dishes from another chef. Adding other chef’s dish will clear your cart. Continue?",
+    "keepCart": "Keep cart",
+    "clearCart": "Clear & add"
   },
   "home-page": {
     "address": {

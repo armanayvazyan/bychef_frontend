@@ -32,7 +32,11 @@
     "clear": "Очистить",
     "back": "Назад",
     "order-days-ahead": "Заказ за {{timeAhead}} дня",
-    "order-hours-ahead": "Заказ за {{timeAhead}} часа(ов)"
+    "order-hours-ahead": "Заказ за {{timeAhead}} часа(ов)",
+    "clearCartTitle": "Меняете повара?",
+    "clearCartDescription": "Ваша корзина содержит блюда от другого повара. Добавление блюда другого повара очистит вашу корзину. Продолжить?",
+    "keepCart": "Сохранить корзину",
+    "clearCart": "Очистить и добавить"
   },
   "home-page": {
     "address": {
