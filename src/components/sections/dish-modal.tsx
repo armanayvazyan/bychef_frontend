@@ -19,6 +19,7 @@ import ClearCartModal from "@/components/sections/clear-cart-modal";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import getDataByLocale, { getDataStringByLocale } from "@/helpers/getDataByLocale";
 import { DialogDescription, DialogFooter, DialogTitle } from "@/components/ui/dialog";
+import DishImage from "@/components/sections/dish-image";
 
 const fetchDish = async (id: string | number): Promise<IDishInfo | undefined> => {
   const data = await fetchApi(
@@ -222,12 +223,7 @@ const DishModal = ({ id, onCloseDialog }: IDishModal) => {
         acceptAction={handleClearCartAcceptAction}
         declineAction={handleClearCartDeclineAction}
       />
-      {dishInfo?.url && (
-        <img src={dishInfo.url} alt="dish image" className="w-full max-h-[282px] object-cover rounded-xl" />
-      )}
-      {isFetching && !dishInfo && (
-        <Skeleton className="w-full h-[282px] rounded-xl" />
-      )}
+      <DishImage url={dishInfo?.url} />
       <div className="max-h-[calc(90dvh-282px-88px-16px-36px-0px)] overflow-y-scroll">
         {dishLabels && <p className="text-base text-zinc-400 font-medium mt-4">{dishLabels}</p>}
         {isFetching && !dishLabels && (
