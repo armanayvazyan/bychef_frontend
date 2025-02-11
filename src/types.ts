@@ -122,6 +122,7 @@ export interface IDishInfo {
   nameEn: string
   nameHy: string
   nameRu: string
+  chefId: number
   price: number
   type: string
   portionAm: string

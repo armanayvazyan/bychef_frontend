@@ -1,4 +1,4 @@
-import { MouseEvent, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { MouseEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { db } from "@/db";
 import { IDishInfo } from "@/types";
 import Button from "@/components/ui/button";
@@ -12,14 +12,13 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Loader2, Minus, Plus } from "lucide-react";
 import { logCartAddEvent } from "@/analytics/Events";
 import Addition from "@/components/sections/addition";
-import ChefInfoContext from "@/context/chef-info-context";
+import DishImage from "@/components/sections/dish-image";
 import DietaryOption from "@/components/sections/dietary-option";
 import DishModalAlert from "@/components/sections/dish-modal-alert";
 import ClearCartModal from "@/components/sections/clear-cart-modal";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import getDataByLocale, { getDataStringByLocale } from "@/helpers/getDataByLocale";
 import { DialogDescription, DialogFooter, DialogTitle } from "@/components/ui/dialog";
-import DishImage from "@/components/sections/dish-image";
 
 const fetchDish = async (id: string | number): Promise<IDishInfo | undefined> => {
   const data = await fetchApi(
@@ -46,7 +45,6 @@ interface ISelectedProductInfo {
 const DishModal = ({ id, onCloseDialog }: IDishModal) => {
   const { toast } = useToast();
   const { i18n, t } = useTranslation();
-  const { info } = useContext(ChefInfoContext);
 
   const {
     isFetching,
@@ -135,17 +133,15 @@ const DishModal = ({ id, onCloseDialog }: IDishModal) => {
   };
 
   const handleAddToCart = useCallback(async () => {
-    if (!dishInfo?.id || !info?.id) return;
+    if (!dishInfo?.id || !dishInfo.chefId) return;
 
     const cartDishes = await db.products.toArray();
-    const chefDishesInCart = await db.products.where("chefId").equals(info.id).toArray();
+    const chefDishesInCart = await db.products.where("chefId").equals(dishInfo.chefId).toArray();
 
     if (cartDishes.length !== chefDishesInCart.length) {
       setIsClearCartOpen(true);
       return;
     }
-
-    console.log();
 
     try {
       // item id consists from 3 parts (product id, spice level id, selected addition ids)
@@ -165,7 +161,7 @@ const DishModal = ({ id, onCloseDialog }: IDishModal) => {
         updatedCart = {
           uid: itemId,
           id: dishInfo.id,
-          chefId: info.id,
+          chefId: dishInfo.chefId,
           price: dishInfo.price,
           quantity: product.quantity,
           ...(product.spiceLevelId && { spiceLevel: product.spiceLevelId }),
@@ -191,7 +187,6 @@ const DishModal = ({ id, onCloseDialog }: IDishModal) => {
     toast,
     product,
     dishInfo,
-    info?.id,
     onCloseDialog,
   ]);
 
