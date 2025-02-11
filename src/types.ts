@@ -131,7 +131,7 @@ export interface IDishInfo {
   status: string
   url: string
   orderBefore: number
-  spiceLevel: string
+  spiceLevel: number
   expirationDate: number
   adjustableSpiceLevelDtoList: IAdjustableSpiceLevelDtoList[]
   dietaryOptionDtoList: IDietaryOptionDtoList[]

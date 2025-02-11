@@ -203,12 +203,14 @@ const DishModal = ({ id, onCloseDialog }: IDishModal) => {
   useEffect(() => {
     if (
       !product.spiceLevelId &&
-      dishInfo?.adjustableSpiceLevelDtoList.length &&
-      product.spiceLevelId !== dishInfo.adjustableSpiceLevelDtoList[0].id
+      dishInfo?.adjustableSpiceLevelDtoList.length
     ) {
-      setProduct(product => ({ ...product, spiceLevelId: dishInfo.adjustableSpiceLevelDtoList[0].id }));
+      setProduct(product => ({
+        ...product,
+        spiceLevelId: dishInfo.spiceLevel ?? dishInfo.adjustableSpiceLevelDtoList[0].id
+      }));
     }
-  }, [dishInfo?.adjustableSpiceLevelDtoList, product.spiceLevelId]);
+  }, [dishInfo?.adjustableSpiceLevelDtoList, dishInfo?.spiceLevel, product.spiceLevelId]);
 
   return (
     <>
