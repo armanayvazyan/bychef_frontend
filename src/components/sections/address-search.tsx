@@ -11,6 +11,7 @@ import { Cross2Icon } from "@radix-ui/react-icons";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AddressSearchContext } from "@/context/address-search-context";
 import { Command, CommandEmpty, CommandGroup, CommandItem, CommandList } from "@/components/ui/command";
+import { YMAP_KEY, YMAP_SEARCH_RESULTS_COUNT } from "@/configs/constants";
 
 interface ISuggestion {
   address: string;
@@ -21,9 +22,9 @@ const fetchSearchAddressSuggestions = async (search: string, locale: LOCALES): P
   if (!search) return null;
 
   const url = new URL("https://geocode-maps.yandex.ru/1.x");
-  url.searchParams.set("apikey", import.meta.env.VITE_YMAP_KEY);
+  url.searchParams.set("apikey", YMAP_KEY);
   url.searchParams.set("geocode", search);
-  url.searchParams.set("results", import.meta.env.VITE_YMAP_SEARCH_RESULTS_COUNT);
+  url.searchParams.set("results", YMAP_SEARCH_RESULTS_COUNT);
   url.searchParams.set("lang", `${locale}_AM`);
   url.searchParams.set("format", "json");
   url.searchParams.set("ll", "44.491567,40.153759");
