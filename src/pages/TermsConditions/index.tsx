@@ -1,23 +1,23 @@
 import { LOCALES } from "@/types";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
-import { fetchApi } from "@/hooks/use-fetch-data";
 import { Skeleton } from "@/components/ui/skeleton";
-import {useEffect} from "react";
-import {logPageOpenEvent} from "@/analytics/Events";
+import { useEffect } from "react";
+import { logPageOpenEvent } from "@/analytics/Events";
 
 const fetchTermsContent = async (locale: LOCALES) => {
-  const response = await fetchApi({
-    url: `https://static.bychef.am/docs/terms/${locale}_latest.html`
-  });
+  try {
+    const response = await fetch(`https://static.bychef.am/docs/terms/${locale}_latest.html`);
 
-  if (response && !response.error) {
-    const html = await response.result.text();
+    if (!response.ok) {
+      throw new Error("Network response was not ok " + response.statusText);
+    }
+
+    const html = await response.text();
 
     return html as TrustedHTML;
-  } else {
-    console.log(response?.error);
-    return "";
+  } catch(error) {
+    console.log(error);
   }
 };
 
