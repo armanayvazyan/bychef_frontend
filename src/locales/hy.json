@@ -144,7 +144,7 @@
     "your-order": "Ձեր պատվերը",
     "delivery": "Առաքում",
     "total": "Ընդհանուր",
-    "pay": "Վճարել {{amount}} դր.",
+    "pay": "Վճարել {{amount}} ֏",
     "cash": "Վճարել կանխիկ",
     "idram": "Վճարել Idram-ով",
     "card": "Վճարել բանկային քարտով",
@@ -173,7 +173,7 @@
       "address-required": "Հասցեն պարտադիր լրացման դաշտ է",
       "payment-method-required": "Վճարման եղանակը պարտադիր է",
       "delivery-date-required": "Ընտրեք առաքման օր",
-      "delivery-time-required": "Ընտրեք առաքման օր",
+      "delivery-time-required": "Ընտրեք առաքման ժամ",
       "invalid-email": "Խնդրում ենք մուտքագրել վավեր էլփոստի հասցե",
       "invalid-phone": "Խնդրում ենք մուտքագրել վավեր հեռախոսահամար"
     }

@@ -44,7 +44,7 @@ const DishCard = ({ dishInfo }: IDishCard) => {
               <p className="text-zinc-900 text-lg font-bold">{name}</p>
               <Separator/>
               <div className="flex flex-col gap-4">
-                <p className="text-lg font-semibold text-zinc-800">{`${dishInfo.price} դր.`}</p>
+                <p className="text-lg font-semibold text-zinc-800">{`${dishInfo.price} ֏`}</p>
                 <Button variant="secondary" className="w-full h-10 text-primary text-sm font-semibold">
                   {t("generic.add")}
                 </Button>

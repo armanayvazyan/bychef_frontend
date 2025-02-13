@@ -32,7 +32,7 @@ const Addition = ({ additionInfo, onSelectAddition, isActive }: IAdditionProps) 
         className="flex pointer-events-none gap-2 items-center text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
       >
         <p>{additionName}</p>
-        <p className="font-bold text-base">{`(+${additionInfo.price} դր.)`}</p>
+        <p className="font-bold text-base">{`(+${additionInfo.price} ֏)`}</p>
       </label>
     </div>
   );

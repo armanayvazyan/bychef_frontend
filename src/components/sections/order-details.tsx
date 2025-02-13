@@ -1,11 +1,13 @@
 import { useCallback, useEffect, useId, useMemo, useState } from "react";
 import { z } from "zod";
 import { db, ICartItem } from "@/db";
+import { EInputNames } from "@/types";
 import { ChevronUp } from "lucide-react";
 import Input from "@/components/ui/input";
 import Button from "@/components/ui/button";
 import { useForm } from "@/components/ui/form";
 import { useNavigate } from "react-router-dom";
+import { FormProvider } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import Form from "@/components/ui/form-wrapper";
 import CartItem from "@/components/ui/cart-item";
@@ -14,21 +16,8 @@ import Separator from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import FormItem from "@/components/ui/form-item-wrapper";
+import PhoneInput from "@/components/sections/phone-input";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select";
-
-enum EInputNames {
-  email = "email",
-  address = "address",
-  apartment = "apartment",
-  entrance = "entrance",
-  floor = "floor",
-  phone = "phone",
-  notes = "notes",
-  delivery_date = "delivery_date",
-  delivery_time = "delivery_time",
-  payment_method = "payment_method",
-  coordinates = "coordinates"
-}
 
 const formSchema = z.object({
   [EInputNames.email]: z
@@ -44,7 +33,7 @@ const formSchema = z.object({
   [EInputNames.phone]: z
     .string()
     .min(1, { message: "form.phone-required" })
-    .regex(/^[+]{1}(?:[0-9]){6,15}[0-9]{1}$/, { message: "form.invalid-phone" }),
+    .regex(/\d{8}$/, { message: "form.invalid-phone" }),
   [EInputNames.notes]: z.string().optional(),
   [EInputNames.delivery_date]: z.string().min(1, { message: "form.delivery-date-required" }),
   [EInputNames.delivery_time]: z.string().min(1, { message: "form.delivery-time-required" }),
@@ -191,20 +180,20 @@ const OrderDetails = () => {
             <Input placeholder={t("address")} />
           </FormItem>
           <div className="flex w-full gap-4">
-            <FormItem className="flex-1" label={t("home")} name={EInputNames.apartment}>
+            <FormItem className="w-[calc(50%-8px)]" label={t("home")} name={EInputNames.apartment}>
               <Input placeholder={t("home")} />
             </FormItem>
-            <FormItem className="flex-1" label={t("entrance")} name={EInputNames.entrance}>
+            <FormItem className="w-[calc(50%-8px)]" label={t("entrance")} name={EInputNames.entrance}>
               <Input placeholder={t("entrance")} />
             </FormItem>
           </div>
           <div className="flex w-full gap-4">
-            <FormItem className="flex-1" label={t("floor")} name={EInputNames.floor}>
+            <FormItem className="w-[calc(50%-8px)]" label={t("floor")} name={EInputNames.floor}>
               <Input placeholder={t("floor")} />
             </FormItem>
-            <FormItem className="flex-1" label={t("phone")} requiredAsterisk name={EInputNames.phone}>
-              <Input placeholder={t("phone")} />
-            </FormItem>
+            <FormProvider {...form}>
+              <PhoneInput />
+            </FormProvider>
           </div>
           <FormItem label={t("delivery-notes")} name={EInputNames.notes}>
             <Textarea placeholder={t("notes")} />
@@ -316,12 +305,12 @@ const OrderDetails = () => {
         <Separator className="my-3" />
         <div className="flex w-full justify-between my-4">
           <p>{t("delivery")}</p>
-          <p>880 դր.</p>
+          <p>880 ֏</p>
         </div>
         {products?.length && (
           <div className="flex justify-between text-base font-bold text-zinc-800 mb-8">
             <p>{t("total")}</p>
-            <p>{totalCartPrice} դր.</p>
+            <p>{totalCartPrice} ֏</p>
           </div>
         )}
         <Button type="submit">

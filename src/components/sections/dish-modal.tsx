@@ -335,7 +335,7 @@ const DishModal = ({ id, onCloseDialog }: IDishModal) => {
               {dishInfo && (
                 <>
                   <span>{t("generic.add")}</span>
-                  <span className="font-bold">({totalCartItemPrice} դր.)</span>
+                  <span className="font-bold">({totalCartItemPrice} ֏)</span>
                 </>
               )}
               {isFetching && !dishInfo && (

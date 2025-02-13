@@ -140,3 +140,17 @@ export interface IDishInfo {
   dishTagDtos: IDishTagDto[]
   dishCuisineTagDto: IDishCuisineTagDto
 }
+
+export enum EInputNames {
+  email = "email",
+  address = "address",
+  apartment = "apartment",
+  entrance = "entrance",
+  floor = "floor",
+  phone = "phone",
+  notes = "notes",
+  delivery_date = "delivery_date",
+  delivery_time = "delivery_time",
+  payment_method = "payment_method",
+  coordinates = "coordinates"
+}

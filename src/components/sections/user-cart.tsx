@@ -103,7 +103,7 @@ const UserCart = () => {
               {products.length && (
                 <div className="flex justify-between text-base font-bold text-zinc-800">
                   <p>{t("user-cart.total")}</p>
-                  <p>{totalCartPrice} դր.</p>
+                  <p>{totalCartPrice} ֏</p>
                 </div>
               )}
               <Button onClick={handleCheckout}>
