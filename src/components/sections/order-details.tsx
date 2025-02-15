@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useId, useMemo, useState } from "react";
 import { z } from "zod";
 import { db, ICartItem } from "@/db";
-import { EInputNames } from "@/types";
 import { ChevronUp } from "lucide-react";
 import Input from "@/components/ui/input";
 import Button from "@/components/ui/button";
@@ -9,46 +8,35 @@ import { useForm } from "@/components/ui/form";
 import { useNavigate } from "react-router-dom";
 import { FormProvider } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import formatPrice from "@/helpers/formatPrice";
 import Form from "@/components/ui/form-wrapper";
 import CartItem from "@/components/ui/cart-item";
 import { useLiveQuery } from "dexie-react-hooks";
+import { useQuery } from "@tanstack/react-query";
+import { EInputNames, IChefInfo } from "@/types";
+import { fetchApi } from "@/hooks/use-fetch-data";
 import Separator from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { checkoutFormSchema } from "@/schemas/checkout";
 import FormItem from "@/components/ui/form-item-wrapper";
 import PhoneInput from "@/components/sections/phone-input";
+import getNextAvailableDays from "@/helpers/getNextAvailableDays";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select";
 
-const formSchema = z.object({
-  [EInputNames.email]: z
-    .string()
-    .min(1, { message: "form.email-required" })
-    .email({ message: "form.invalid-email" }),
-  [EInputNames.address]: z
-    .string()
-    .min(1, { message: "form.address-required" }),
-  [EInputNames.apartment]: z.string().optional(),
-  [EInputNames.entrance]: z.string().optional(),
-  [EInputNames.floor]: z.string().optional(),
-  [EInputNames.phone]: z
-    .string()
-    .min(1, { message: "form.phone-required" })
-    .regex(/\d{8}$/, { message: "form.invalid-phone" }),
-  [EInputNames.notes]: z.string().optional(),
-  [EInputNames.delivery_date]: z.string().min(1, { message: "form.delivery-date-required" }),
-  [EInputNames.delivery_time]: z.string().min(1, { message: "form.delivery-time-required" }),
-  [EInputNames.payment_method]: z.string().min(1, { message: "form.payment-method-required" }),
-  [EInputNames.coordinates]: z.array(z.number()).optional(),
-});
+const fetchChef = async (id: string): Promise<Pick<IChefInfo, "chefAvailableDtoList" | "chefAvailabilityExceptionDays"> | undefined> => {
+  const data = await fetchApi(
+    {
+      initialPath: "chef/",
+      pathExtension: id
+    }
+  );
 
-const deliveryDates = [
-  "Հունվար 1",
-  "Հունվար 2",
-  "Հունվար 3",
-  "Հունվար 4",
-  "Հունվար 5",
-  "Հունվար 6",
-];
+  return {
+    chefAvailableDtoList: data?.result.chefAvailableDtoList,
+    chefAvailabilityExceptionDays: data?.result.chefAvailabilityExceptionDays,
+  };
+};
 
 const deliveryHours = [
   "11:30",
@@ -61,7 +49,7 @@ const deliveryHours = [
 
 const OrderDetails = () => {
   const formId = useId();
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<z.infer<typeof checkoutFormSchema>>({
     defaultValues: {
       email: "",
       address: "",
@@ -74,7 +62,7 @@ const OrderDetails = () => {
       payment_method: "",
       coordinates: [],
     },
-    resolver: zodResolver(formSchema)
+    resolver: zodResolver(checkoutFormSchema)
   });
 
   const [isCollapsed, setIsCollapsed] = useState(true);
@@ -82,27 +70,55 @@ const OrderDetails = () => {
   const navigate = useNavigate();
   const { t } = useTranslation("translation", { keyPrefix: "checkout" });
 
-  const products = useLiveQuery(async () => {
+  const cartItems = useLiveQuery(async () => {
     const products = await db.products.reverse().toArray();
 
     if (!products.length) navigate("/explore");
 
     return products;
+  }, [], []);
+
+  const {
+    data: chefAvailabilityInfo,
+  } = useQuery({
+    queryKey: ["chef-checkout"],
+    queryFn: () => cartItems[0]?.chefId ? fetchChef(String(cartItems[0]?.chefId)) : undefined,
+    refetchOnWindowFocus: false,
+    enabled: !!cartItems[0]?.chefId,
   });
 
+  const dateOptions = useMemo(() => {
+    const workingWeekdays = chefAvailabilityInfo?.chefAvailableDtoList?.map(date => date.dayOfTheWeek);
+    const exceptionDays = chefAvailabilityInfo?.chefAvailabilityExceptionDays.map(date => date.exceptionDate);
+
+    if (!workingWeekdays) return [];
+
+    let min = 0;
+
+    cartItems.forEach(product => {
+      if (product.orderBefore) {
+        min = Math.max(min, product.orderBefore);
+      }
+    });
+
+    const availableDays = getNextAvailableDays(min, workingWeekdays, exceptionDays);
+
+    return availableDays;
+  }, [cartItems, chefAvailabilityInfo]);
+
   const totalCartPrice = useMemo(() => {
-    return products?.reduce((acc: number, product: ICartItem) => {
+    return cartItems.reduce((acc: number, product: ICartItem) => {
       const additionsTotalPrice = product.additions ? Object.values(product.additions).reduce((acc, additionPrice) => acc + Number(additionPrice), 0) : 0;
 
       return acc + ((product.price + additionsTotalPrice) * product.quantity);
     }, 0);
-  }, [products]);
+  }, [cartItems]);
 
   const selectedDeliveryDate = form.watch(EInputNames.delivery_date);
   const selectedDeliveryTime = form.watch(EInputNames.delivery_time);
   const selectedPaymentMethod = form.watch(EInputNames.payment_method);
 
-  const handleSubmitOrder = (formData: z.infer<typeof formSchema>) => {
+  const handleSubmitOrder = (formData: z.infer<typeof checkoutFormSchema>) => {
     console.log("formData", formData);
   };
 
@@ -130,7 +146,7 @@ const OrderDetails = () => {
 
   const handleChangeQuantity = useCallback(
     async (uid: string, targetItem: ICartItem & { price: number }, diff: -1 | 1, callbackFn: () => void) => {
-      const cartItem = products?.find(product => product.uid === uid);
+      const cartItem = cartItems.find(product => product.uid === uid);
 
       if (targetItem.quantity == 1 && diff == -1) return;
 
@@ -145,16 +161,16 @@ const OrderDetails = () => {
 
         callbackFn();
       }
-    }, [products]);
+    }, [cartItems]);
 
   const handleDeleteCartItem = useCallback(async (uid: string) => {
-    const cartItem = products?.find(product => product.uid === uid);
+    const cartItem = cartItems.find(product => product.uid === uid);
 
     if (cartItem) {
       await db.products.delete(uid);
       return;
     }
-  }, [products]);
+  }, [cartItems]);
 
   useEffect(() => {
     (async () => {
@@ -215,7 +231,7 @@ const OrderDetails = () => {
                   </div>
                 </SelectTrigger>
                 <SelectContent className="max-h-[240px] overflow-y-scroll">
-                  {deliveryDates.map((date) => (
+                  {dateOptions.map((date) => (
                     <SelectItem key={date} value={date} className="p-2">
                       <div className="flex gap-2 text-sm leading-tight text-foreground cursor-pointer">
                         {date}
@@ -291,13 +307,13 @@ const OrderDetails = () => {
         </div>
         <div className="grid group-data-[collapsed=false]:grid-rows-[0fr] grid-rows-[1fr] transition-all duration-300">
           <div data-collapsed={isCollapsed} className="overflow-hidden flex flex-col gap-6">
-            {!!products?.length && products.map((product, index) => (
+            {!!cartItems.length && cartItems.map((product, index) => (
               <CartItem
                 key={product.id}
                 product={product}
                 onDeleteItem={handleDeleteCartItem}
                 onChangeQuantity={handleChangeQuantity}
-                isLastItem={products.length === index + 1}
+                isLastItem={cartItems.length === index + 1}
               />
             ))}
           </div>
@@ -307,14 +323,14 @@ const OrderDetails = () => {
           <p>{t("delivery")}</p>
           <p>880 ֏</p>
         </div>
-        {products?.length && (
+        {cartItems.length && (
           <div className="flex justify-between text-base font-bold text-zinc-800 mb-8">
             <p>{t("total")}</p>
             <p>{totalCartPrice} ֏</p>
           </div>
         )}
         <Button type="submit">
-          {t("pay", { amount: totalCartPrice })}
+          {t("pay", { amount: formatPrice(totalCartPrice) })}
         </Button>
       </div>
     </Form>

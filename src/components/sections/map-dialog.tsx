@@ -15,7 +15,6 @@ const MapDialog = ({ trigger }: { trigger: ReactNode }) => {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger className="text-xs font-normal text-zinc-600">{trigger}</DialogTrigger>
       <DialogContent
-        className="rounded-lg"
         closeIcon={
           <X size={24}/>
         }

@@ -36,7 +36,7 @@ const Chef = () => {
     error,
     isFetching,
   } = useQuery({
-    queryKey: ["chef"],
+    queryKey: ["chef", id],
     queryFn: () => fetchChef(id ?? ""),
     refetchOnWindowFocus: false
   });

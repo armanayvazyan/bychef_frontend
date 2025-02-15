@@ -3,7 +3,6 @@ import { db } from "@/db";
 import { IDishInfo } from "@/types";
 import Button from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { Label } from "@/components/ui/label";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
 import { fetchApi } from "@/hooks/use-fetch-data";
@@ -13,12 +12,13 @@ import { Loader2, Minus, Plus } from "lucide-react";
 import { logCartAddEvent } from "@/analytics/Events";
 import Addition from "@/components/sections/addition";
 import DishImage from "@/components/sections/dish-image";
+import DishSpiceLevels from "@/components/ui/dish-spice-levels";
 import DietaryOption from "@/components/sections/dietary-option";
 import DishModalAlert from "@/components/sections/dish-modal-alert";
 import ClearCartModal from "@/components/sections/clear-cart-modal";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import getDataByLocale, { getDataStringByLocale } from "@/helpers/getDataByLocale";
 import { DialogDescription, DialogFooter, DialogTitle } from "@/components/ui/dialog";
+import formatPrice from "@/helpers/formatPrice";
 
 const fetchDish = async (id: string | number): Promise<IDishInfo | undefined> => {
   const data = await fetchApi(
@@ -39,6 +39,7 @@ interface IDishModal {
 interface ISelectedProductInfo {
   quantity: number;
   spiceLevelId?: number,
+  orderInAdvanceDays?: number,
   additions?: Record<string, number>
 }
 
@@ -81,7 +82,7 @@ const DishModal = ({ id, onCloseDialog }: IDishModal) => {
         ? Object.values(product.additions).reduce((acc, additionPrice) => acc + additionPrice, 0)
         : 0;
 
-      return (dishInfo.price + additionsTotalPrice) * product.quantity;
+      return formatPrice((dishInfo.price + additionsTotalPrice) * product.quantity);
     } else {
       return 0;
     }
@@ -164,6 +165,7 @@ const DishModal = ({ id, onCloseDialog }: IDishModal) => {
           chefId: dishInfo.chefId,
           price: dishInfo.price,
           quantity: product.quantity,
+          ...(dishInfo.orderBefore && { orderBefore: dishInfo.orderBefore }),
           ...(product.spiceLevelId && { spiceLevel: product.spiceLevelId }),
           ...(!!product.additions && { additions: product.additions })
         };
@@ -241,11 +243,12 @@ const DishModal = ({ id, onCloseDialog }: IDishModal) => {
           </div>
         )}
         <DialogTitle className="mt-4">
-          {name && <p className="text-zinc-900 text-lg font-bold">{name}</p>}
+          {name && <p className="inline-block text-zinc-900 text-lg font-bold">{name}</p>}
+          {dishPortion && <p className="inline-block text-zinc-900 text-lg font-bold">&nbsp;({dishPortion})</p>}
           {isFetching && !name && <Skeleton className="w-full h-[20px] rounded-md" />}
         </DialogTitle>
         <DialogDescription className="mt-3">
-          {dishIngredients && <p className="text-zinc-500 text-base font-medium">{[dishPortion, dishIngredients].join(", ")}</p>}
+          {dishIngredients && <p className="text-zinc-500 text-base font-medium">{dishIngredients}</p>}
           {isFetching && !dishIngredients && <Skeleton className="w-full h-[60px] rounded-md" />}
         </DialogDescription>
         <Separator className="my-4"/>
@@ -253,29 +256,11 @@ const DishModal = ({ id, onCloseDialog }: IDishModal) => {
           {!!dishInfo?.adjustableSpiceLevelDtoList.length && (
             <div className="flex flex-col gap-3">
               <p className="text-primary text-base font-bold">{t("spice-level")}</p>
-              <RadioGroup value={product.spiceLevelId?.toString()}>
-                {dishInfo.adjustableSpiceLevelDtoList.map(spiceLevelInfo => (
-                  <div
-                    key={spiceLevelInfo.id}
-                    onClick={() => { handleChangeSpiceLevel(spiceLevelInfo.id.toString()); }}
-                    className="flex gap-4 cursor-pointer items-center px-4 py-2 border-border border-[1px] rounded-md hover:bg-secondary"
-                  >
-                    <RadioGroupItem
-                      id={spiceLevelInfo.id.toString()}
-                      value={spiceLevelInfo.id.toString()}
-                      className="w-[20px] h-[20px]" circleSize={10}
-                    />
-                    <img
-                      className="h-[28px]"
-                      alt="spice level icon"
-                      src={`https://static.bychef.am/icons/${spiceLevelInfo.spiceLevel}.svg`}
-                    />
-                    <Label className="cursor-pointer" htmlFor="option-one">
-                      {t(`spice-levels.${spiceLevelInfo.spiceLevel}`)}
-                    </Label>
-                  </div>
-                ))}
-              </RadioGroup>
+              <DishSpiceLevels
+                onChangeSpiceLevel={handleChangeSpiceLevel}
+                spiceLevels={dishInfo.adjustableSpiceLevelDtoList}
+                selectedSpiceLevel={product.spiceLevelId?.toString()}
+              />
             </div>
           )}
           {isFetching && !dishInfo && (

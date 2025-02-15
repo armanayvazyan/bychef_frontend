@@ -44,6 +44,12 @@ export interface IChefInfo {
     socialType: string | null;
   }[],
   chefAvailabilityExceptionDays: { id: number; exceptionDate: string, isAvailable: boolean }[],
+  chefAvailableDtoList?: {
+    dayOfTheWeek: number
+    isAvailable: boolean
+    timeFrom: string | null
+    timeTo: string | null
+  }[]
 }
 
 export interface ILocalizedData {
