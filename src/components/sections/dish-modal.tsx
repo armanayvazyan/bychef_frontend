@@ -18,6 +18,7 @@ import DishModalAlert from "@/components/sections/dish-modal-alert";
 import ClearCartModal from "@/components/sections/clear-cart-modal";
 import getDataByLocale, { getDataStringByLocale } from "@/helpers/getDataByLocale";
 import { DialogDescription, DialogFooter, DialogTitle } from "@/components/ui/dialog";
+import formatPrice from "@/helpers/formatPrice";
 
 const fetchDish = async (id: string | number): Promise<IDishInfo | undefined> => {
   const data = await fetchApi(
@@ -81,7 +82,7 @@ const DishModal = ({ id, onCloseDialog }: IDishModal) => {
         ? Object.values(product.additions).reduce((acc, additionPrice) => acc + additionPrice, 0)
         : 0;
 
-      return (dishInfo.price + additionsTotalPrice) * product.quantity;
+      return formatPrice((dishInfo.price + additionsTotalPrice) * product.quantity);
     } else {
       return 0;
     }

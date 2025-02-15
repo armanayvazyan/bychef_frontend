@@ -9,6 +9,7 @@ import DishModal from "@/components/sections/dish-modal";
 import getDataByLocale, { getDataStringByLocale } from "@/helpers/getDataByLocale";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { logDishClickEvent } from "@/analytics/Events";
+import formatPrice from "@/helpers/formatPrice";
 
 interface IDishCard {
   dishInfo: IDishInfo;
@@ -44,7 +45,7 @@ const DishCard = ({ dishInfo }: IDishCard) => {
               <p className="text-zinc-900 text-lg font-bold">{name}</p>
               <Separator/>
               <div className="flex flex-col gap-4">
-                <p className="text-lg font-semibold text-zinc-800">{`${dishInfo.price} ֏`}</p>
+                <p className="text-lg font-semibold text-zinc-800">{`${formatPrice(dishInfo.price)} ֏`}</p>
                 <Button variant="secondary" className="w-full h-10 text-primary text-sm font-semibold">
                   {t("generic.add")}
                 </Button>

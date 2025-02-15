@@ -8,6 +8,7 @@ import { useForm } from "@/components/ui/form";
 import { useNavigate } from "react-router-dom";
 import { FormProvider } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import formatPrice from "@/helpers/formatPrice";
 import Form from "@/components/ui/form-wrapper";
 import CartItem from "@/components/ui/cart-item";
 import { useLiveQuery } from "dexie-react-hooks";
@@ -329,7 +330,7 @@ const OrderDetails = () => {
           </div>
         )}
         <Button type="submit">
-          {t("pay", { amount: totalCartPrice })}
+          {t("pay", { amount: formatPrice(totalCartPrice) })}
         </Button>
       </div>
     </Form>
