@@ -7,6 +7,7 @@ interface ICartItem {
   chefId?: number;
   quantity: number;
   spiceLevel?: number;
+  orderBefore?: number;
   additions?: Record<string, number>;
 }
 

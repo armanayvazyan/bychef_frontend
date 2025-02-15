@@ -58,7 +58,7 @@ const DishCard = ({ dishInfo }: IDishCard) => {
         </GridCard>
       </DialogTrigger>
       <DialogContent
-        className="pt-16 rounded-lg w-11/12 sm:max-w-lg"
+        className="pt-16"
         closeIcon={
           <X size={24} />
         }

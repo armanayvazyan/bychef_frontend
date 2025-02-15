@@ -197,7 +197,7 @@ const CartItem = ({ product, onChangeQuantity, onDeleteItem, isLastItem = false 
         if (!open) setSelectedDish(null);
       }}>
         <DialogContent
-          className="pt-16 rounded-lg w-11/12 sm:max-w-lg"
+          className="pt-16"
           closeIcon={
             <X size={24} />
           }
