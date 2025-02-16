@@ -12,11 +12,12 @@ import formatPrice from "@/helpers/formatPrice";
 import Form from "@/components/ui/form-wrapper";
 import CartItem from "@/components/ui/cart-item";
 import { useLiveQuery } from "dexie-react-hooks";
-import { useQuery } from "@tanstack/react-query";
 import { EInputNames, IChefInfo } from "@/types";
 import { fetchApi } from "@/hooks/use-fetch-data";
 import Separator from "@/components/ui/separator";
+import { useQueries } from "@tanstack/react-query";
 import { Textarea } from "@/components/ui/textarea";
+import { Skeleton } from "@/components/ui/skeleton";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { checkoutFormSchema } from "@/schemas/checkout";
 import FormItem from "@/components/ui/form-item-wrapper";
@@ -29,13 +30,28 @@ const fetchChef = async (id: string): Promise<Pick<IChefInfo, "chefAvailableDtoL
     {
       initialPath: "chef/",
       pathExtension: id
-    }
-  );
+    });
 
   return {
     chefAvailableDtoList: data?.result.chefAvailableDtoList,
     chefAvailabilityExceptionDays: data?.result.chefAvailabilityExceptionDays,
   };
+};
+
+const fetchDeliveryPrice = async (id: number, coordinates: { lat: number; lng: number }): Promise<{ deliveryPrice: number } | undefined> => {
+  const data = await fetchApi(
+    {
+      initialPath: "order/delivery-price",
+      method: "POST",
+      bodyParams: {
+        chefId: id,
+        doorToDoorEnabled: false,
+        userCoordinates: [coordinates.lng, coordinates.lat],
+      }
+    }
+  );
+
+  return data?.result;
 };
 
 const deliveryHours = [
@@ -78,18 +94,35 @@ const OrderDetails = () => {
     return products;
   }, [], []);
 
-  const {
-    data: chefAvailabilityInfo,
-  } = useQuery({
-    queryKey: ["chef-checkout"],
-    queryFn: () => cartItems[0]?.chefId ? fetchChef(String(cartItems[0]?.chefId)) : undefined,
-    refetchOnWindowFocus: false,
-    enabled: !!cartItems[0]?.chefId,
+  const sessionLocation = useLiveQuery(() => db.location.toArray());
+
+  const [
+    chefAvailabilityInfoResponse,
+    deliveryInfoResponse,
+  ] = useQueries({
+    queries: [
+      {
+        queryKey: ["chef-checkout"],
+        queryFn: () => cartItems[0]?.chefId
+          ? fetchChef(String(cartItems[0]?.chefId))
+          : undefined,
+        refetchOnWindowFocus: false,
+        enabled: !!cartItems[0]?.chefId,
+      },
+      {
+        queryKey: ["delivery-price"],
+        queryFn: () => (cartItems[0]?.chefId && sessionLocation)
+          ? fetchDeliveryPrice(cartItems[0]?.chefId, sessionLocation[0].coordinates)
+          : undefined,
+        refetchOnWindowFocus: false,
+        enabled: !!cartItems[0]?.chefId && !!sessionLocation,
+      }
+    ]
   });
 
   const dateOptions = useMemo(() => {
-    const workingWeekdays = chefAvailabilityInfo?.chefAvailableDtoList?.map(date => date.dayOfTheWeek);
-    const exceptionDays = chefAvailabilityInfo?.chefAvailabilityExceptionDays.map(date => date.exceptionDate);
+    const workingWeekdays = chefAvailabilityInfoResponse.data?.chefAvailableDtoList?.map(date => date.dayOfTheWeek);
+    const exceptionDays = chefAvailabilityInfoResponse.data?.chefAvailabilityExceptionDays.map(date => date.exceptionDate);
 
     if (!workingWeekdays) return [];
 
@@ -104,7 +137,7 @@ const OrderDetails = () => {
     const availableDays = getNextAvailableDays(min, workingWeekdays, exceptionDays);
 
     return availableDays;
-  }, [cartItems, chefAvailabilityInfo]);
+  }, [cartItems, chefAvailabilityInfoResponse.data]);
 
   const totalCartPrice = useMemo(() => {
     return cartItems.reduce((acc: number, product: ICartItem) => {
@@ -113,6 +146,10 @@ const OrderDetails = () => {
       return acc + ((product.price + additionsTotalPrice) * product.quantity);
     }, 0);
   }, [cartItems]);
+
+  const orderTotalPrice = useMemo(() => {
+    return totalCartPrice + (deliveryInfoResponse.data?.deliveryPrice ?? 0);
+  }, [deliveryInfoResponse.data?.deliveryPrice, totalCartPrice]);
 
   const selectedDeliveryDate = form.watch(EInputNames.delivery_date);
   const selectedDeliveryTime = form.watch(EInputNames.delivery_time);
@@ -321,16 +358,18 @@ const OrderDetails = () => {
         <Separator className="my-3" />
         <div className="flex w-full justify-between my-4">
           <p>{t("delivery")}</p>
-          <p>880 ֏</p>
+          {deliveryInfoResponse.data?.deliveryPrice && <p>{formatPrice(deliveryInfoResponse.data.deliveryPrice)} ֏</p>}
+          {deliveryInfoResponse.isLoading && <Skeleton className="w-[100px]" />}
         </div>
-        {cartItems.length && (
+        {!!cartItems.length && (
           <div className="flex justify-between text-base font-bold text-zinc-800 mb-8">
             <p>{t("total")}</p>
-            <p>{totalCartPrice} ֏</p>
+            {deliveryInfoResponse.data?.deliveryPrice && <p>{formatPrice(orderTotalPrice)} ֏</p>}
+            {deliveryInfoResponse.isLoading && <Skeleton className="w-[100px]" />}
           </div>
         )}
         <Button type="submit">
-          {t("pay", { amount: formatPrice(totalCartPrice) })}
+          {deliveryInfoResponse.data?.deliveryPrice && t("pay", { amount: formatPrice(orderTotalPrice) })}
         </Button>
       </div>
     </Form>
