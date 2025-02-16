@@ -1,6 +1,7 @@
 import { useEffect } from "react";
-import ExploreChefs from "@/components/sections/explore-chefs";
 import { logPageOpenEvent } from "@/analytics/Events";
+import LazyImage from "@/components/sections/lazy-image";
+import ExploreChefs from "@/components/sections/explore-chefs";
 
 const Explore = () => {
   useEffect(() => {
@@ -9,10 +10,11 @@ const Explore = () => {
 
   return (
     <section>
-      <img
-        src="https://static.bychef.am/explore_banner.webp"
+      <LazyImage
         alt="hero"
-        className="hidden md:block w-full max-h-[240px] object-cover"
+        imgClassName="w-full h-full object-cover"
+        containerClassName="h-[220px] md:h-[282px]"
+        url="https://static.bychef.am/explore_banner.webp"
       />
       <ExploreChefs />
     </section>
