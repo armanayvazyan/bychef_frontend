@@ -44,6 +44,12 @@ export interface IChefInfo {
     socialType: string | null;
   }[],
   chefAvailabilityExceptionDays: { id: number; exceptionDate: string, isAvailable: boolean }[],
+  chefAvailableDtoList?: {
+    dayOfTheWeek: number
+    isAvailable: boolean
+    timeFrom: string | null
+    timeTo: string | null
+  }[]
 }
 
 export interface ILocalizedData {
@@ -139,4 +145,18 @@ export interface IDishInfo {
   dishAdditionDtoList: IDishAddition[]
   dishTagDtos: IDishTagDto[]
   dishCuisineTagDto: IDishCuisineTagDto
+}
+
+export enum EInputNames {
+  email = "email",
+  address = "address",
+  apartment = "apartment",
+  entrance = "entrance",
+  floor = "floor",
+  phone = "phone",
+  notes = "notes",
+  delivery_date = "delivery_date",
+  delivery_time = "delivery_time",
+  payment_method = "payment_method",
+  coordinates = "coordinates"
 }

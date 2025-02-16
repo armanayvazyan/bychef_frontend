@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { IDishInfo } from "@/types";
 import { db, ICartItem } from "@/db";
 import Button from "@/components/ui/button";
+import formatPrice from "@/helpers/formatPrice";
 import { useTranslation } from "react-i18next";
 import Separator from "@/components/ui/separator";
 import { fetchApi } from "@/hooks/use-fetch-data";
@@ -136,7 +137,7 @@ const CartItem = ({ product, onChangeQuantity, onDeleteItem, isLastItem = false 
             <h1 className="text-xl font-extrabold text-zinc-800">{name}</h1>
             <p className="text-zinc-400 text-sm my-4">{details}</p>
             <div>
-              <p className="text-lg font-semibold text-zinc-800">{`${totalCartItemPrice} դր.`}</p>
+              <p className="text-lg font-semibold text-zinc-800">{`${formatPrice(totalCartItemPrice)} ֏`}</p>
               <div className="flex gap-3 items-center mt-2">
                 <Button
                   size="icon"
@@ -197,7 +198,7 @@ const CartItem = ({ product, onChangeQuantity, onDeleteItem, isLastItem = false 
         if (!open) setSelectedDish(null);
       }}>
         <DialogContent
-          className="pt-16 rounded-lg w-11/12 sm:max-w-lg"
+          className="pt-16"
           closeIcon={
             <X size={24} />
           }

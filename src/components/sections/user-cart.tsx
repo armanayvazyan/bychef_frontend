@@ -8,6 +8,7 @@ import { useLiveQuery } from "dexie-react-hooks";
 import Separator from "@/components/ui/separator";
 import { Circle, CircleX, ShoppingCart } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import formatPrice from "@/helpers/formatPrice";
 
 const UserCart = () => {
   const navigate = useNavigate();
@@ -103,7 +104,7 @@ const UserCart = () => {
               {products.length && (
                 <div className="flex justify-between text-base font-bold text-zinc-800">
                   <p>{t("user-cart.total")}</p>
-                  <p>{totalCartPrice} դր.</p>
+                  <p>{formatPrice(totalCartPrice)} ֏</p>
                 </div>
               )}
               <Button onClick={handleCheckout}>

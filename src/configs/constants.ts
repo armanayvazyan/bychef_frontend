@@ -1,6 +1,7 @@
 export const REDIRECT_PATH = "/";
 export const PATHS = [];
 export const PROTECTED_PATHS = [];
+export const PHONE_NUMBER_PREFIX = "+374";
 export const BASE_API_URL = import.meta.env.VITE_BASE_API_URL;
 export const SB_KEY = import.meta.env.VITE_SB_KEY;
 export const YMAP_KEY = import.meta.env.VITE_YMAP_KEY;
