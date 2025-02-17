@@ -69,11 +69,13 @@ const AddressSearch = ({ callback }: { callback?: any }) => {
         coordinates: { lat: selectedAddress.location[0], lng: selectedAddress.location[1] },
       }, "1");
 
-      if(callback) callback(false);
+      if (callback) callback(false);
 
       handleResetInputState();
 
-      navigate("/explore");
+      if (window.location.pathname === "/") {
+        navigate("/explore");
+      }
     }
   };
 
