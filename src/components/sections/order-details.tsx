@@ -101,7 +101,7 @@ const OrderDetails = () => {
         enabled: !!cartItems[0]?.chefId,
       },
       {
-        queryKey: ["delivery-price"],
+        queryKey: ["delivery-price", sessionLocation?.[0].coordinates.lat, sessionLocation?.[0].coordinates.lng],
         queryFn: () => (cartItems[0]?.chefId && sessionLocation)
           ? fetchDeliveryPrice(cartItems[0]?.chefId, sessionLocation[0].coordinates)
           : undefined,
