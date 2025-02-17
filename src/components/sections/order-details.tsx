@@ -46,7 +46,7 @@ const fetchDeliveryPrice = async (id: number, coordinates: { lat: number; lng: n
       bodyParams: {
         chefId: id,
         doorToDoorEnabled: false,
-        userCoordinates: [coordinates.lat, coordinates.lng],
+        userCoordinates: [coordinates.lng, coordinates.lat],
       }
     }
   );
