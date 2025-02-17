@@ -28,7 +28,7 @@ const NotificationsWrapper = ({ children }: PropsWithChildren) => {
           if (token) {
             console.log("Token generated:", token);
 
-            await fetch(`${BASE_API_URL}/notifications/register-device`, {
+            await fetch(`${BASE_API_URL}/notification/register-device`, {
               method: "POST",
               body: JSON.stringify({
                 token,
