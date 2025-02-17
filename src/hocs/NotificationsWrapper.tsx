@@ -1,9 +1,10 @@
 import { PropsWithChildren, useEffect } from "react";
 import { getToken, onMessage } from "firebase/messaging";
-import { BASE_API_URL, FIREBASE_VAPID_KEY } from "@/configs/constants";
+import { FIREBASE_VAPID_KEY } from "@/configs/constants";
 import { messaging } from "@/firebase/firebaseConfig";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/db";
+import { fetchApi } from "@/hooks/use-fetch-data";
 
 const NotificationsWrapper = ({ children }: PropsWithChildren) => {
 
@@ -13,7 +14,7 @@ const NotificationsWrapper = ({ children }: PropsWithChildren) => {
       console.log("Received foreground message ", payload);
       const title = payload.notification?.title ??  "";
       const body = payload.notification?.body ?? "";
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+
       new Notification(title, { body: body });
     });
   }, []);
@@ -29,13 +30,16 @@ const NotificationsWrapper = ({ children }: PropsWithChildren) => {
           });
 
           if (token) {
-            await fetch(`${BASE_API_URL}/notification/register-device`, {
-              method: "POST",
-              body: JSON.stringify({
-                token,
-                location: sessionLocation?.[0]?.address ?? "unknown"
-              })
-            });
+            await fetchApi(
+              {
+                initialPath: "notification/register-device",
+                method: "POST",
+                bodyParams: {
+                  location: sessionLocation?.[0]?.address ?? "unknown",
+                  token: token
+                }
+              }
+            );
           } else {
             console.warn("No registration token available. Request permission to generate one.");
           }
