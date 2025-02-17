@@ -4,6 +4,7 @@ import { IDishInfo } from "@/types";
 import Button from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useTranslation } from "react-i18next";
+import formatPrice from "@/helpers/formatPrice";
 import { useQuery } from "@tanstack/react-query";
 import { fetchApi } from "@/hooks/use-fetch-data";
 import Separator from "@/components/ui/separator";
@@ -11,14 +12,13 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Loader2, Minus, Plus } from "lucide-react";
 import { logCartAddEvent } from "@/analytics/Events";
 import Addition from "@/components/sections/addition";
-import DishImage from "@/components/sections/dish-image";
+import LazyImage from "@/components/sections/lazy-image";
 import DishSpiceLevels from "@/components/ui/dish-spice-levels";
 import DietaryOption from "@/components/sections/dietary-option";
 import DishModalAlert from "@/components/sections/dish-modal-alert";
 import ClearCartModal from "@/components/sections/clear-cart-modal";
 import getDataByLocale, { getDataStringByLocale } from "@/helpers/getDataByLocale";
 import { DialogDescription, DialogFooter, DialogTitle } from "@/components/ui/dialog";
-import formatPrice from "@/helpers/formatPrice";
 
 const fetchDish = async (id: string | number): Promise<IDishInfo | undefined> => {
   const data = await fetchApi(
@@ -222,7 +222,12 @@ const DishModal = ({ id, onCloseDialog }: IDishModal) => {
         acceptAction={handleClearCartAcceptAction}
         declineAction={handleClearCartDeclineAction}
       />
-      <DishImage url={dishInfo?.url} />
+      <LazyImage
+        alt="dish"
+        url={dishInfo?.url}
+        containerClassName="h-[220px] md:h-[282px]"
+        imgClassName="w-full h-full object-cover rounded-xl"
+      />
       <div className="max-h-[calc(90dvh-282px-88px-16px-36px-0px)] overflow-y-scroll">
         {dishLabels && <p className="text-base text-zinc-400 font-medium mt-4">{dishLabels}</p>}
         {isFetching && !dishLabels && (

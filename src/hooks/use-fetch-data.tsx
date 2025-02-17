@@ -9,7 +9,7 @@ interface IFetchData {
   pathExtension?: string,
   method?: "GET" | "POST" | "DELETE",
   headerParams?: Record<string, string | number>,
-  bodyParams?: Record<string, string | number>,
+  bodyParams?: Record<string, any>,
   options?: Record<string, string | number>,
   hasAT?: boolean,
   injectErrorMessage?: boolean,
