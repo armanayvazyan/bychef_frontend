@@ -2,9 +2,12 @@ import { PropsWithChildren, useEffect } from "react";
 import { getToken, onMessage } from "firebase/messaging";
 import { BASE_API_URL, FIREBASE_VAPID_KEY } from "@/configs/constants";
 import { messaging } from "@/firebase/firebaseConfig";
+import { useLiveQuery } from "dexie-react-hooks";
+import { db } from "@/db";
 
 const NotificationsWrapper = ({ children }: PropsWithChildren) => {
 
+  const sessionLocation = useLiveQuery(() => db.location.toArray());
   useEffect(() => {
     onMessage(messaging, (payload) => {
       console.log("Received foreground message ", payload);
@@ -26,13 +29,11 @@ const NotificationsWrapper = ({ children }: PropsWithChildren) => {
           });
 
           if (token) {
-            console.log("Token generated:", token);
-
             await fetch(`${BASE_API_URL}/notification/register-device`, {
               method: "POST",
               body: JSON.stringify({
                 token,
-                location: "Yerevan"
+                location: sessionLocation?.[0]?.address ?? "unknown"
               })
             });
           } else {
