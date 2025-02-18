@@ -254,7 +254,7 @@ const OrderDetails = () => {
                   <div className="flex justify-between py-2 rounded-xl cursor-pointer">
                     {selectedDeliveryDate ? (
                       <span className="flex gap-2">
-                        {t(`month.${selectedDeliveryDate.split(" ")[0]}`, { day: selectedDeliveryDate.split(" ")[1] })}
+                        {t(`months.${selectedDeliveryDate.split(" ")[0].toLowerCase()}`, { day: selectedDeliveryDate.split(" ")[1] })}
                       </span>
                     ) : (
                       t("select-day")
