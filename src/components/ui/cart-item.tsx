@@ -19,7 +19,7 @@ const fetchCartItem = async (id: string | number, deleteItemCb: () => void) => {
     pathExtension: id.toString()
   });
 
-  if (data && data.status === 404) {
+  if (data && data.status === 403) {
     deleteItemCb();
   }
 

@@ -12,7 +12,6 @@ import formatPrice from "@/helpers/formatPrice";
 import Form from "@/components/ui/form-wrapper";
 import CartItem from "@/components/ui/cart-item";
 import { useLiveQuery } from "dexie-react-hooks";
-import { EInputNames, IChefInfo } from "@/types";
 import { fetchApi } from "@/hooks/use-fetch-data";
 import Separator from "@/components/ui/separator";
 import { useQueries } from "@tanstack/react-query";
@@ -24,8 +23,9 @@ import FormItem from "@/components/ui/form-item-wrapper";
 import PhoneInput from "@/components/sections/phone-input";
 import getNextAvailableDays from "@/helpers/getNextAvailableDays";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select";
+import { EInputNames, IChefAvailabilityExceptionDays, IChefAvailableDates } from "@/types";
 
-const fetchChef = async (id: string): Promise<Pick<IChefInfo, "chefAvailableDtoList" | "chefAvailabilityExceptionDays"> | undefined> => {
+const fetchChef = async (id: string): Promise<{ chefAvailableDates?: IChefAvailableDates[], chefAvailabilityExceptionDays?: IChefAvailabilityExceptionDays[] }> => {
   const data = await fetchApi(
     {
       initialPath: "chef/",
@@ -33,7 +33,7 @@ const fetchChef = async (id: string): Promise<Pick<IChefInfo, "chefAvailableDtoL
     });
 
   return {
-    chefAvailableDtoList: data?.result.chefAvailableDtoList,
+    chefAvailableDates: data?.result.chefAvailableDates,
     chefAvailabilityExceptionDays: data?.result.chefAvailabilityExceptionDays,
   };
 };
@@ -53,15 +53,6 @@ const fetchDeliveryPrice = async (id: number, coordinates: { lat: number; lng: n
 
   return data?.result;
 };
-
-const deliveryHours = [
-  "11:30",
-  "12:30",
-  "13:30",
-  "14:30",
-  "15:30",
-  "16:30",
-];
 
 const OrderDetails = () => {
   const formId = useId();
@@ -110,7 +101,7 @@ const OrderDetails = () => {
         enabled: !!cartItems[0]?.chefId,
       },
       {
-        queryKey: ["delivery-price"],
+        queryKey: ["delivery-price", sessionLocation?.[0].coordinates.lat, sessionLocation?.[0].coordinates.lng],
         queryFn: () => (cartItems[0]?.chefId && sessionLocation)
           ? fetchDeliveryPrice(cartItems[0]?.chefId, sessionLocation[0].coordinates)
           : undefined,
@@ -121,12 +112,12 @@ const OrderDetails = () => {
   });
 
   const dateOptions = useMemo(() => {
-    const workingWeekdays = chefAvailabilityInfoResponse.data?.chefAvailableDtoList?.map(date => date.dayOfTheWeek);
-    const exceptionDays = chefAvailabilityInfoResponse.data?.chefAvailabilityExceptionDays.map(date => date.exceptionDate);
+    const workingWeekdays = chefAvailabilityInfoResponse.data?.chefAvailableDates;
+    const exceptionDays = chefAvailabilityInfoResponse.data?.chefAvailabilityExceptionDays?.map(date => date.exceptionDate);
 
-    if (!workingWeekdays) return [];
+    if (!workingWeekdays?.length) return [];
 
-    let min = 0;
+    let min = 1;
 
     cartItems.forEach(product => {
       if (product.orderBefore) {
@@ -171,6 +162,7 @@ const OrderDetails = () => {
 
   const handleSelectDeliveryDate = (date: string) => {
     form.setValue(EInputNames.delivery_date, date);
+    form.setValue(EInputNames.delivery_time, "");
   };
 
   const handleSelectDeliveryTime = (time: string) => {
@@ -230,7 +222,7 @@ const OrderDetails = () => {
             <Input placeholder="example@gmail.com" />
           </FormItem>
           <FormItem label={t("address")} requiredAsterisk name={EInputNames.address}>
-            <Input placeholder={t("address")} />
+            <Input placeholder={t("address")} disabled />
           </FormItem>
           <div className="flex w-full gap-4">
             <FormItem className="w-[calc(50%-8px)]" label={t("home")} name={EInputNames.apartment}>
@@ -257,11 +249,13 @@ const OrderDetails = () => {
           <h1 className="text-primary font-bold text-xl leading-tight">{t("delivery-time")}</h1>
           <div className="flex w-full gap-4">
             <FormItem className="flex-1" name={EInputNames.delivery_date}>
-              <Select onValueChange={handleSelectDeliveryDate}>
+              <Select onValueChange={handleSelectDeliveryDate} disabled={!dateOptions.length}>
                 <SelectTrigger>
                   <div className="flex justify-between py-2 rounded-xl cursor-pointer">
                     {selectedDeliveryDate ? (
-                      <span className="flex gap-2">{selectedDeliveryDate}</span>
+                      <span className="flex gap-2">
+                        {t(`months.${selectedDeliveryDate.split(" ")[0].toLowerCase()}`, { day: selectedDeliveryDate.split(" ")[1] })}
+                      </span>
                     ) : (
                       t("select-day")
                     )}
@@ -269,9 +263,9 @@ const OrderDetails = () => {
                 </SelectTrigger>
                 <SelectContent className="max-h-[240px] overflow-y-scroll">
                   {dateOptions.map((date) => (
-                    <SelectItem key={date} value={date} className="p-2">
+                    <SelectItem key={date.date} value={date.date} className="p-2">
                       <div className="flex gap-2 text-sm leading-tight text-foreground cursor-pointer">
-                        {date}
+                        {t(`months.${date.date.split(" ")[0].toLowerCase()}`, { day: date.date.split(" ")[1] })}
                       </div>
                     </SelectItem>
                   ))}
@@ -279,7 +273,7 @@ const OrderDetails = () => {
               </Select>
             </FormItem>
             <FormItem className="flex-1" name={EInputNames.delivery_time}>
-              <Select onValueChange={handleSelectDeliveryTime}>
+              <Select onValueChange={handleSelectDeliveryTime} disabled={!selectedDeliveryDate}>
                 <SelectTrigger>
                   <div className="flex justify-between py-2 rounded-xl cursor-pointer">
                     {selectedDeliveryTime ? (
@@ -290,10 +284,10 @@ const OrderDetails = () => {
                   </div>
                 </SelectTrigger>
                 <SelectContent className="max-h-[240px] overflow-y-scroll">
-                  {deliveryHours.map((time) => (
-                    <SelectItem key={time} value={time} className="p-2">
+                  {dateOptions.find(option => option.date === selectedDeliveryDate)?.time.map((timeOption) => (
+                    <SelectItem key={timeOption} value={timeOption} className="p-2">
                       <div className="flex gap-2 text-sm leading-tight text-foreground cursor-pointer">
-                        {time}
+                        {timeOption}
                       </div>
                     </SelectItem>
                   ))}

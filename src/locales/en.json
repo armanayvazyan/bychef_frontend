@@ -14,20 +14,6 @@
       "sunday": "Sunday",
       "today": "today"
     },
-    "months": {
-      "january": "January",
-      "february": "February",
-      "march": "March",
-      "april": "April",
-      "may": "May",
-      "june": "June",
-      "july": "July",
-      "august": "August",
-      "september": "September",
-      "october": "October",
-      "november": "November",
-      "december": "December"
-    },
     "show": "Show",
     "clear": "Clear",
     "back": "Go back",
@@ -153,7 +139,21 @@
     "cash": "Pay cash",
     "idram": "Pay with Idram",
     "card": "Pay with card",
-    "delivery-notes": "Additional notes for the delivery"
+    "delivery-notes": "Additional notes for the delivery",
+    "months": {
+      "january": "January {{day}}",
+      "february": "February {{day}}",
+      "march": "March {{day}}",
+      "april": "April {{day}}",
+      "may": "May {{day}}",
+      "june": "June {{day}}",
+      "july": "July {{day}}",
+      "august": "August {{day}}",
+      "september": "September {{day}}",
+      "october": "October {{day}}",
+      "november": "November {{day}}",
+      "december": "December {{day}}"
+    }
   },
   "additions": "Additions",
   "spice-level": "Spice level",

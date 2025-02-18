@@ -22,6 +22,18 @@ export interface IChefLegalInfo {
   }
 }
 
+export interface IChefAvailableDates {
+  date: string
+  timeFrom: string
+  timeTo: string
+}
+
+export interface IChefAvailabilityExceptionDays {
+  id: number,
+  exceptionDate: string,
+  isAvailable: boolean
+}
+
 export interface IChefInfo {
   id: number,
   phoneNumber: string,
@@ -36,20 +48,14 @@ export interface IChefInfo {
   kitchen: ILocalizedData[],
   rating: number,
   dishes: IDishInfo[],
-  chefAvailableDates: string[],
   chefLabels?: IChefLabelsDto[],
   socialLinks: {
     id: number;
     link: string;
     socialType: string | null;
   }[],
-  chefAvailabilityExceptionDays: { id: number; exceptionDate: string, isAvailable: boolean }[],
-  chefAvailableDtoList?: {
-    dayOfTheWeek: number
-    isAvailable: boolean
-    timeFrom: string | null
-    timeTo: string | null
-  }[]
+  chefAvailabilityExceptionDays: IChefAvailabilityExceptionDays[],
+  chefAvailableDates?: IChefAvailableDates[]
 }
 
 export interface ILocalizedData {

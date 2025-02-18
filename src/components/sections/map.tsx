@@ -24,7 +24,7 @@ const Map = () => {
   useEffect(() => {
     (async () => {
       if (selectedAddress && !isUserInteracting && mapRef.current) {
-        await mapRef.current.setCenter(selectedAddress.location.reverse(), 17);
+        await mapRef.current.setCenter(selectedAddress.location, 17);
         onSetIsUserInteracting(true);
       }
     })();
