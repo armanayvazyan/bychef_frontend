@@ -85,8 +85,8 @@ const AddressSearch = ({ callback }: { callback?: any }) => {
     onSelectAddress({
       address: suggestion.address,
       location: [
-        Number(suggestion.location.split(" ")[0]),
-        Number(suggestion.location.split(" ")[1])
+        Number(suggestion.location.split(" ")[1]),
+        Number(suggestion.location.split(" ")[0])
       ]
     });
   };
