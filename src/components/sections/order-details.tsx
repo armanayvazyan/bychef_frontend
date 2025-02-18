@@ -20,10 +20,18 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { checkoutFormSchema } from "@/schemas/checkout";
 import FormItem from "@/components/ui/form-item-wrapper";
+import LazyImage from "@/components/sections/lazy-image";
 import PhoneInput from "@/components/sections/phone-input";
+import { MAX_ORDER_PRICE_BY_CASH } from "@/configs/constants";
 import getNextAvailableDays from "@/helpers/getNextAvailableDays";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select";
 import { EInputNames, IChefAvailabilityExceptionDays, IChefAvailableDates } from "@/types";
+
+const paymentMethods = {
+  CARD: { value: "CARD", logo: "https://static.bychef.am/icons/card-arca.svg" },
+  IDRAM: { value: "IDRAM", logo: "https://static.bychef.am/icons/card-idram.svg" },
+  CASH: { value: "CASH", logo: "https://static.bychef.am/icons/cash.svg" },
+};
 
 const fetchChef = async (id: string): Promise<{ chefAvailableDates?: IChefAvailableDates[], chefAvailabilityExceptionDays?: IChefAvailabilityExceptionDays[] }> => {
   const data = await fetchApi(
@@ -150,15 +158,9 @@ const OrderDetails = () => {
     console.log("formData", formData);
   };
 
-  const paymentMethods = useMemo(() => {
-    const paymentMethods = [
-      "card",
-      "idram",
-      "cash"
-    ];
-
-    return paymentMethods.filter(method => (totalCartPrice || 0) >= 20000 ? method === "cash" : true);
-  }, [totalCartPrice]);
+  const paymentOptions = useMemo(() => {
+    return Object.values(paymentMethods).filter(method => orderTotalPrice >= MAX_ORDER_PRICE_BY_CASH ? method.value !== "CASH" : true);
+  }, [orderTotalPrice]);
 
   const handleSelectDeliveryDate = (date: string) => {
     form.setValue(EInputNames.delivery_date, date);
@@ -189,8 +191,9 @@ const OrderDetails = () => {
         }, uid);
 
         callbackFn();
+        form.setValue(EInputNames.payment_method, "");
       }
-    }, [cartItems]);
+    }, [cartItems, form]);
 
   const handleDeleteCartItem = useCallback(async (uid: string) => {
     const cartItem = cartItems.find(product => product.uid === uid);
@@ -199,7 +202,9 @@ const OrderDetails = () => {
       await db.products.delete(uid);
       return;
     }
-  }, [cartItems]);
+
+    form.setValue(EInputNames.payment_method, "");
+  }, [cartItems, form]);
 
   useEffect(() => {
     (async () => {
@@ -304,35 +309,45 @@ const OrderDetails = () => {
               <SelectTrigger>
                 <div className="flex justify-between py-2 rounded-xl cursor-pointer">
                   {selectedPaymentMethod ? (
-                    <span className="flex gap-2">{selectedPaymentMethod}</span>
+                    <div className="flex items-center gap-2 cursor-pointer">
+                      <img src={paymentMethods[selectedPaymentMethod as keyof typeof paymentMethods].logo} alt="payment option logo" className="h-[15px]"/>
+                      <span className="flex gap-2">{t(selectedPaymentMethod)}</span>
+                    </div>
                   ) : (
                     t("choose-payment-method")
                   )}
                 </div>
               </SelectTrigger>
               <SelectContent className="max-h-[240px] overflow-y-scroll">
-                {paymentMethods.map((method) => (
-                  <SelectItem key={method} value={method} className="p-2">
-                    <div className="flex flex-col gap-2 text-sm leading-tight text-foreground cursor-pointer">
-                      {t(method)}
-                      {method === "cash" && (
-                        <div className="bg-muted-foreground max-w-[350px] w-full">
-                          <p>
-                            20.000 դրամ և ավել գնումներ կատարելուց վճարումը
-                            կկատարվի կանխիկ։
-                          </p>
-                        </div>
-                      )}
+                {paymentOptions.map((method) => (
+                  <SelectItem key={method.value} value={method.value} className="p-2 cursor-pointer">
+                    <div className="flex items-center gap-2 cursor-pointer">
+                      <LazyImage
+                        url={method.logo}
+                        alt="payment option logo"
+                        imgClassName="w-full h-full object-cover"
+                        containerClassName="h-[15px] w-[25px]"
+                      />
+                      <p className="text-sm leading-tight text-foreground">{t(method.value)}</p>
                     </div>
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </FormItem>
+          <div className="w-full">
+            <p className="text-xs text-primary">
+              {t("payment-notes")}
+            </p>
+          </div>
         </div>
       </fieldset>
-      <div className="flex flex-col p-6 border-[1px] lg:max-w-[424px] max-h-max w-full rounded-xl border-border group" data-collapsed={isCollapsed}>
-        <div className="flex justify-between cursor-pointer" onClick={() => { setIsCollapsed(isCollapsed => !isCollapsed); }}>
+      <div className="flex flex-col p-6 border-[1px] lg:max-w-[424px] max-h-max w-full rounded-xl border-border group"
+        data-collapsed={isCollapsed}>
+        <div
+          className="flex justify-between cursor-pointer"
+          onClick={() => { setIsCollapsed(isCollapsed => !isCollapsed); }}
+        >
           <h1 className="text-xl font-bold text-primary mb-4">{t("your-order")}</h1>
           <ChevronUp className="group-data-[collapsed=false]:-rotate-180 transition-all duration-500" />
         </div>

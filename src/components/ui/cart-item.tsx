@@ -141,6 +141,7 @@ const CartItem = ({ product, onChangeQuantity, onDeleteItem, isLastItem = false 
               <div className="flex gap-3 items-center mt-2">
                 <Button
                   size="icon"
+                  type="button"
                   className="bg-muted hover:bg-muted w-[32px] h-[32px]"
                   onClick={(event) => {
                     event.stopPropagation();
@@ -157,6 +158,7 @@ const CartItem = ({ product, onChangeQuantity, onDeleteItem, isLastItem = false 
                 <p className="text-lg font-extrabold text-zinc-950">{product.quantity}</p>
                 <Button
                   size="icon"
+                  type="button"
                   className="bg-muted hover:bg-muted w-[32px] h-[32px]"
                   onClick={(event) => {
                     event.stopPropagation();

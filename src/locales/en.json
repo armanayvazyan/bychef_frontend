@@ -136,9 +136,9 @@
     "delivery": "Delivery",
     "total": "Total",
     "pay": "Pay {{amount}} ֏",
-    "cash": "Pay cash",
-    "idram": "Pay with Idram",
-    "card": "Pay with card",
+    "CASH": "Pay cash",
+    "IDRAM": "Pay with Idram",
+    "CARD": "Pay with card",
     "delivery-notes": "Additional notes for the delivery",
     "months": {
       "january": "January {{day}}",
@@ -153,7 +153,8 @@
       "october": "October {{day}}",
       "november": "November {{day}}",
       "december": "December {{day}}"
-    }
+    },
+    "payment-notes": "For orders exceeding 20,000 AMD, only cashless payment methods are available."
   },
   "additions": "Additions",
   "spice-level": "Spice level",

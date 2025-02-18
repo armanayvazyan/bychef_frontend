@@ -9,3 +9,4 @@ export const IDRAM_ORDER_ID_PREFIX = import.meta.env.VITE_IDRAM_ORDER_ID_URL_PRE
 export const YMAP_SEARCH_RESULTS_COUNT = import.meta.env.VITE_YMAP_SEARCH_RESULTS_COUNT;
 export const ANALYTICS_AMPLITUDE_KEY = import.meta.env.VITE_ANALYTICS_AMPLITUDE_KEY;
 export const FIREBASE_VAPID_KEY = import.meta.env.VITE_FIREBASE_VAPID_KEY;
+export const MAX_ORDER_PRICE_BY_CASH = 20000;
