@@ -253,7 +253,9 @@ const OrderDetails = () => {
                 <SelectTrigger>
                   <div className="flex justify-between py-2 rounded-xl cursor-pointer">
                     {selectedDeliveryDate ? (
-                      <span className="flex gap-2">{selectedDeliveryDate}</span>
+                      <span className="flex gap-2">
+                        {t(`month.${selectedDeliveryDate.split(" ")[0]}`, { day: selectedDeliveryDate.split(" ")[1] })}
+                      </span>
                     ) : (
                       t("select-day")
                     )}
@@ -263,7 +265,7 @@ const OrderDetails = () => {
                   {dateOptions.map((date) => (
                     <SelectItem key={date.date} value={date.date} className="p-2">
                       <div className="flex gap-2 text-sm leading-tight text-foreground cursor-pointer">
-                        {date.date}
+                        {t(`months.${date.date.split(" ")[0].toLowerCase()}`, { day: date.date.split(" ")[1] })}
                       </div>
                     </SelectItem>
                   ))}

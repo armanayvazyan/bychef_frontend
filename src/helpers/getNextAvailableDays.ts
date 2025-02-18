@@ -26,7 +26,7 @@ function getNextAvailableDays(orderBefore: number, workingDays: IChefAvailableDa
       return date >= minOrderDate && !exceptionDays.includes(dateObj.date);
     })
     // @ts-expect-error no need for mentioned types
-    .sort((a: string, b: string) => new Date(a) - new Date(b))
+    .sort((a: IChefAvailableDates, b: IChefAvailableDates) => new Date(a.date) - new Date(b.date))
     .map(({ date: dateStr, timeFrom, timeTo }) => {
       const date = new Date(dateStr);
       return {
