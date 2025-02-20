@@ -46,7 +46,7 @@ const FormItemWrapper = ({
             {children}
           </FormControlWrapper>
           {description && <FormDescription>{description}</FormDescription>}
-          <FormItemErrorMessage />
+          <FormItemErrorMessage className="text-sm" />
         </FormItem>
       )}
     />
