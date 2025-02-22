@@ -2,6 +2,11 @@ name: Vercel Deploy
 
 on:
   workflow_dispatch:
+    inputs:
+      branch:
+        description: "Branch to deploy"
+        required: true
+        default: "main"
 
 jobs:
   deploy:
@@ -10,27 +15,48 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.inputs.branch }}
 
-      - name: Add a blank line to vercel.json
+      - name: Ensure vercel.json has a blank line
         run: |
           if [ -f vercel.json ]; then
-            echo "" >> vercel.json
-            echo "Added a blank line to vercel.json."
+            if [ -z "$(tail -c 1 vercel.json)" ]; then
+              echo "vercel.json already ends with a blank line."
+            else
+              echo "" >> vercel.json
+              echo "Added a blank line to vercel.json."
+            fi
           else
             echo "vercel.json not found, exiting..."
             exit 1
           fi
 
-      - name: Configure Git
+      - name: Check for Changes
+        id: git-check
         run: |
-          git config user.name "Arman Ayvazyan"
-          git config user.email "manchayvazyan@gmail.com"
+          if git diff --quiet; then
+            echo "No changes to commit."
+            echo "push_needed=false" >> $GITHUB_ENV
+          else
+            echo "Changes detected."
+            echo "push_needed=true" >> $GITHUB_ENV
+          fi
+
+      - name: Configure Git
+        if: env.push_needed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Commit and Push Changes
+        if: env.push_needed == 'true'
         env:
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git add vercel.json
-          git commit -m "Deploy vercel"
-          git remote set-url origin https://x-access-token:${TOKEN}@github.com/armanayvazyan/bychef_frontend.git
-          git push origin $(git rev-parse --abbrev-ref HEAD)
+          git commit -m "Ensure vercel.json has a blank line"
+          git push origin ${{ github.event.inputs.branch }}
+
+      - name: Deploy to Vercel
+        run: npx vercel --token ${{ secrets.VERCEL_TOKEN }} --prod --branch ${{ github.event.inputs.branch }}
