@@ -1,38 +1,16 @@
 import { useEffect, useMemo, useState } from "react";
-import { IDishInfo } from "@/types";
 import { db, ICartItem } from "@/db";
 import Button from "@/components/ui/button";
-import formatPrice from "@/helpers/formatPrice";
 import { useTranslation } from "react-i18next";
+import useCartItem from "@/hooks/use-cart-item";
+import formatPrice from "@/helpers/formatPrice";
 import Separator from "@/components/ui/separator";
-import { fetchApi } from "@/hooks/use-fetch-data";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useQueryClient } from "@tanstack/react-query";
 import DishModal from "@/components/sections/dish-modal";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getDataStringByLocale } from "@/helpers/getDataByLocale";
 import { Minus, Plus, Trash2, TriangleAlert, X } from "lucide-react";
-
-const fetchCartItem = async (id: string | number, deleteItemCb: () => void) => {
-  const data = await fetchApi({
-    initialPath: "dish/",
-    pathExtension: id.toString()
-  });
-
-  if (data && data.status === 403) {
-    deleteItemCb();
-  }
-
-  return data?.result as IDishInfo;
-};
-
-const useCartItem = (itemId: string | number, deleteItemCb: () => void) => {
-  return useQuery({
-    queryKey: ["cart-item", itemId],
-    queryFn: () => fetchCartItem(itemId, deleteItemCb),
-    refetchOnWindowFocus: false,
-  });
-};
 
 interface ICartItemProps {
   product: ICartItem;
@@ -49,10 +27,9 @@ interface ICartItemProps {
 const CartItem = ({ product, onChangeQuantity, onDeleteItem, isLastItem = false }: ICartItemProps) => {
   const queryClient = useQueryClient();
   const { t, i18n } = useTranslation("translation");
+  const { data } = useCartItem(product.id, () => { onDeleteItem(product.uid); });
 
   const [selectedDish, setSelectedDish] = useState<{ id: string | number } | null>(null);
-
-  const { data } = useCartItem(product.id, () => { onDeleteItem(product.uid); });
 
   const name = data ? getDataStringByLocale(data, "name", i18n.language) : null;
 

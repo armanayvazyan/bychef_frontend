@@ -1,7 +1,9 @@
+import { useEffect } from "react";
 import { LOCALES } from "@/types";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
+<<<<<<< Updated upstream
 import { useEffect } from "react";
 import { logPageOpenEvent } from "@/analytics/Events";
 
@@ -20,6 +22,10 @@ const fetchTermsContent = async (locale: LOCALES) => {
     console.log(error);
   }
 };
+=======
+import { fetchTermsContent } from "@/server-actions";
+import { logPageOpenEvent } from "@/analytics/Events";
+>>>>>>> Stashed changes
 
 const TermsConditions = () => {
   const { i18n } = useTranslation();

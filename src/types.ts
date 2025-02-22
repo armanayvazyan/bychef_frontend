@@ -4,11 +4,6 @@ export enum LOCALES {
   RU = "ru"
 }
 
-export interface IChefAvailableDates {
-  dayOfTheWeek: 0 | 1 | 2 | 3 | 4 | 5 | 6,
-  isAvailable: boolean
-}
-
 export interface IChefLegalInfo {
   id: number,
   taxNumber: string,
@@ -165,4 +160,33 @@ export enum EInputNames {
   delivery_time = "delivery_time",
   payment_method = "payment_method",
   coordinates = "coordinates"
+}
+
+export interface IFetchApiReturnType {
+  result?: any;
+  error?: string;
+  status?: number;
+  isInjected: boolean;
+}
+
+export interface ICartItem {
+  id: number;
+  uid: string;
+  price: number;
+  chefId?: number;
+  quantity: number;
+  spiceLevel?: number;
+  orderBefore?: number;
+  additions?: Record<string, number>;
+}
+
+export interface ILocation {
+  id: string;
+  address: string;
+  coordinates: { lng: number; lat: number };
+}
+
+export interface ISuggestion {
+  address: string;
+  location: string
 }

@@ -154,7 +154,13 @@
       "november": "November {{day}}",
       "december": "December {{day}}"
     },
-    "payment-notes": "For orders exceeding 20,000 AMD, only cashless payment methods are available."
+    "payment-notes": "For orders exceeding 20,000 AMD, only cashless payment methods are available.",
+    "wrongAddressModal": {
+      "title": "Something went wrong",
+      "description": "This restaurant doesn't deliver to this address",
+      "negativeButton": "Change the delivery address and empty the cart",
+      "positiveButton": "Keep previous address"
+    }
   },
   "additions": "Additions",
   "spice-level": "Spice level",

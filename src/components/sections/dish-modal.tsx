@@ -1,35 +1,24 @@
 import { MouseEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { db } from "@/db";
-import { IDishInfo } from "@/types";
 import Button from "@/components/ui/button";
+import { fetchDish } from "@/server-actions";
 import { useToast } from "@/hooks/use-toast";
 import { useTranslation } from "react-i18next";
 import formatPrice from "@/helpers/formatPrice";
 import { useQuery } from "@tanstack/react-query";
-import { fetchApi } from "@/hooks/use-fetch-data";
 import Separator from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Loader2, Minus, Plus } from "lucide-react";
 import { logCartAddEvent } from "@/analytics/Events";
 import Addition from "@/components/sections/addition";
 import LazyImage from "@/components/sections/lazy-image";
+import { DATA_DEFAULT_STALE_TIME } from "@/configs/constants";
 import DishSpiceLevels from "@/components/ui/dish-spice-levels";
 import DietaryOption from "@/components/sections/dietary-option";
 import DishModalAlert from "@/components/sections/dish-modal-alert";
-import ClearCartModal from "@/components/sections/clear-cart-modal";
+import ConfirmationModal from "@/components/sections/confirmation-modal";
 import getDataByLocale, { getDataStringByLocale } from "@/helpers/getDataByLocale";
 import { DialogDescription, DialogFooter, DialogTitle } from "@/components/ui/dialog";
-
-const fetchDish = async (id: string | number): Promise<IDishInfo | undefined> => {
-  const data = await fetchApi(
-    {
-      initialPath: "dish/",
-      pathExtension: id.toString()
-    }
-  );
-
-  return data?.result;
-};
 
 interface IDishModal {
   id: number | string;
@@ -53,7 +42,8 @@ const DishModal = ({ id, onCloseDialog }: IDishModal) => {
   } = useQuery({
     queryKey: ["dish", id],
     queryFn: () => fetchDish(id),
-    refetchOnWindowFocus: false
+    refetchOnWindowFocus: false,
+    staleTime: DATA_DEFAULT_STALE_TIME
   });
 
   const name = dishInfo ? getDataStringByLocale(dishInfo, "name", i18n.language) : null;
@@ -192,12 +182,12 @@ const DishModal = ({ id, onCloseDialog }: IDishModal) => {
     onCloseDialog,
   ]);
 
-  const handleClearCartAcceptAction = async () => {
+  const handleClearCartPositiveAction = async () => {
     await db.products.clear();
     handleAddToCart();
   };
 
-  const handleClearCartDeclineAction = () => {
+  const handleClearCartNegativeAction = () => {
     setIsClearCartOpen(false);
   };
 
@@ -216,12 +206,6 @@ const DishModal = ({ id, onCloseDialog }: IDishModal) => {
 
   return (
     <>
-      <ClearCartModal
-        open={isClearCartOpen}
-        setOpen={setIsClearCartOpen}
-        acceptAction={handleClearCartAcceptAction}
-        declineAction={handleClearCartDeclineAction}
-      />
       <LazyImage
         alt="dish"
         url={dishInfo?.url}
@@ -335,6 +319,18 @@ const DishModal = ({ id, onCloseDialog }: IDishModal) => {
           </div>
         </div>
       </DialogFooter>
+      <ConfirmationModal
+        contentKeys={{
+          title: "generic.clearCartTitle",
+          description: "generic.clearCartDescription",
+          positiveButtonText: "generic.clearCart",
+          negativeButtonText: "generic.keepCart",
+        }}
+        open={isClearCartOpen}
+        setOpen={setIsClearCartOpen}
+        positiveAction={handleClearCartPositiveAction}
+        negativeAction={handleClearCartNegativeAction}
+      />
     </>
   );
 };

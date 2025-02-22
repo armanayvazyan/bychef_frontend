@@ -1,36 +1,27 @@
+import { useEffect } from "react";
 import { ChevronLeft } from "lucide-react";
 import Button from "@/components/ui/button";
+import { fetchChef } from "@/server-actions";
 import { useTranslation } from "react-i18next";
+import { useQuery } from "@tanstack/react-query";
+import { logPageOpenEvent } from "@/analytics/Events";
 import { useNavigate, useParams } from "react-router-dom";
+import ChefInfoContext from "@/context/chef-info-context";
 import ChefDishes from "@/components/sections/chef-dishes";
 import ChefDetails from "@/components/sections/chef-details";
-import { useQuery } from "@tanstack/react-query";
-import { fetchApi } from "@/hooks/use-fetch-data";
-import ChefInfoContext from "@/context/chef-info-context";
-import { IChefInfo } from "@/types";
-import { useEffect } from "react";
-import { logPageOpenEvent } from "@/analytics/Events";
-
-const fetchChef = async (id: string): Promise<IChefInfo | undefined> => {
-  const data = await fetchApi(
-    {
-      initialPath: "chef/",
-      pathExtension: id
-    }
-  );
-
-  return data?.result;
-};
+import { DATA_DEFAULT_STALE_TIME } from "@/configs/constants";
 
 const Chef = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { id } = useParams();
+
   useEffect(() => {
     logPageOpenEvent({
       chef_id: Number(id)
     });
   }, []);
+
   const {
     data: chefInfo,
     error,
@@ -38,7 +29,8 @@ const Chef = () => {
   } = useQuery({
     queryKey: ["chef", id],
     queryFn: () => fetchChef(id ?? ""),
-    refetchOnWindowFocus: false
+    refetchOnWindowFocus: false,
+    staleTime: DATA_DEFAULT_STALE_TIME
   });
 
   const handleNavigateBack = () => { navigate("/explore"); };

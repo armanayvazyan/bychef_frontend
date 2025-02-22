@@ -1,6 +1,7 @@
 import { useCallback } from "react";
 import isEmpty from "lodash/isEmpty";
 import { SB_KEY } from "@/configs/constants";
+import { IFetchApiReturnType } from "@/types";
 import constructFinalUrl from "@/helpers/constructFinalUrl";
 
 interface IFetchData {
@@ -45,11 +46,9 @@ export const fetchApi = async ({
   options = {},
   hasAT = true,
   injectErrorMessage = false,
-}: IFetchData = {}) => {
+}: IFetchData = {}): Promise<IFetchApiReturnType> => {
   try {
     const endPoint = initialPath + pathExtension;
-
-    if (!endPoint && !url) return;
 
     const reqUrl = url ? url + pathExtension : constructFinalUrl(endPoint);
 
@@ -81,11 +80,11 @@ export const fetchApi = async ({
     }
 
     if (response.status === 201) {
-      return {};
+      return { isInjected: false };
     }
 
     const res = await response.json();
-    return { result: res };
+    return { result: res, isInjected: true };
   } catch (e) {
     console.error(e);
     return { ...processErrorResponse(), isInjected: false };
