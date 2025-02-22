@@ -69,17 +69,34 @@ export const fetchChef = async (id: string): Promise<IChefInfo | undefined> => {
 };
 
 export const fetchTermsContent = async (locale: LOCALES) => {
-  const response = await fetchApi({
-    url: `https://static.bychef.am/docs/terms/${locale}_latest.html`
-  });
+  try {
+    const response = await fetch(`https://static.bychef.am/docs/terms/${locale}_latest.html`);
 
-  if (response && !response.error) {
-    const html = await response.result.text();
+    if (!response.ok) {
+      throw new Error("Network response was not ok " + response.statusText);
+    }
+
+    const html = await response.text();
 
     return html as TrustedHTML;
-  } else {
-    console.log(response.error);
-    return "";
+  } catch(error) {
+    console.log(error);
+  }
+};
+
+export const fetchPrivacyContent = async (locale: LOCALES) => {
+  try {
+    const response = await fetch(`https://static.bychef.am/docs/privacy/${locale}_latest.html`);
+
+    if (!response.ok) {
+      throw new Error("Network response was not ok " + response.statusText);
+    }
+
+    const html = await response.text();
+
+    return html as TrustedHTML;
+  } catch(error) {
+    console.log(error);
   }
 };
 
