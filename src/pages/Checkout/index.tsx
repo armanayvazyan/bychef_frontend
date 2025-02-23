@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { logPageOpenEvent } from "@/analytics/Events";
-import OrderDetails from "@/components/sections/order-details";
+import OrderCheckout from "@/components/sections/order-checkout";
 
 const Checkout = () => {
   useEffect(() => {
@@ -9,7 +9,7 @@ const Checkout = () => {
 
   return (
     <section className="pt-9 px-4">
-      <OrderDetails />
+      <OrderCheckout />
     </section>
   );
 };

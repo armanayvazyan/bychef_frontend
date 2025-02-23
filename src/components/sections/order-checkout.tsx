@@ -26,8 +26,10 @@ import CheckoutAddressField from "@/components/sections/checkout-address-field";
 import DeliveryPaymentSelect from "@/components/sections/delivery-payment-select";
 import DeliveryDateTimeSelect from "@/components/sections/delivery-date-time-select";
 
-const OrderDetails = () => {
+const OrderCheckout = () => {
   const formId = useId();
+  const navigate = useNavigate();
+  const { t } = useTranslation("translation", { keyPrefix: "checkout" });
   const form = useForm<z.infer<typeof checkoutFormSchema>>({
     defaultValues: {
       email: "",
@@ -45,9 +47,6 @@ const OrderDetails = () => {
   });
 
   const [isCollapsed, setIsCollapsed] = useState(true);
-
-  const navigate = useNavigate();
-  const { t } = useTranslation("translation", { keyPrefix: "checkout" });
 
   const cartItems = useLiveQuery(async () => {
     const products = await db.products.reverse().toArray();
@@ -87,6 +86,7 @@ const OrderDetails = () => {
     console.log("formData", formData);
   };
 
+  // TODO: create a custom hook to work with cart items
   const handleChangeQuantity = useCallback(
     async (uid: string, targetItem: ICartItem & { price: number }, diff: -1 | 1, callbackFn: () => void) => {
       const cartItem = cartItems.find(product => product.uid === uid);
@@ -210,4 +210,4 @@ const OrderDetails = () => {
   );
 };
 
-export default OrderDetails;
+export default OrderCheckout;

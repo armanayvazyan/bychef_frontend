@@ -50,7 +50,6 @@ const Chef = () => {
           <ChevronLeft size={20} />
           <p className="text-sm text-primary font-semibold">{t("generic.back")}</p>
         </Button>
-        {/* TODO: loading skeletons */}
         {chefInfo && <ChefDetails />}
         {chefInfo && <ChefDishes />}
       </section>
