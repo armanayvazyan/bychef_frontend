@@ -7,7 +7,7 @@ import constructFinalUrl from "@/helpers/constructFinalUrl";
 interface IFetchData {
   url?: string;
   initialPath?: string,
-  pathExtension?: string,
+  pathExtension?: string | number,
   method?: "GET" | "POST" | "DELETE",
   headerParams?: Record<string, string | number>,
   bodyParams?: Record<string, any>,
@@ -48,9 +48,9 @@ export const fetchApi = async ({
   injectErrorMessage = false,
 }: IFetchData = {}): Promise<IFetchApiReturnType> => {
   try {
-    const endPoint = initialPath + pathExtension;
+    const endPoint = initialPath + String(pathExtension);
 
-    const reqUrl = url ? url + pathExtension : constructFinalUrl(endPoint);
+    const reqUrl = url ? url + String(pathExtension) : constructFinalUrl(endPoint);
 
     const body = !isEmpty(bodyParams) ? JSON.stringify(bodyParams) : null;
     const headers = {

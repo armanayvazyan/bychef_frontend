@@ -1,5 +1,14 @@
 {
   "generic": {
+    "home": "Home",
+    "chefs": "Chefs",
+    "kitchen": "Kitchen",
+    "checkout": "Checkout",
+    "order_success": "Order Placed",
+    "order_failed": "Failed Order",
+    "privacy": "Privacy Policy",
+    "terms": "General Terms and Conditions",
+    "tracking": "Order",
     "no-dish-found": "No dishes are available",
     "no-chefs-found": "No chefs are available",
     "menu": "Menu",
@@ -156,10 +165,10 @@
     },
     "payment-notes": "For orders exceeding 20,000 AMD, only cashless payment methods are available.",
     "wrongAddressModal": {
-      "title": "Something went wrong",
-      "description": "This restaurant doesn't deliver to this address",
-      "negativeButton": "Change the delivery address and empty the cart",
-      "positiveButton": "Keep previous address"
+      "title": "Oops!",
+      "description": "This chef doesn't deliver to this address",
+      "negativeButton": "Keep previous address",
+      "positiveButton": "Change address and empty cart"
     }
   },
   "additions": "Additions",

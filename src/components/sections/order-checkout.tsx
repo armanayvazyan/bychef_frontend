@@ -21,6 +21,7 @@ import { fetchDeliveryPrice } from "@/server-actions";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { checkoutFormSchema } from "@/schemas/checkout";
 import FormItem from "@/components/ui/form-item-wrapper";
+import { formatDateTime } from "@/helpers/formatDateTime";
 import PhoneInput from "@/components/sections/phone-input";
 import CheckoutAddressField from "@/components/sections/checkout-address-field";
 import DeliveryPaymentSelect from "@/components/sections/delivery-payment-select";
@@ -78,12 +79,40 @@ const OrderCheckout = () => {
   }, [cartItems]);
 
   const orderTotalPrice = useMemo(() => {
-    const deliveryPrice = deliveryInfoResponse.data?.result ? deliveryInfoResponse.data.result.deliveryPrice as number : 0;
+    const deliveryPrice = deliveryInfoResponse.data?.result
+      ? deliveryInfoResponse.data.result.deliveryPrice as number
+      : 0;
     return totalCartPrice + deliveryPrice;
   }, [deliveryInfoResponse.data?.result, totalCartPrice]);
 
   const handleSubmitOrder = (formData: z.infer<typeof checkoutFormSchema>) => {
-    console.log("formData", formData);
+    const [country, region] = formData.address.split(", ");
+
+    const orderItems = cartItems.map(item => ({
+      selectedSpiceLevel: item.spiceLevel,
+      quantity: item.quantity,
+      orderDishAdditionList: item.additions ? Object.keys(item.additions) : [],
+      dish: { id: item.id }
+    }));
+
+    console.log(
+      {
+        address: {
+          country: country,
+          region: region,
+          street: formData.address,
+          home: formData.apartment,
+          floor: formData.floor,
+          coordinates: formData.coordinates
+        },
+        receiverPhoneNumber: "+374" + formData.phone,
+        receiverEmail: formData.email,
+        chefId: chefId,
+        deliveryDateTime: formatDateTime(formData.delivery_date, formData.delivery_time),
+        paymentType: formData.payment_method,
+        orderList: orderItems,
+      }
+    );
   };
 
   // TODO: create a custom hook to work with cart items
@@ -177,7 +206,7 @@ const OrderCheckout = () => {
           <ChevronUp className="group-data-[collapsed=false]:-rotate-180 transition-all duration-500" />
         </div>
         <div className="grid group-data-[collapsed=false]:grid-rows-[0fr] grid-rows-[1fr] transition-all duration-300">
-          <div data-collapsed={isCollapsed} className="overflow-hidden flex flex-col gap-6">
+          <div className="overflow-hidden flex flex-col gap-6">
             {!!cartItems.length && cartItems.map((product, index) => (
               <CartItem
                 key={product.id}

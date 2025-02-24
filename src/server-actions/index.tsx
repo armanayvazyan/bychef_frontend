@@ -44,13 +44,13 @@ export const fetchDish = async (id: string | number): Promise<IDishInfo | undefi
   return data.result;
 };
 
-export const fetchCartItem = async (id: string | number, deleteItemCb: () => void) => {
+export const fetchCartItem = async (id: string | number, deleteItemCb?: () => void) => {
   const data = await fetchApi({
     initialPath: "dish/",
     pathExtension: String(id)
   });
 
-  if (data && data.status === 403) {
+  if (data && data.status === 403 && deleteItemCb) {
     deleteItemCb();
   }
 
@@ -142,12 +142,16 @@ export const fetchSearchAddressSuggestions = async (search: string, locale: LOCA
           metaDataProperty: { GeocoderMetaData: { text: string } };
           name: string; Point: { pos: string; }; };
       }) => {
-        const [country, street] = item.GeoObject.metaDataProperty.GeocoderMetaData.text.split(", ");
+        const [country, region] = item.GeoObject.metaDataProperty.GeocoderMetaData.text.split(", ");
 
-        if (country && street)
+        if (country && region)
           collection.push({ address: item.GeoObject.metaDataProperty.GeocoderMetaData.text, location: item.GeoObject.Point.pos });
       }
     );
 
   return collection;
+};
+
+export const placeOrder = async () => {
+
 };
