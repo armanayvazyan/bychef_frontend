@@ -10,6 +10,7 @@ import { fetchDeliveryPrice } from "@/server-actions";
 import MapDialog from "@/components/sections/map-dialog";
 import { AddressSearchContext } from "@/context/address-search-context";
 import ConfirmationModal from "@/components/sections/confirmation-modal";
+import useServerError from "@/hooks/useServerError";
 
 interface ICheckoutAddressFieldContainerProps {
   chefId?: number;
@@ -19,6 +20,7 @@ interface ICheckoutAddressFieldContainerProps {
 const CheckoutAddressField = ({ chefId, sessionLocation }: ICheckoutAddressFieldContainerProps) => {
   const form = useFormContext();
   const navigate = useNavigate();
+  const { handleServerError } = useServerError();
   const { selectedAddress } = useContext(AddressSearchContext);
   const { t } = useTranslation("translation", { keyPrefix: "checkout" });
 
@@ -38,11 +40,13 @@ const CheckoutAddressField = ({ chefId, sessionLocation }: ICheckoutAddressField
     if (selectedAddress && chefId) {
       const res = await fetchDeliveryPrice(
         chefId,
-        { lat: selectedAddress.location[0], lng: selectedAddress.location[1] }
+        { lat: selectedAddress.location[0], lng: selectedAddress.location[1] },
+        false,
       );
 
       if (res.error) {
         setIsPromptOpen(true);
+        handleServerError(res.error);
         return;
       }
 
@@ -50,7 +54,7 @@ const CheckoutAddressField = ({ chefId, sessionLocation }: ICheckoutAddressField
 
       if (callback) callback();
     }
-  }, [chefId, handleSaveAddress, selectedAddress]);
+  }, [chefId, handleSaveAddress, handleServerError, selectedAddress]);
 
   const handleAddressPromptPositiveAction = useCallback(async () => {
     await db.products.clear();

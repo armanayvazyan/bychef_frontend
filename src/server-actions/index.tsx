@@ -1,31 +1,45 @@
 import { fetchApi } from "@/hooks/use-fetch-data";
-import { IFetchChefsProps } from "@/server-actions/types";
+import { IFetchChefsProps, IPlaceOrderProps } from "@/server-actions/types";
 import constructFinalUrl from "@/helpers/constructFinalUrl";
 import { CHEFS_PER_PAGE_COUNT, YMAP_KEY, YMAP_SEARCH_RESULTS_COUNT } from "@/configs/constants";
 import { IChefAvailabilityExceptionDays, IChefAvailableDates, IChefInfo, IDishInfo, ISuggestion, LOCALES } from "@/types";
 
-export const fetchDeliveryPrice = async (id: number, coordinates: { lat: number; lng: number }) => {
+export const fetchDeliveryPrice = async (id: number, coordinates: { lat: number; lng: number }, doorToDoorEnabled: boolean, onErrorCb?: (errorKey: string) => void) => {
   const data = await fetchApi(
     {
       initialPath: "order/delivery-price",
       method: "POST",
       bodyParams: {
         chefId: id,
-        doorToDoorEnabled: false,
+        doorToDoorEnabled,
         userCoordinates: [coordinates.lng, coordinates.lat],
-      }
+      },
+      injectErrorMessage: true,
     }
   );
+
+  if (data.error) {
+    if (onErrorCb) onErrorCb(data.error);
+
+    return { result: null, error: data.error };
+  }
 
   return data;
 };
 
-export const fetchChefAvailableDates = async (id: number): Promise<{ chefAvailableDates?: IChefAvailableDates[], chefAvailabilityExceptionDays?: IChefAvailabilityExceptionDays[] }> => {
+export const fetchChefAvailableDates = async (id: number, onErrorCb?: (errorKey: string) => void): Promise<{ chefAvailableDates?: IChefAvailableDates[], chefAvailabilityExceptionDays?: IChefAvailabilityExceptionDays[] }> => {
   const data = await fetchApi(
     {
       initialPath: "chef/",
-      pathExtension: String(id)
+      pathExtension: String(id),
+      injectErrorMessage: true,
     });
+
+  if (data.error) {
+    if (onErrorCb) onErrorCb(data.error);
+
+    return {};
+  }
 
   return {
     chefAvailableDates: data.result.chefAvailableDates,
@@ -33,37 +47,58 @@ export const fetchChefAvailableDates = async (id: number): Promise<{ chefAvailab
   };
 };
 
-export const fetchDish = async (id: string | number): Promise<IDishInfo | undefined> => {
+export const fetchDish = async (id: string | number, onErrorCb?: (errorKey: string) => void): Promise<IDishInfo | undefined> => {
   const data = await fetchApi(
     {
       initialPath: "dish/",
-      pathExtension: String(id)
+      pathExtension: String(id),
+      injectErrorMessage: true,
     }
   );
+
+  if (data.error) {
+    if (onErrorCb) onErrorCb(data.error);
+
+    return;
+  }
 
   return data.result;
 };
 
-export const fetchCartItem = async (id: string | number, deleteItemCb?: () => void) => {
+export const fetchCartItem = async (id: string | number, deleteItemCb?: () => void, onErrorCb?: (errorKey: string) => void) => {
   const data = await fetchApi({
     initialPath: "dish/",
-    pathExtension: String(id)
+    pathExtension: String(id),
+    injectErrorMessage: true,
   });
 
   if (data && data.status === 403 && deleteItemCb) {
     deleteItemCb();
   }
 
+  if (data.error) {
+    if (onErrorCb) onErrorCb(data.error);
+
+    return;
+  }
+
   return data.result as IDishInfo;
 };
 
-export const fetchChef = async (id: string): Promise<IChefInfo | undefined> => {
+export const fetchChef = async (id: string, onErrorCb?: (errorKey: string) => void): Promise<IChefInfo | undefined> => {
   const data = await fetchApi(
     {
       initialPath: "chef/",
-      pathExtension: id
+      pathExtension: id,
+      injectErrorMessage: true,
     }
   );
+
+  if (data.error) {
+    if (onErrorCb) onErrorCb(data.error);
+
+    return;
+  }
 
   return data.result;
 };
@@ -100,7 +135,7 @@ export const fetchPrivacyContent = async (locale: LOCALES) => {
   }
 };
 
-export const fetchChefs = async ({ pageParam, dateFrom, dateTo }: IFetchChefsProps) => {
+export const fetchChefs = async ({ pageParam, dateFrom, dateTo, onErrorCb }: IFetchChefsProps) => {
   const url = new URL(constructFinalUrl("chef/active"));
 
   url.searchParams.append("limit", String(CHEFS_PER_PAGE_COUNT));
@@ -111,9 +146,16 @@ export const fetchChefs = async ({ pageParam, dateFrom, dateTo }: IFetchChefsPro
   const data = await fetchApi(
     {
       initialPath: "chef/active",
-      pathExtension: url.search
+      pathExtension: url.search,
+      injectErrorMessage: true,
     }
   );
+
+  if (data.error) {
+    if (onErrorCb) onErrorCb(data.error);
+
+    return;
+  }
 
   return data.result || {};
 };
@@ -152,6 +194,25 @@ export const fetchSearchAddressSuggestions = async (search: string, locale: LOCA
   return collection;
 };
 
-export const placeOrder = async () => {
+export const placeOrder = async (formData: IPlaceOrderProps, locale: LOCALES, onErrorCb?: (errorKey: string) => void) => {
+  const data = await fetchApi(
+    {
+      initialPath: "order",
+      method: "POST",
+      headerParams: {
+        language: locale,
+      },
+      bodyParams: formData,
+      injectErrorMessage: true,
+      isResponseOtherType: true
+    }
+  );
 
+  if (data.error) {
+    if (onErrorCb) onErrorCb(data.error);
+
+    return;
+  }
+
+  return data.result || null;
 };

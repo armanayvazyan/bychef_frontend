@@ -6,13 +6,14 @@ import { IChefGenericInfo, IChefsPage } from "@/types";
 import ChefCard from "@/components/sections/chef-card";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { CHEFS_PER_PAGE_COUNT } from "@/configs/constants";
+import useServerError from "@/hooks/useServerError";
 
 const ExploreChefs = () => {
   const { t } = useTranslation("translation");
+  const { handleServerError } = useServerError();
   const observerTargetRef = useRef<HTMLDivElement | null>(null);
   const {
     data,
-    error,
     isFetching,
     hasNextPage,
     fetchNextPage,
@@ -23,6 +24,7 @@ const ExploreChefs = () => {
     ],
     queryFn: (props) => fetchChefs({
       ...props,
+      onErrorCb: handleServerError,
     }),
     initialPageParam: 0,
     getNextPageParam: (lastPage: IChefsPage, allPages: IChefsPage[]) => {
@@ -69,7 +71,7 @@ const ExploreChefs = () => {
           ))
         )}
       </div>
-      {!data && !isFetchingNextPage && !isFetching && !error && (
+      {!data && !isFetchingNextPage && !isFetching && (
         <div className="w-full grid place-items-center min-h-[50dvh]">
           <h2 className="text-2xl font-bold">{t("generic.no-chefs-found")}</h2>
         </div>

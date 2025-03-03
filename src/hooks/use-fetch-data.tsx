@@ -14,25 +14,26 @@ interface IFetchData {
   options?: Record<string, string | number>,
   hasAT?: boolean,
   injectErrorMessage?: boolean,
+  isResponseOtherType?: boolean,
 }
 
 const processErrorResponse = (status?: number) => {
   switch (status) {
     case 400:
-      return { error: "Bad Request!" };
+      return { error: "bad-request-default" };
     case 498:
     case 401:
-      return { error: "Please authorize!" };
+      return { error: "authorize-default" };
     case 403:
-      return { error: "Forbidden!" };
+      return { error: "forbidden-default" };
     case 404:
-      return { error: "Not found!" };
+      return { error: "not-found-default" };
     case 429:
-      return { error: "Too many requests! Please try again later." };
+      return { error: "too-many-requests-default" };
     case 500:
-      return { error: "Server Error!" };
+      return { error: "server-error-default" };
     default:
-      return { error: "Something went wrong!" };
+      return { error: "something-went-wrong-default" };
   }
 };
 
@@ -46,6 +47,7 @@ export const fetchApi = async ({
   options = {},
   hasAT = true,
   injectErrorMessage = false,
+  isResponseOtherType = false,
 }: IFetchData = {}): Promise<IFetchApiReturnType> => {
   try {
     const endPoint = initialPath + String(pathExtension);
@@ -73,7 +75,7 @@ export const fetchApi = async ({
     if (!response.ok) {
       if (injectErrorMessage && response) {
         const res = await response.json();
-        return { error: res.error, status: response.status, isInjected: true };
+        return { error: res.message, status: response.status, isInjected: true };
       }
 
       return { ...processErrorResponse(response.status), status: response.status, isInjected: false };
@@ -83,7 +85,7 @@ export const fetchApi = async ({
       return { isInjected: false };
     }
 
-    const res = await response.json();
+    const res = isResponseOtherType ? response : await response.json();
     return { result: res, isInjected: true };
   } catch (e) {
     console.error(e);

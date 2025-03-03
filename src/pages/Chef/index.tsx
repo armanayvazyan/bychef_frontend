@@ -9,12 +9,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import ChefInfoContext from "@/context/chef-info-context";
 import ChefDishes from "@/components/sections/chef-dishes";
 import ChefDetails from "@/components/sections/chef-details";
-import { DATA_DEFAULT_STALE_TIME } from "@/configs/constants";
+import { DATA_DEFAULT_CACHE_TIME, DATA_DEFAULT_STALE_TIME } from "@/configs/constants";
+import useServerError from "@/hooks/useServerError";
 
 const Chef = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const { handleServerError } = useServerError();
 
   useEffect(() => {
     logPageOpenEvent({
@@ -28,9 +30,10 @@ const Chef = () => {
     isFetching,
   } = useQuery({
     queryKey: ["chef", id],
-    queryFn: () => fetchChef(id ?? ""),
+    queryFn: () => fetchChef(id ?? "", handleServerError),
+    staleTime: DATA_DEFAULT_STALE_TIME,
+    gcTime: DATA_DEFAULT_CACHE_TIME,
     refetchOnWindowFocus: false,
-    staleTime: DATA_DEFAULT_STALE_TIME
   });
 
   const handleNavigateBack = () => { navigate("/explore"); };

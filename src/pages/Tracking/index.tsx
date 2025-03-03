@@ -13,6 +13,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { ChevronUp, Copy, Download } from "lucide-react";
 import OrderItem from "@/components/sections/order-item";
 
+const statusKey = "ready-for-delivery";
+
 const deliveryInfoResponse = {
   data: {
     deliveryPrice: 5000,
@@ -25,7 +27,7 @@ const orderTotalPrice = 4000;
 const Tracking = () => {
   const { id } = useParams();
   const { toast } = useToast();
-  const { t } = useTranslation("translation", { keyPrefix: "checkout" });
+  const { t } = useTranslation("translation", { keyPrefix: "tracking" });
 
   const cartItems = useLiveQuery(async () => {
     const products = await db.products.reverse().toArray();
@@ -50,7 +52,7 @@ const Tracking = () => {
       <div className="w-full flex flex-col-reverse lg:flex-row justify-around gap-3">
         <div className="flex flex-col gap-4 min-w-[50%]">
           <div className="flex gap-4 items-center">
-            <h1 className="text-primary font-bold text-xl">Order</h1>
+            <h1 className="text-primary font-bold text-xl">{t("order")}</h1>
             <div className="flex gap-2 items-center cursor-pointer" onClick={handleCopyId}>
               <p className="text-primary font-bold">#{id}</p>
               <Copy size={16} />
@@ -58,17 +60,17 @@ const Tracking = () => {
           </div>
           <div className="flex gap-3 items-center">
             <div className="bg-zinc-200 rounded-md px-2-5 py-1-5">
-              <p>Առաքվում է</p>
+              <p>{t(statusKey)}</p>
             </div>
             <p>25 Հոկ, 2024 | 13:40</p>
           </div>
           <div className="flex gap-1">
-            <p className="text-zinc-800 font-bold">Հասցե -</p>
+            <p className="text-zinc-800 font-bold">{t("address")} -</p>
             <p>Երևան, Սերո Խանզադյան 131/9, 5-րդ հարկ, բն. 36</p>
           </div>
           <Button variant="secondary" className="max-w-[200px]">
             <Download />
-            Ներբեռնել կտրոնը
+            {t("download")}
           </Button>
           <Separator />
           <YMaps query={{ lang: "en_US", apikey: import.meta.env.VITE_YMAP_KEY }}>

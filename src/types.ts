@@ -159,7 +159,8 @@ export enum EInputNames {
   delivery_date = "delivery_date",
   delivery_time = "delivery_time",
   payment_method = "payment_method",
-  coordinates = "coordinates"
+  coordinates = "coordinates",
+  door2Door = "door2Door",
 }
 
 export interface IFetchApiReturnType {
@@ -189,4 +190,11 @@ export interface ILocation {
 export interface ISuggestion {
   address: string;
   location: string
+}
+
+export interface ISelectedProductInfo {
+  quantity: number;
+  spiceLevelId?: number,
+  orderInAdvanceDays?: number,
+  additions?: Record<string, number>
 }

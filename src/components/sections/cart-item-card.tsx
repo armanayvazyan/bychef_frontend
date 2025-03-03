@@ -1,9 +1,10 @@
-import formatPrice from "@/helpers/formatPrice";
-import Button from "@/components/ui/button";
-import { Minus, Plus, Trash2, TriangleAlert } from "lucide-react";
-import Separator from "@/components/ui/separator";
-import { useTranslation } from "react-i18next";
 import { MouseEvent } from "react";
+import Button from "@/components/ui/button";
+import { useTranslation } from "react-i18next";
+import formatPrice from "@/helpers/formatPrice";
+import Separator from "@/components/ui/separator";
+import { Trash2, TriangleAlert } from "lucide-react";
+import ItemQuantityButtonGroup from "@/components/sections/item-quantity-button-group";
 
 interface ICartItemCardProps {
   title: string | null;
@@ -30,12 +31,13 @@ const CartItemCard = ({
   onSelectDish,
   orderBeforeDays,
   onDecreaseQuantity,
-  onIncreaseQuantity
+  onIncreaseQuantity,
+  ...props
 }: ICartItemCardProps) => {
   const { t } = useTranslation("translation");
 
   return (
-    <div className="cursor-pointer" onClick={onSelectDish}>
+    <div className="cursor-pointer" onClick={onSelectDish} {...props}>
       <div className="flex items-center gap-4">
         <img src={imageUrl} alt="cart product image" className="w-[136px] h-[136px] object-cover rounded-xl"/>
         <div>
@@ -44,26 +46,10 @@ const CartItemCard = ({
           <div>
             <p className="text-lg font-semibold text-zinc-800">{`${formatPrice(price)} ֏`}</p>
             <div className="flex gap-3 items-center mt-2">
-              {onDecreaseQuantity && (
-                <Button
-                  size="icon"
-                  type="button"
-                  className="bg-muted hover:bg-muted w-[32px] h-[32px]"
-                  onClick={onDecreaseQuantity}
-                >
-                  <Minus size={14} className="text-foreground"/>
-                </Button>
-              )}
-              <p className="text-lg font-extrabold text-zinc-950">{quantity}</p>
-              {onIncreaseQuantity && (
-                <Button
-                  size="icon"
-                  type="button"
-                  className="bg-muted hover:bg-muted w-[32px] h-[32px]"
-                  onClick={onIncreaseQuantity}
-                >
-                  <Plus size={14} className="text-foreground"/>
-                </Button>
+              {onIncreaseQuantity && onDecreaseQuantity ? (
+                <ItemQuantityButtonGroup quantity={quantity} onIncrement={onIncreaseQuantity} onDecrement={onDecreaseQuantity} />
+              ) : (
+                <p className="text-lg font-extrabold text-zinc-950">{quantity}</p>
               )}
             </div>
           </div>

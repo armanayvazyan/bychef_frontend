@@ -20,5 +20,6 @@ export const checkoutFormSchema = z.object({
   [EInputNames.delivery_date]: z.string().min(1, { message: "form.delivery-date-required" }),
   [EInputNames.delivery_time]: z.string().min(1, { message: "form.delivery-time-required" }),
   [EInputNames.payment_method]: z.string().min(1, { message: "form.payment-method-required" }),
-  [EInputNames.coordinates]: z.array(z.number()).optional(),
+  [EInputNames.coordinates]: z.array(z.number()),
+  [EInputNames.door2Door]: z.boolean(),
 });

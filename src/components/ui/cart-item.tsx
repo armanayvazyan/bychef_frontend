@@ -113,6 +113,7 @@ const CartItem = ({ product, onChangeQuantity, onDeleteItem, isLastItem = false 
         details={details}
         imageUrl={data.url}
         hasSeparator={!isLastItem}
+        aria-haspopup="dialog"
         price={totalCartItemPrice}
         quantity={product.quantity}
         orderBeforeDays={data.orderBefore}

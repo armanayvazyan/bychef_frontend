@@ -9,6 +9,8 @@ export const FIREBASE_VAPID_KEY = import.meta.env.VITE_FIREBASE_VAPID_KEY;
 export const MAX_ORDER_PRICE_BY_CASH = 20000;
 export const CHEFS_PER_PAGE_COUNT = 8;
 export const DATA_DEFAULT_STALE_TIME = 60 * 10 * 1000;
+export const DATA_DEFAULT_CACHE_TIME = 2 * DATA_DEFAULT_STALE_TIME;
+export const MIN_CART_ITEM_QUANTITY = 1;
 
 export const PAYMENT_METHODS = {
   CARD: { value: "CARD", logo: "https://static.bychef.am/icons/card-arca.svg" },

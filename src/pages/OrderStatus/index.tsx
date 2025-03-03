@@ -18,6 +18,7 @@ const OrderStatus = ({ type }: { type: "success" | "failure" }) => {
   useEffect(() => {
     logPageOpenEvent();
   }, []);
+
   return (
     <section data-state={type} className="group flex-auto w-full flex flex-col gap-4 justify-center items-center px-8">
       <div className="text-center flex flex-col gap-4 items-center justify-center max-w-[483px] w-full">

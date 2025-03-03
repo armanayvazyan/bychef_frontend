@@ -1,7 +1,7 @@
 import { useCallback, useId, useMemo, useState } from "react";
 import { z } from "zod";
 import { db, ICartItem } from "@/db";
-import { EInputNames } from "@/types";
+import { EInputNames, LOCALES } from "@/types";
 import { ChevronUp } from "lucide-react";
 import Input from "@/components/ui/input";
 import Button from "@/components/ui/button";
@@ -14,23 +14,29 @@ import Form from "@/components/ui/form-wrapper";
 import CartItem from "@/components/ui/cart-item";
 import { useLiveQuery } from "dexie-react-hooks";
 import Separator from "@/components/ui/separator";
-import { useQuery } from "@tanstack/react-query";
 import { Textarea } from "@/components/ui/textarea";
 import { Skeleton } from "@/components/ui/skeleton";
-import { fetchDeliveryPrice } from "@/server-actions";
+import useServerError from "@/hooks/useServerError";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { checkoutFormSchema } from "@/schemas/checkout";
 import FormItem from "@/components/ui/form-item-wrapper";
+import FormCheckbox from "@/components/ui/form-checkbox";
 import { formatDateTime } from "@/helpers/formatDateTime";
+import { IPlaceOrderProps } from "@/server-actions/types";
 import PhoneInput from "@/components/sections/phone-input";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { fetchDeliveryPrice, placeOrder } from "@/server-actions";
 import CheckoutAddressField from "@/components/sections/checkout-address-field";
 import DeliveryPaymentSelect from "@/components/sections/delivery-payment-select";
 import DeliveryDateTimeSelect from "@/components/sections/delivery-date-time-select";
+import { useToast } from "@/hooks/use-toast";
 
 const OrderCheckout = () => {
   const formId = useId();
+  const { toast } = useToast();
   const navigate = useNavigate();
-  const { t } = useTranslation("translation", { keyPrefix: "checkout" });
+  const { handleServerError } = useServerError();
+  const { t, i18n } = useTranslation("translation", { keyPrefix: "checkout" });
   const form = useForm<z.infer<typeof checkoutFormSchema>>({
     defaultValues: {
       email: "",
@@ -43,8 +49,32 @@ const OrderCheckout = () => {
       delivery_time: "",
       payment_method: "",
       coordinates: [],
+      door2Door: false,
     },
     resolver: zodResolver(checkoutFormSchema)
+  });
+
+  const placeOrderMutation = useMutation({
+    mutationFn: (formData: IPlaceOrderProps) => {
+      return placeOrder(formData, i18n.language as LOCALES, handleServerError);
+    },
+    onSuccess: async (data) => {
+      try {
+        const html = await data.text();
+        const blob = new Blob([html], { type: "text/html" });
+        const url = URL.createObjectURL(blob);
+
+        await db.products.clear();
+
+        window.open(url, "_blank");
+      } catch (e) {
+        toast({
+          title: "Something went wrong!",
+          description: (e instanceof Error) ? e.message : "Unknown Error",
+          variant: "destructive",
+        });
+      }
+    }
   });
 
   const [isCollapsed, setIsCollapsed] = useState(true);
@@ -59,12 +89,14 @@ const OrderCheckout = () => {
 
   const chefId = useMemo(() => cartItems[0]?.chefId, [cartItems]);
 
+  const isDoorToDoorEnabled = form.watch(EInputNames.door2Door);
+
   const sessionLocation = useLiveQuery(() => db.location.toArray());
 
   const deliveryInfoResponse = useQuery({
-    queryKey: ["delivery-price", sessionLocation?.[0].coordinates.lat, sessionLocation?.[0].coordinates.lng],
+    queryKey: ["delivery-price", sessionLocation?.[0].coordinates.lat, sessionLocation?.[0].coordinates.lng, isDoorToDoorEnabled],
     queryFn: () => (chefId && sessionLocation)
-      ? fetchDeliveryPrice(chefId, sessionLocation[0].coordinates)
+      ? fetchDeliveryPrice(chefId, sessionLocation[0].coordinates, isDoorToDoorEnabled, handleServerError)
       : undefined,
     refetchOnWindowFocus: false,
     enabled: !!chefId && !!sessionLocation,
@@ -86,33 +118,37 @@ const OrderCheckout = () => {
   }, [deliveryInfoResponse.data?.result, totalCartPrice]);
 
   const handleSubmitOrder = (formData: z.infer<typeof checkoutFormSchema>) => {
+    if (!chefId) return;
+
     const [country, region] = formData.address.split(", ");
 
     const orderItems = cartItems.map(item => ({
-      selectedSpiceLevel: item.spiceLevel,
+      selectedSpiceLevel: item.spiceLevel ?? null,
       quantity: item.quantity,
-      orderDishAdditionList: item.additions ? Object.keys(item.additions) : [],
-      dish: { id: item.id }
+      dishAdditionIds: item.additions ? Object.keys(item.additions).map(Number) : [],
+      dishId: item.id
     }));
 
-    console.log(
-      {
-        address: {
-          country: country,
-          region: region,
-          street: formData.address,
-          home: formData.apartment,
-          floor: formData.floor,
-          coordinates: formData.coordinates
-        },
-        receiverPhoneNumber: "+374" + formData.phone,
-        receiverEmail: formData.email,
-        chefId: chefId,
-        deliveryDateTime: formatDateTime(formData.delivery_date, formData.delivery_time),
-        paymentType: formData.payment_method,
-        orderList: orderItems,
-      }
-    );
+    placeOrderMutation.mutate({
+      doorToDoorEnabled: formData.door2Door,
+      addressDto: {
+        country: country,
+        city: region,
+        region: region,
+        street: formData.address,
+        entrance: formData.entrance ?? "",
+        home: formData.apartment ?? "",
+        floor: formData.floor ?? "",
+        coordinates: formData.coordinates.reverse(),
+      },
+      note: formData.notes ?? "",
+      receiverPhoneNumber: "+374" + formData.phone,
+      receiverEmail: formData.email,
+      chefId: chefId,
+      deliveryDateTime: formatDateTime(formData.delivery_date, formData.delivery_time),
+      paymentType: formData.payment_method,
+      createOrderDishes: orderItems,
+    });
   };
 
   // TODO: create a custom hook to work with cart items
@@ -158,6 +194,7 @@ const OrderCheckout = () => {
           <FormItem label={t("email")} requiredAsterisk name={EInputNames.email}>
             <Input placeholder="example@gmail.com" />
           </FormItem>
+          <p className="text-xs font-semibold">{t("emailNotice")}</p>
           <div className="flex w-full gap-4">
             <FormItem className="w-[calc(50%-8px)]" label={t("home")} name={EInputNames.apartment}>
               <Input placeholder={t("home")} />
@@ -193,6 +230,7 @@ const OrderCheckout = () => {
             </p>
           </div>
         </div>
+        <FormCheckbox name={EInputNames.door2Door} title={t("door2door")} />
       </fieldset>
       <div
         data-collapsed={isCollapsed}

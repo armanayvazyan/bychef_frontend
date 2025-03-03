@@ -1,49 +1,47 @@
-import { MouseEvent, useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { db } from "@/db";
+import { Loader2 } from "lucide-react";
 import Button from "@/components/ui/button";
 import { fetchDish } from "@/server-actions";
 import { useToast } from "@/hooks/use-toast";
 import { useTranslation } from "react-i18next";
+import { ISelectedProductInfo } from "@/types";
 import formatPrice from "@/helpers/formatPrice";
 import { useQuery } from "@tanstack/react-query";
 import Separator from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Loader2, Minus, Plus } from "lucide-react";
 import { logCartAddEvent } from "@/analytics/Events";
-import Addition from "@/components/sections/addition";
 import LazyImage from "@/components/sections/lazy-image";
-import { DATA_DEFAULT_STALE_TIME } from "@/configs/constants";
+import AdditionList from "@/components/sections/addition-list";
 import DishSpiceLevels from "@/components/ui/dish-spice-levels";
 import DietaryOption from "@/components/sections/dietary-option";
 import DishModalAlert from "@/components/sections/dish-modal-alert";
 import ConfirmationModal from "@/components/sections/confirmation-modal";
 import getDataByLocale, { getDataStringByLocale } from "@/helpers/getDataByLocale";
 import { DialogDescription, DialogFooter, DialogTitle } from "@/components/ui/dialog";
+import ItemQuantityButtonGroup from "@/components/sections/item-quantity-button-group";
+import { DATA_DEFAULT_CACHE_TIME, DATA_DEFAULT_STALE_TIME, MIN_CART_ITEM_QUANTITY } from "@/configs/constants";
+import useServerError from "@/hooks/useServerError";
 
-interface IDishModal {
+interface IDishModalProps {
   id: number | string;
   onCloseDialog: () => void;
 }
 
-interface ISelectedProductInfo {
-  quantity: number;
-  spiceLevelId?: number,
-  orderInAdvanceDays?: number,
-  additions?: Record<string, number>
-}
-
-const DishModal = ({ id, onCloseDialog }: IDishModal) => {
+const DishModal = ({ id, onCloseDialog }: IDishModalProps) => {
   const { toast } = useToast();
   const { i18n, t } = useTranslation();
+  const { handleServerError } = useServerError();
 
   const {
     isFetching,
     data: dishInfo,
   } = useQuery({
     queryKey: ["dish", id],
-    queryFn: () => fetchDish(id),
+    queryFn: () => fetchDish(id, handleServerError),
+    staleTime: DATA_DEFAULT_STALE_TIME,
+    gcTime: DATA_DEFAULT_CACHE_TIME,
     refetchOnWindowFocus: false,
-    staleTime: DATA_DEFAULT_STALE_TIME
   });
 
   const name = dishInfo ? getDataStringByLocale(dishInfo, "name", i18n.language) : null;
@@ -78,50 +76,21 @@ const DishModal = ({ id, onCloseDialog }: IDishModal) => {
     }
   }, [dishInfo, product.additions, product.quantity]);
 
-  const handleIncrement = () => {
-    setProduct((prevState) => {
-      return { ...prevState, quantity: prevState.quantity > 19 ? prevState.quantity : prevState.quantity + 1 };
-    });
-  };
-
-  const handleDecrement = () => {
-    setProduct((prevState) => {
-      return { ...prevState, quantity: prevState.quantity < 2 ? prevState.quantity : prevState.quantity - 1 };
-    });
-  };
-
   const handleChangeSpiceLevel = (value: string) => {
     setProduct(prevState => ({ ...prevState, spiceLevelId: Number(value) }));
   };
 
-  const handleSelectAddition = (e: MouseEvent<HTMLDivElement>) => {
-    const id = e.currentTarget.getAttribute("data-id");
+  const handleIncrementQuantity = useCallback(() => {
+    setProduct((prevState) => {
+      return { ...prevState, quantity: prevState.quantity + 1 };
+    });
+  }, []);
 
-    if (!id) return;
-
-    const price = e.currentTarget.getAttribute("data-price");
-    const hasAddition = product.additions
-      ? Object.keys(product.additions).find(additionId => additionId === id)
-      : false;
-
-    if (hasAddition) {
-      const filteredAdditions = { ...product.additions };
-      delete filteredAdditions[id];
-
-      setProduct(prevState => ({
-        ...prevState,
-        additions: filteredAdditions
-      }));
-    } else {
-      setProduct(prevState => ({
-        ...product,
-        additions: {
-          ...(prevState.additions ?? {}),
-          [id]: Number(price),
-        }
-      }));
-    }
-  };
+  const handleDecrementQuantity = useCallback(() => {
+    setProduct((prevState) => {
+      return { ...prevState, quantity: prevState.quantity <= MIN_CART_ITEM_QUANTITY ? prevState.quantity : prevState.quantity - 1 };
+    });
+  }, []);
 
   const handleAddToCart = useCallback(async () => {
     if (!dishInfo?.id || !dishInfo.chefId) return;
@@ -263,17 +232,11 @@ const DishModal = ({ id, onCloseDialog }: IDishModal) => {
             <Separator />
           )}
           {!!dishInfo?.dishAdditionDtoList.length && (
-            <div className="flex flex-col gap-3 mb-13">
-              <p className="text-primary text-base font-bold">{t("additions")}</p>
-              {dishInfo.dishAdditionDtoList.map(additionInfo => (
-                <Addition
-                  key={additionInfo.id}
-                  additionInfo={additionInfo}
-                  onSelectAddition={handleSelectAddition}
-                  isActive={product.additions ? !!product.additions[additionInfo.id] : false}
-                />
-              ))}
-            </div>
+            <AdditionList
+              onSetProduct={setProduct}
+              selectedAdditions={product.additions}
+              additions={dishInfo.dishAdditionDtoList}
+            />
           )}
           {isFetching && !dishInfo && (
             <div className="flex flex-col mt-3 w-full gap-3">
@@ -288,23 +251,7 @@ const DishModal = ({ id, onCloseDialog }: IDishModal) => {
         <div className="flex flex-col gap-6 w-full">
           {dishInfo?.orderBefore && <DishModalAlert date={dishInfo.orderBefore} />}
           <div className="flex gap-4 w-full">
-            <div className="flex gap-3 items-center">
-              <Button
-                size="icon"
-                onClick={handleDecrement}
-                className="bg-muted hover:bg-muted w-[32px] h-[32px]"
-              >
-                <Minus size={14} className="text-foreground"/>
-              </Button>
-              <p className="text-lg font-extrabold text-zinc-950">{product.quantity}</p>
-              <Button
-                size="icon"
-                onClick={handleIncrement}
-                className="bg-muted hover:bg-muted w-[32px] h-[32px]"
-              >
-                <Plus size={14} className="text-foreground"/>
-              </Button>
-            </div>
+            <ItemQuantityButtonGroup quantity={product.quantity} onIncrement={handleIncrementQuantity} onDecrement={handleDecrementQuantity} />
             <Button className="flex gap-2 w-full" onClick={handleAddToCart} type="submit">
               {dishInfo && (
                 <>

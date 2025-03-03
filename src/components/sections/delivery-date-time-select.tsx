@@ -10,6 +10,7 @@ import { fetchChefAvailableDates } from "@/server-actions";
 import getNextAvailableDays from "@/helpers/getNextAvailableDays";
 import { FieldValues, useFormContext, UseFormSetValue } from "react-hook-form";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select";
+import useServerError from "@/hooks/useServerError";
 
 interface IDeliveryDateTimeSelectProps {
   selectedDeliveryDate: string;
@@ -19,6 +20,7 @@ interface IDeliveryDateTimeSelectProps {
 
 const DeliveryDateTimeSelect = memo(({ selectedDeliveryDate, selectedDeliveryTime, setFormValue }: IDeliveryDateTimeSelectProps) => {
   const navigate = useNavigate();
+  const { handleServerError } = useServerError();
   const { t } = useTranslation("translation", { keyPrefix: "checkout" });
 
   const cartItems = useLiveQuery(async () => {
@@ -34,7 +36,7 @@ const DeliveryDateTimeSelect = memo(({ selectedDeliveryDate, selectedDeliveryTim
   const chefAvailabilityInfoResponse = useQuery({
     queryKey: ["chef-checkout"],
     queryFn: () => chefId
-      ? fetchChefAvailableDates(chefId)
+      ? fetchChefAvailableDates(chefId, handleServerError)
       : undefined,
     refetchOnWindowFocus: false,
     enabled: !!chefId,
