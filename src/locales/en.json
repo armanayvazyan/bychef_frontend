@@ -119,12 +119,14 @@
     "success": {
       "title": "Your order has been successfully placed",
       "details": "Your order number is #{{orderId}}. Soon you’ll receive an email with a link to track your order.",
-      "button": "Back to orders"
+      "back-to-orders": "Back to orders"
     },
     "failure": {
       "title": "Your order has not been confirmed",
-      "details": "Your order number is #{{orderId}}. Soon you’ll receive an email with a link to track your order.",
-      "button": "Back to orders"
+      "details": "Payment for your order #{{orderId}} failed. Please try again with the same or a different payment method.",
+      "back-to-orders": "Back to orders",
+      "try-again": "Try again",
+      "contact-support": "Contact to support"
     }
   },
   "checkout": {
@@ -140,15 +142,11 @@
     "delivery-time": "Delivery date and time",
     "select-day": "Select day",
     "select-time": "Select time",
-    "choose-payment-method": "Choose payment method",
     "payment-method": "Payment method",
     "your-order": "Your order",
     "delivery": "Delivery",
     "total": "Total",
     "pay": "Pay {{amount}} ֏",
-    "CASH": "Pay cash",
-    "IDRAM": "Pay with Idram",
-    "CARD": "Pay with card",
     "delivery-notes": "Additional notes for the delivery",
     "door2door": "Door to door",
     "months": {
@@ -252,5 +250,11 @@
     "invalid-chef-state": "Your account cannot be accessed. Please contact support for more information.",
     "invalid-otp": "Sorry, the one-time-code you provided is incorrect. Please verify and try again.",
     "invalid-limit-size": "Sorry, we couldn’t complete your request. Please contact support if the issue persists."
+  },
+  "payment-methods": {
+    "choose-payment-method": "Choose payment method",
+    "CASH": "Pay cash",
+    "IDRAM": "Pay with Idram",
+    "CARD": "Pay with card"
   }
 }

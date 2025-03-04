@@ -30,3 +30,8 @@ export interface IPlaceOrderProps {
     dishId: number,
   }[],
 }
+
+export interface IRetryOrderProps {
+  paymentType: string,
+  orderNumber: string,
+}

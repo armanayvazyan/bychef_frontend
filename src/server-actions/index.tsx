@@ -1,5 +1,5 @@
 import { fetchApi } from "@/hooks/use-fetch-data";
-import { IFetchChefsProps, IPlaceOrderProps } from "@/server-actions/types";
+import { IFetchChefsProps, IPlaceOrderProps, IRetryOrderProps } from "@/server-actions/types";
 import constructFinalUrl from "@/helpers/constructFinalUrl";
 import { CHEFS_PER_PAGE_COUNT, YMAP_KEY, YMAP_SEARCH_RESULTS_COUNT } from "@/configs/constants";
 import { IChefAvailabilityExceptionDays, IChefAvailableDates, IChefInfo, IDishInfo, ISuggestion, LOCALES } from "@/types";
@@ -203,6 +203,28 @@ export const placeOrder = async (formData: IPlaceOrderProps, locale: LOCALES, on
         language: locale,
       },
       bodyParams: formData,
+      injectErrorMessage: true,
+      isResponseOtherType: true
+    }
+  );
+
+  if (data.error) {
+    if (onErrorCb) onErrorCb(data.error);
+
+    return;
+  }
+
+  return data.result || null;
+};
+
+export const retryOrder = async (formData: IRetryOrderProps, locale: LOCALES, onErrorCb?: (errorKey: string) => void) => {
+  const data = await fetchApi(
+    {
+      initialPath: `order/payment?orderNumber=${formData.orderNumber}&paymentType=${formData.paymentType}`,
+      method: "PATCH",
+      headerParams: {
+        language: locale,
+      },
       injectErrorMessage: true,
       isResponseOtherType: true
     }

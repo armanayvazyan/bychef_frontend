@@ -8,7 +8,7 @@ interface IFetchData {
   url?: string;
   initialPath?: string,
   pathExtension?: string | number,
-  method?: "GET" | "POST" | "DELETE",
+  method?: "GET" | "POST" | "DELETE" | "PATCH",
   headerParams?: Record<string, string | number>,
   bodyParams?: Record<string, any>,
   options?: Record<string, string | number>,

@@ -1,16 +1,16 @@
+import { useEffect } from "react";
 import Button from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { IDRAM_ORDER_ID_PREFIX } from "@/configs/constants";
-import { useEffect } from "react";
 import { logPageOpenEvent } from "@/analytics/Events";
+import { IDRAM_ORDER_ID_PREFIX } from "@/configs/constants";
+import FailedOrderRetryForm from "@/components/sections/failed-order-retry-form";
 
 const OrderStatus = ({ type }: { type: "success" | "failure" }) => {
   const navigate = useNavigate();
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
   const orderId = urlParams.get(IDRAM_ORDER_ID_PREFIX as string);
-
   const { t } = useTranslation("translation", { keyPrefix: "order-status" });
 
   const handleNavigateExplore = () => { navigate("/explore"); };
@@ -33,9 +33,10 @@ const OrderStatus = ({ type }: { type: "success" | "failure" }) => {
         </div>
         <h1 className="text-xl">{t(type === "success" ? "success.title" : "failure.title")}</h1>
         <p className="text-sm">{t(type === "success" ? "success.details" : "failure.details", { orderId })}</p>
+        {type !== "success" && <FailedOrderRetryForm orderId={orderId} />}
       </div>
-      <Button variant="secondary" onClick={handleNavigateExplore}>
-        {t(type === "success" ? "success.button" : "failure.button")}
+      <Button variant="secondary" onClick={handleNavigateExplore} className="max-w-[264px] w-full">
+        {t(type === "success" ? "success.back-to-orders" : "failure.back-to-orders")}
       </Button>
     </section>
   );

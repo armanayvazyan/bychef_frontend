@@ -163,6 +163,11 @@ export enum EInputNames {
   door2Door = "door2Door",
 }
 
+export enum EFailedOrderInputNames {
+  payment_type = "paymentType",
+  order_number = "orderNumber"
+}
+
 export interface IFetchApiReturnType {
   result?: any;
   error?: string;
