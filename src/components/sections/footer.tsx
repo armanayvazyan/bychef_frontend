@@ -22,21 +22,19 @@ import changeLanguage from "@/helpers/changeLanguage";
 import { NavigationMenuItem } from "@radix-ui/react-navigation-menu";
 import { logLanguageApplyEvent } from "@/analytics/Events";
 
-const components: { title: string; href: string }[][] = [
-  [
-    {
-      title: "privacy",
-      href: "/privacy",
-    },
-    {
-      title: "terms",
-      href: "/terms",
-    },
-    {
-      title: "support@bychef.am",
-      href: "mailto:support@bychef.am",
-    }
-  ],
+const components: { title: string; href: string }[] = [
+  {
+    title: "privacy",
+    href: "/privacy",
+  },
+  {
+    title: "terms",
+    href: "/terms",
+  },
+  {
+    title: "support@bychef.am",
+    href: "mailto:support@bychef.am",
+  }
 ];
 
 const socials = [
@@ -80,58 +78,49 @@ const Footer = () => {
       <div className="w-full px-16 flex flex-col-reverse md:flex-row justify-between items-center py-6">
         <NavigationMenu>
           <NavigationMenuList className="flex flex-wrap justify-center items-center text-zinc-700 gap-3">
-            {components.map(([component1, component2]) => (
-              <div key={component1.href} className="flex flex-wrap justify-center">
-                {component1 && (
-                  <NavigationMenuItem key={component1.title}>
-                    <NavigationMenuLink href={component1.href} className={navigationMenuTriggerStyle()}>
-                      {t(component1.title)}
-                    </NavigationMenuLink>
-                  </NavigationMenuItem>
-                )}
-                {component2 && (
-                  <NavigationMenuItem key={component2.title}>
-                    <NavigationMenuLink href={component2.href} className={navigationMenuTriggerStyle()}>
-                      {t(component2.title)}
-                    </NavigationMenuLink>
-                  </NavigationMenuItem>
-                )}
-              </div>
+            {components.map((component) => (
+              <NavigationMenuItem key={component.title}>
+                <NavigationMenuLink href={component.href} className={navigationMenuTriggerStyle()}>
+                  {t(component.title)}
+                </NavigationMenuLink>
+              </NavigationMenuItem>
             ))}
-            <DropdownMenu>
-              <DropdownMenuTrigger>
-                <Button variant="ghost2">
-                  <Globe />
-                  {t(`locales.${languageNames[selectedLocale ?? LOCALES.HY]}`)}
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuItem
-                  data-locale={LOCALES.HY}
-                  onSelect={handleSelectLocale}
-                  data-selected={selectedLocale === LOCALES.HY}
-                  className="py-1 cursor-pointer data-[selected=true]:bg-secondary"
-                >
-                  <p>{t(`locales.${languageNames[LOCALES.HY]}`)}</p>
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  className="py-1 cursor-pointer data-[selected=true]:bg-secondary"
-                  data-selected={selectedLocale === LOCALES.EN}
-                  data-locale={LOCALES.EN}
-                  onSelect={handleSelectLocale}
-                >
-                  <p>{t(`locales.${languageNames[LOCALES.EN]}`)}</p>
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  className="py-1 cursor-pointer data-[selected=true]:bg-secondary"
-                  data-selected={selectedLocale === LOCALES.RU}
-                  data-locale={LOCALES.RU}
-                  onSelect={handleSelectLocale}
-                >
-                  <p>{t(`locales.${languageNames[LOCALES.RU]}`)}</p>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <NavigationMenuItem key="locale-switcher">
+              <DropdownMenu>
+                <DropdownMenuTrigger>
+                  <Button variant="ghost2">
+                    <Globe />
+                    {t(`locales.${languageNames[selectedLocale ?? LOCALES.HY]}`)}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuItem
+                    data-locale={LOCALES.HY}
+                    onSelect={handleSelectLocale}
+                    data-selected={selectedLocale === LOCALES.HY}
+                    className="py-1 cursor-pointer data-[selected=true]:bg-secondary"
+                  >
+                    <p>{t(`locales.${languageNames[LOCALES.HY]}`)}</p>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    className="py-1 cursor-pointer data-[selected=true]:bg-secondary"
+                    data-selected={selectedLocale === LOCALES.EN}
+                    data-locale={LOCALES.EN}
+                    onSelect={handleSelectLocale}
+                  >
+                    <p>{t(`locales.${languageNames[LOCALES.EN]}`)}</p>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    className="py-1 cursor-pointer data-[selected=true]:bg-secondary"
+                    data-selected={selectedLocale === LOCALES.RU}
+                    data-locale={LOCALES.RU}
+                    onSelect={handleSelectLocale}
+                  >
+                    <p>{t(`locales.${languageNames[LOCALES.RU]}`)}</p>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
         <div className="flex gap-4 py-6">
