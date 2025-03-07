@@ -29,7 +29,7 @@ const Tracking = () => {
   const token = urlParams.get("accessToken");
 
   const { data, isLoading } = useQuery({
-    queryKey: ["order-info", id],
+    queryKey: ["order-info", id, token],
     queryFn: () => {
       if (id && token) return fetchOrderInfo(id, token, handleServerError);
     },
