@@ -12,7 +12,7 @@ import { useMutation } from "@tanstack/react-query";
 import { PAYMENT_METHODS } from "@/configs/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import FormItem from "@/components/ui/form-item-wrapper";
-import { EFailedOrderInputNames, LOCALES } from "@/types";
+import { EFailedOrderInputNames, LOCALES, PAYMENT_TYPES } from "@/types";
 import { IRetryOrderProps } from "@/server-actions/types";
 import { failedOrderSchema } from "@/schemas/failed-order";
 import PaymentSelect from "@/components/sections/payment-select";
@@ -61,7 +61,7 @@ const FailedOrderRetryForm = ({ orderId }: { orderId: string | null }) => {
 
   const paymentOptions = useMemo(() => {
     // TODO: make payment method enums
-    return Object.values(PAYMENT_METHODS).filter(method => method.value !== "CASH");
+    return Object.values(PAYMENT_METHODS).filter(method => method.value !== PAYMENT_TYPES.CASH);
   }, []);
 
   const handleSubmitOrder = useCallback((formData: z.infer<typeof failedOrderSchema>) => {

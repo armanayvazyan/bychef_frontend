@@ -13,6 +13,20 @@
     "no-chefs-found": "Нет доступных поваров",
     "menu": "Меню",
     "add": "Добавить",
+    "months": {
+      "january": "{{day}} Января",
+      "february": "{{day}} Февраля",
+      "march": "{{day}} Марта",
+      "april": "{{day}} Апреля",
+      "may": "{{day}} Мая",
+      "june": "{{day}} Июня",
+      "july": "{{day}} Июля",
+      "august": "{{day}} Августа",
+      "september": "{{day}} Сентября",
+      "october": "{{day}} Октября",
+      "november": "{{day}} Ноября",
+      "december": "{{day}} Декабря"
+    },
     "weekdays": {
       "monday": "Понедельник",
       "tuesday": "Вторник",
@@ -145,20 +159,6 @@
     "pay": "Оплатить {{amount}} ֏",
     "delivery-notes": "Дополнительные примечания по доставке",
     "door2door": "От двери до двери",
-    "months": {
-      "january": "{{day}} Января",
-      "february": "{{day}} Февраля",
-      "march": "{{day}} Марта",
-      "april": "{{day}} Апреля",
-      "may": "{{day}} Мая",
-      "june": "{{day}} Июня",
-      "july": "{{day}} Июля",
-      "august": "{{day}} Августа",
-      "september": "{{day}} Сентября",
-      "october": "{{day}} Октября",
-      "november": "{{day}} Ноября",
-      "december": "{{day}} Декабря"
-    },
     "payment-notes": "Для заказов на сумму 20,000 AMD или больше доступны только безналичные способы оплаты.",
     "wrongAddressModal": {
       "title": "Упс!",
@@ -168,16 +168,22 @@
     }
   },
   "tracking": {
+    "floor": "Этаж",
+    "entrance": "Подъезд",
+    "home": "Квартира/Дом",
     "address": "Адрес",
     "download": "Загрузить квитанцию",
     "order": "Заказ",
+    "delivery": "Доставка",
+    "total": "Всего",
+    "your-order": "Ваш заказ",
     "status": {
-      "delivery-in-process": "Доставка в процессе",
-      "delivered": "Доставлено",
-      "preparing": "Готовится",
-      "requested": "Заказ сделан",
-      "cancelled": "Отменено",
-      "ready-for-delivery": "Готово для доставки"
+      "DELIVERY_IN_PROGRESS": "Доставка в процессе",
+      "DELIVERED": "Доставлено",
+      "PREPARING": "Готовится",
+      "REQUESTED": "Заказ сделан",
+      "DECLINED": "Отменено",
+      "READY_FOR_DELIVERY": "Готово для доставки"
     }
   },
   "additions": "Дополнения",

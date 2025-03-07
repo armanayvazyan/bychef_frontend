@@ -2,7 +2,15 @@ import { fetchApi } from "@/hooks/use-fetch-data";
 import { IFetchChefsProps, IPlaceOrderProps, IRetryOrderProps } from "@/server-actions/types";
 import constructFinalUrl from "@/helpers/constructFinalUrl";
 import { CHEFS_PER_PAGE_COUNT, YMAP_KEY, YMAP_SEARCH_RESULTS_COUNT } from "@/configs/constants";
-import { IChefAvailabilityExceptionDays, IChefAvailableDates, IChefInfo, IDishInfo, ISuggestion, LOCALES } from "@/types";
+import {
+  IChefAvailabilityExceptionDays,
+  IChefAvailableDates,
+  IChefInfo,
+  IDishInfo,
+  IOrderDto,
+  ISuggestion,
+  LOCALES
+} from "@/types";
 
 export const fetchDeliveryPrice = async (id: number, coordinates: { lat: number; lng: number }, doorToDoorEnabled: boolean, onErrorCb?: (errorKey: string) => void) => {
   const data = await fetchApi(
@@ -237,4 +245,21 @@ export const retryOrder = async (formData: IRetryOrderProps, locale: LOCALES, on
   }
 
   return data.result || null;
+};
+
+export const fetchOrderInfo = async (orderId: string, token: string, onErrorCb?: (errorKey: string) => void): Promise<IOrderDto | undefined> => {
+  const data = await fetchApi({
+    initialPath: `order/number/${orderId}`,
+    headerParams: {
+      Authorization: `Bearer ${token}`
+    },
+  });
+
+  if (data.error) {
+    if (onErrorCb) onErrorCb(data.error);
+
+    return;
+  }
+
+  return data.result;
 };

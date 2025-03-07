@@ -22,6 +22,7 @@ const DeliveryDateTimeSelect = memo(({ selectedDeliveryDate, selectedDeliveryTim
   const navigate = useNavigate();
   const { handleServerError } = useServerError();
   const { t } = useTranslation("translation", { keyPrefix: "checkout" });
+  const { t: tGeneral } = useTranslation("translation", { keyPrefix: "generic" });
 
   const cartItems = useLiveQuery(async () => {
     const products = await db.products.reverse().toArray();
@@ -78,7 +79,7 @@ const DeliveryDateTimeSelect = memo(({ selectedDeliveryDate, selectedDeliveryTim
             <div className="flex justify-between py-2 rounded-xl cursor-pointer">
               {selectedDeliveryDate ? (
                 <span className="flex gap-2">
-                  {t(`months.${selectedDeliveryDate.split(" ")[0].toLowerCase()}`, { day: selectedDeliveryDate.split(" ")[1] })}
+                  {tGeneral(`months.${selectedDeliveryDate.split(" ")[0].toLowerCase()}`, { day: selectedDeliveryDate.split(" ")[1] })}
                 </span>
               ) : (
                 t("select-day")
@@ -89,7 +90,7 @@ const DeliveryDateTimeSelect = memo(({ selectedDeliveryDate, selectedDeliveryTim
             {dateOptions.map((date) => (
               <SelectItem key={date.date} value={date.date} className="p-2">
                 <div className="flex gap-2 text-sm leading-tight text-foreground cursor-pointer">
-                  {t(`months.${date.date.split(" ")[0].toLowerCase()}`, { day: date.date.split(" ")[1] })}
+                  {tGeneral(`months.${date.date.split(" ")[0].toLowerCase()}`, { day: date.date.split(" ")[1] })}
                 </div>
               </SelectItem>
             ))}

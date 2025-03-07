@@ -13,6 +13,20 @@
     "no-chefs-found": "No chefs are available",
     "menu": "Menu",
     "add": "Add",
+    "months": {
+      "january": "January {{day}}",
+      "february": "February {{day}}",
+      "march": "March {{day}}",
+      "april": "April {{day}}",
+      "may": "May {{day}}",
+      "june": "June {{day}}",
+      "july": "July {{day}}",
+      "august": "August {{day}}",
+      "september": "September {{day}}",
+      "october": "October {{day}}",
+      "november": "November {{day}}",
+      "december": "December {{day}}"
+    },
     "weekdays": {
       "monday": "Monday",
       "tuesday": "Tuesday",
@@ -150,20 +164,6 @@
     "pay": "Pay {{amount}} ֏",
     "delivery-notes": "Additional notes for the delivery",
     "door2door": "Door to door",
-    "months": {
-      "january": "January {{day}}",
-      "february": "February {{day}}",
-      "march": "March {{day}}",
-      "april": "April {{day}}",
-      "may": "May {{day}}",
-      "june": "June {{day}}",
-      "july": "July {{day}}",
-      "august": "August {{day}}",
-      "september": "September {{day}}",
-      "october": "October {{day}}",
-      "november": "November {{day}}",
-      "december": "December {{day}}"
-    },
     "payment-notes": "For orders exceeding 20,000 AMD, only cashless payment methods are available.",
     "wrongAddressModal": {
       "title": "Oops!",
@@ -173,16 +173,22 @@
     }
   },
   "tracking": {
+    "floor": "Floor",
+    "entrance": "Entrance",
+    "home": "Apartment/House",
     "address": "Address",
     "download": "Download the receipt",
     "order": "Order",
+    "delivery": "Delivery",
+    "total": "Total",
+    "your-order": "Your order",
     "status": {
-      "delivery-in-process": "Delivery in process",
-      "delivered": "Delivered",
-      "preparing": "Preparing",
-      "requested": "Requested",
-      "cancelled": "Cancelled",
-      "ready-for-delivery": "Ready for delivery"
+      "DELIVERY_IN_PROGRESS": "Delivery in process",
+      "DELIVERED": "Delivered",
+      "PREPARING": "Preparing",
+      "REQUESTED": "Requested",
+      "DECLINED": "Cancelled",
+      "READY_FOR_DELIVERY": "Ready for delivery"
     }
   },
   "additions": "Additions",

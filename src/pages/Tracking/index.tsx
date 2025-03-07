@@ -1,33 +1,40 @@
-import { useCallback, useState } from "react";
+import { useMemo, useState } from "react";
 import { db } from "@/db";
+import { ORDER_STATUS } from "@/types";
 import Button from "@/components/ui/button";
-import Map from "@/components/sections/map";
-import { useToast } from "@/hooks/use-toast";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { YMaps } from "@pbe/react-yandex-maps";
 import formatPrice from "@/helpers/formatPrice";
+import { useQuery } from "@tanstack/react-query";
 import { useLiveQuery } from "dexie-react-hooks";
 import Separator from "@/components/ui/separator";
+import { fetchOrderInfo } from "@/server-actions";
+import CopyId from "@/components/sections/copy-id";
+import { ChevronUp, Download } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ChevronUp, Copy, Download } from "lucide-react";
+import useServerError from "@/hooks/useServerError";
 import OrderItem from "@/components/sections/order-item";
-
-const statusKey = "ready-for-delivery";
-
-const deliveryInfoResponse = {
-  data: {
-    deliveryPrice: 5000,
-  },
-  isLoading: false,
-};
-
-const orderTotalPrice = 4000;
+import { formatDateTimeReverse } from "@/helpers/formatDateTime";
 
 const Tracking = () => {
   const { id } = useParams();
-  const { toast } = useToast();
+  const { handleServerError } = useServerError();
   const { t } = useTranslation("translation", { keyPrefix: "tracking" });
+  const { t: tGeneral } = useTranslation("translation", { keyPrefix: "generic" });
+
+  const [isCollapsed, setIsCollapsed] = useState(true);
+
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  const token = urlParams.get("accessToken");
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["order-info", id],
+    queryFn: () => {
+      if (id && token) return fetchOrderInfo(id, token, handleServerError);
+    },
+    refetchOnWindowFocus: false,
+  });
 
   const cartItems = useLiveQuery(async () => {
     const products = await db.products.reverse().toArray();
@@ -35,47 +42,64 @@ const Tracking = () => {
     return products;
   }, [], []);
 
-  const [isCollapsed, setIsCollapsed] = useState(true);
+  const orderDate = useMemo(() => {
+    if (data?.deliveryDateTime) {
+      const dateObj = formatDateTimeReverse(data.deliveryDateTime);
 
-  const handleCopyId = useCallback(async () => {
-    if (id) {
-      await navigator.clipboard.writeText(id);
-
-      toast({
-        title: "Order id copied to clipboard!",
-      });
+      return `${tGeneral(`months.${dateObj.month}`, { day: dateObj.day })}, ${dateObj.year} | ${dateObj.time}`;
     }
-  }, [id, toast]);
+  }, [data?.deliveryDateTime, tGeneral]);
+
+  const address = useMemo(() => {
+    const addressList = [];
+
+    if (data?.addressDto.street) {
+      addressList.push(data.addressDto.street);
+    }
+
+    if (data?.addressDto.entrance) {
+      addressList.push(`${t("entrance")} - ${data.addressDto.entrance}`);
+    }
+
+    if (data?.addressDto.floor) {
+      addressList.push(`${t("floor")} - ${data.addressDto.floor}`);
+    }
+
+    if (data?.addressDto.home) {
+      addressList.push(`${t("home")} - ${data.addressDto.home}`);
+    }
+
+    return addressList.join(", ");
+  }, [data?.addressDto.entrance, data?.addressDto.floor, data?.addressDto.home, data?.addressDto.street, t]);
 
   return (
     <section className="pt-9 px-4 flex-1">
-      <div className="w-full flex flex-col-reverse lg:flex-row justify-around gap-3">
+      <div className="w-full flex flex-col lg:flex-row justify-around gap-3">
         <div className="flex flex-col gap-4 min-w-[50%]">
-          <div className="flex gap-4 items-center">
-            <h1 className="text-primary font-bold text-xl">{t("order")}</h1>
-            <div className="flex gap-2 items-center cursor-pointer" onClick={handleCopyId}>
-              <p className="text-primary font-bold">#{id}</p>
-              <Copy size={16} />
-            </div>
-          </div>
-          <div className="flex gap-3 items-center">
-            <div className="bg-zinc-200 rounded-md px-2-5 py-1-5">
-              <p>{t(statusKey)}</p>
-            </div>
-            <p>25 Հոկ, 2024 | 13:40</p>
-          </div>
-          <div className="flex gap-1">
-            <p className="text-zinc-800 font-bold">{t("address")} -</p>
-            <p>Երևան, Սերո Խանզադյան 131/9, 5-րդ հարկ, բն. 36</p>
-          </div>
-          <Button variant="secondary" className="max-w-[200px]">
-            <Download />
-            {t("download")}
-          </Button>
-          <Separator />
-          <YMaps query={{ lang: "en_US", apikey: import.meta.env.VITE_YMAP_KEY }}>
-            <Map/>
-          </YMaps>
+          {isLoading ? (
+            <Skeleton className="w-full min-h-[200px]" />
+          ) : (
+            <>
+              <div className="flex gap-4 items-center">
+                <h1 className="text-primary font-bold text-xl">{t("order")}</h1>
+                <CopyId id={id} />
+              </div>
+              <div className="flex gap-3 items-center">
+                <div className="bg-zinc-200 rounded-md px-2-5 py-1-5">
+                  {data?.status && <p>{t(`status.${ORDER_STATUS[data.status]}`)}</p>}
+                </div>
+                {orderDate && <p>{orderDate}</p>}
+              </div>
+              <div className="flex gap-1">
+                <p className="text-zinc-800 font-bold text-nowrap">{t("address") + " -"}</p>
+                <p>{address}</p>
+              </div>
+              <Button variant="secondary" className="max-w-max">
+                <Download />
+                {t("download")}
+              </Button>
+            </>
+          )}
         </div>
         <div
           className="flex flex-col p-6 border-[1px] lg:max-w-[424px] max-h-max w-full rounded-xl border-border group"
@@ -91,27 +115,31 @@ const Tracking = () => {
             <ChevronUp className="group-data-[collapsed=false]:-rotate-180 transition-all duration-500"/>
           </div>
           <div className="grid group-data-[collapsed=false]:grid-rows-[0fr] grid-rows-[1fr] transition-all duration-300">
-            <div className="overflow-hidden flex flex-col gap-6">
-              {!!cartItems.length && cartItems.map((product, index) => (
-                <OrderItem
-                  key={product.id}
-                  product={product}
-                  isLastItem={cartItems.length === index + 1}
-                />
-              ))}
-            </div>
+            {isLoading ? (
+              <Skeleton className="w-full min-h-[200px]" />
+            ) : (
+              <div className="overflow-hidden flex flex-col gap-6">
+                {data?.orderDishList.map((product, index) => (
+                  <OrderItem
+                    key={product.id}
+                    product={product}
+                    isLastItem={data.orderDishList.length === index + 1}
+                  />
+                ))}
+              </div>
+            )}
           </div>
           <Separator className="my-3"/>
           <div className="flex w-full justify-between my-4">
             <p>{t("delivery")}</p>
-            {deliveryInfoResponse.data.deliveryPrice && <p>{formatPrice(deliveryInfoResponse.data.deliveryPrice)} ֏</p>}
-            {deliveryInfoResponse.isLoading && <Skeleton className="w-[100px]"/>}
+            {!isLoading && data?.deliveryPrice && <p>{formatPrice(data.deliveryPrice)} ֏</p>}
+            {isLoading && <Skeleton className="w-[100px]"/>}
           </div>
           {!!cartItems.length && (
             <div className="flex justify-between text-base font-bold text-zinc-800">
               <p>{t("total")}</p>
-              {deliveryInfoResponse.data.deliveryPrice && <p>{formatPrice(orderTotalPrice)} ֏</p>}
-              {deliveryInfoResponse.isLoading && <Skeleton className="w-[100px]"/>}
+              {!isLoading && data?.deliveryPrice && <p>{formatPrice(data.totalPrice)} ֏</p>}
+              {isLoading && <Skeleton className="w-[100px]"/>}
             </div>
           )}
         </div>

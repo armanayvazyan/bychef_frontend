@@ -1,43 +1,38 @@
 import { useMemo } from "react";
-import { ICartItem } from "@/types";
+import { IOrderDishDto } from "@/types";
 import { useTranslation } from "react-i18next";
-import useCartItem from "@/hooks/use-cart-item";
-import Separator from "@/components/ui/separator";
-import { Skeleton } from "@/components/ui/skeleton";
 import CartItemCard from "@/components/sections/cart-item-card";
 import { getDataStringByLocale } from "@/helpers/getDataByLocale";
 
 interface IOrderItem {
-  product: ICartItem;
+  product: IOrderDishDto;
   isLastItem?: boolean;
 }
 
 const OrderItem = ({ product, isLastItem = false }: IOrderItem) => {
-  const { data } = useCartItem(product.id);
   const { t, i18n } = useTranslation("translation");
 
-  const name = data ? getDataStringByLocale(data, "name", i18n.language) : null;
+  const name = product ? getDataStringByLocale(product, "name", i18n.language) : null;
 
   const totalCartItemPrice = useMemo(() => {
-    const additionsTotalPrice = product.additions
-      ? Object.values(product.additions).reduce((acc, additionPrice) => acc + Number(additionPrice), 0)
+    const additionsTotalPrice = product.orderDishAdditionDtoList
+      ? Object.values(product.orderDishAdditionDtoList).reduce((acc, addition) => acc + Number(addition.price), 0)
       : 0;
 
     return (product.price + additionsTotalPrice) * product.quantity;
-  }, [product.additions, product.price, product.quantity]);
+  }, [product.orderDishAdditionDtoList, product.price, product.quantity]);
 
   const details = useMemo(() => {
     const details = [];
 
-    if (product.spiceLevel) {
-      const spiceLevel = data?.adjustableSpiceLevelDtoList.find(spiceLevelInfo => product.spiceLevel === spiceLevelInfo.id)?.spiceLevel;
+    if (product.selectedSpiceLevel) {
+      const spiceLevel = product.dishDto.adjustableSpiceLevelDtoList.find(spiceLevelInfo => product.selectedSpiceLevel === spiceLevelInfo.id)?.spiceLevel;
       details.unshift(t(`spice-levels.${spiceLevel}`));
     }
 
-    if (product.additions) {
-      const additions = Object.keys(product.additions).map(additionId => {
-        const currentAddition = data?.dishAdditionDtoList.find(info => String(info.id) === additionId);
-        const additionName = currentAddition ? getDataStringByLocale(currentAddition, "name", i18n.language) : "";
+    if (product.orderDishAdditionDtoList.length) {
+      const additions = product.orderDishAdditionDtoList.map(addition => {
+        const additionName = getDataStringByLocale(addition.dishAdditionDto, "name", i18n.language);
 
         return additionName;
       }).join(", ");
@@ -46,22 +41,13 @@ const OrderItem = ({ product, isLastItem = false }: IOrderItem) => {
     }
 
     return details.join(", ");
-  }, [data?.adjustableSpiceLevelDtoList, data?.dishAdditionDtoList, i18n.language, product.additions, product.spiceLevel, t]);
-
-  if (!data) {
-    return (
-      <>
-        <Skeleton className="w-full min-w-[344px] h-[180px] rounded-xl" />
-        {!isLastItem && <Separator className="my-4" />}
-      </>
-    );
-  }
+  }, [i18n.language, product.dishDto.adjustableSpiceLevelDtoList, product.orderDishAdditionDtoList, product.selectedSpiceLevel, t]);
 
   return (
     <CartItemCard
       title={name}
       details={details}
-      imageUrl={data.url}
+      imageUrl={product.url}
       hasSeparator={!isLastItem}
       price={totalCartItemPrice}
       quantity={product.quantity}

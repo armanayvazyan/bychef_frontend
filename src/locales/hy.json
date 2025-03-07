@@ -13,6 +13,20 @@
     "no-chefs-found": "Հասանելի խոհարարներ չեն գտնվել",
     "menu": "Մենյու",
     "add": "Ավելացնել",
+    "months": {
+      "january": "Հունվարի {{day}}",
+      "february": "Փետրվարի {{day}}",
+      "march": "Մարտի {{day}}",
+      "april": "Ապրիլի {{day}}",
+      "may": "Մայիսի {{day}}",
+      "june": "Հունիսի {{day}}",
+      "july": "Հուլիսի {{day}}",
+      "august": "Օգոստոսի {{day}}",
+      "september": "Սեպտեմբերի {{day}}",
+      "october": "Հոկտեմբերի {{day}}",
+      "november": "Նոյեմբերի {{day}}",
+      "december": "Դեկտեմբերի {{day}}"
+    },
     "weekdays": {
       "monday": "Երկուշաբթի",
       "tuesday": "Երեքշաբթի",
@@ -146,20 +160,6 @@
     "pay": "Վճարել {{amount}} ֏",
     "delivery-notes": "Հավելյալ նշումներ առաքման համար",
     "door2door": "Դռնից դուռ",
-    "months": {
-      "january": "Հունվարի {{day}}",
-      "february": "Փետրվարի {{day}}",
-      "march": "Մարտի {{day}}",
-      "april": "Ապրիլի {{day}}",
-      "may": "Մայիսի {{day}}",
-      "june": "Հունիսի {{day}}",
-      "july": "Հուլիսի {{day}}",
-      "august": "Օգոստոսի {{day}}",
-      "september": "Սեպտեմբերի {{day}}",
-      "october": "Հոկտեմբերի {{day}}",
-      "november": "Նոյեմբերի {{day}}",
-      "december": "Դեկտեմբերի {{day}}"
-    },
     "payment-notes": "20,000 դրամ կամ ավել գումարով պատվերների դեպքում հասանելի են միայն անկանխիկ վճարման միջոցները։",
     "wrongAddressModal": {
       "title": "Վա՜յ",
@@ -169,16 +169,22 @@
     }
   },
   "tracking": {
+    "floor": "Հարկ",
+    "entrance": "Մուտք",
+    "home": "Բնակարան/Տուն",
     "address": "Հասցե",
     "download": "Ներբեռնել անդորրագիրը",
     "order": "Պատվեր",
+    "delivery": "Առաքում",
+    "total": "Ընդհանուր",
+    "your-order": "Ձեր պատվերը",
     "status": {
-      "delivery-in-process": "Առաքվում է",
-      "delivered": "Առաքվել է",
-      "preparing": "Պատրաստվում է",
-      "requested": "Պատվիրված է",
-      "cancelled": "Չեղարկված",
-      "ready-for-delivery": "Պատրաստ է առաքման համար"
+      "DELIVERY_IN_PROGRESS": "Առաքվում է",
+      "DELIVERED": "Առաքվել է",
+      "PREPARING": "Պատրաստվում է",
+      "REQUESTED": "Պատվիրված է",
+      "DECLINED": "Չեղարկված",
+      "READY_FOR_DELIVERY": "Պատրաստ է առաքման համար"
     }
   },
   "additions": "Հավելումներ",

@@ -48,6 +48,13 @@ const socials = [
   },
 ];
 
+const payment_methods = [
+  { name: "arca", src: "https://static.bychef.am/icons/card-arca.svg" },
+  { name: "master_card", src: "https://static.bychef.am/icons/card-mastercard.svg" },
+  { name: "visa", src: "https://static.bychef.am/icons/card-visa.svg" },
+  { name: "idram", src: "https://static.bychef.am/icons/card-idram.svg" }
+];
+
 const languageNames = {
   [LOCALES.HY]: "AM",
   [LOCALES.EN]: "EN",
@@ -120,6 +127,13 @@ const Footer = () => {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <div className="flex gap-3">
+                {payment_methods.map((method) =>
+                  <img className="w-[30px]" key={method.src} src={method.src} alt={method.name}/>
+                )}
+              </div>
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>

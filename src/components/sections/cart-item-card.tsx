@@ -37,7 +37,7 @@ const CartItemCard = ({
   const { t } = useTranslation("translation");
 
   return (
-    <div className="cursor-pointer" onClick={onSelectDish} {...props}>
+    <div className={onSelectDish ? "cursor-pointer" : ""} onClick={onSelectDish} {...props}>
       <div className="flex items-center gap-4">
         <img src={imageUrl} alt="cart product image" className="w-[136px] h-[136px] object-cover rounded-xl"/>
         <div>

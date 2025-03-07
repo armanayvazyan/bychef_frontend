@@ -4,13 +4,13 @@ import Button from "@/components/ui/button";
 import { fetchChef } from "@/server-actions";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
+import useServerError from "@/hooks/useServerError";
 import { logPageOpenEvent } from "@/analytics/Events";
 import { useNavigate, useParams } from "react-router-dom";
 import ChefInfoContext from "@/context/chef-info-context";
 import ChefDishes from "@/components/sections/chef-dishes";
 import ChefDetails from "@/components/sections/chef-details";
 import { DATA_DEFAULT_CACHE_TIME, DATA_DEFAULT_STALE_TIME } from "@/configs/constants";
-import useServerError from "@/hooks/useServerError";
 
 const Chef = () => {
   const { id } = useParams();
@@ -53,8 +53,8 @@ const Chef = () => {
           <ChevronLeft size={20} />
           <p className="text-sm text-primary font-semibold">{t("generic.back")}</p>
         </Button>
-        {chefInfo && <ChefDetails />}
-        {chefInfo && <ChefDishes />}
+        <ChefDetails />
+        <ChefDishes />
       </section>
     </ChefInfoContext.Provider>
   );

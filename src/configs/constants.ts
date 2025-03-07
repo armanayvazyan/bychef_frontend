@@ -1,3 +1,5 @@
+import { PAYMENT_TYPES } from "@/types";
+
 export const PHONE_NUMBER_PREFIX = "+374";
 export const BASE_API_URL = import.meta.env.VITE_BASE_API_URL;
 export const SB_KEY = import.meta.env.VITE_SB_KEY;
@@ -13,7 +15,7 @@ export const DATA_DEFAULT_CACHE_TIME = 2 * DATA_DEFAULT_STALE_TIME;
 export const MIN_CART_ITEM_QUANTITY = 1;
 
 export const PAYMENT_METHODS = {
-  CARD: { value: "CARD", logo: "https://static.bychef.am/icons/card-arca.svg" },
-  IDRAM: { value: "IDRAM", logo: "https://static.bychef.am/icons/card-idram.svg" },
-  CASH: { value: "CASH", logo: "https://static.bychef.am/icons/cash.svg" },
+  CARD: { value: PAYMENT_TYPES.CARD, logo: "https://static.bychef.am/icons/card-arca.svg" },
+  IDRAM: { value: PAYMENT_TYPES.IDRAM, logo: "https://static.bychef.am/icons/card-idram.svg" },
+  CASH: { value: PAYMENT_TYPES.CASH, logo: "https://static.bychef.am/icons/cash.svg" },
 };

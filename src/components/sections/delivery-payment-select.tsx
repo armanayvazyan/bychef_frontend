@@ -1,5 +1,5 @@
 import { memo, useCallback, useMemo } from "react";
-import { EInputNames } from "@/types";
+import { EInputNames, PAYMENT_TYPES } from "@/types";
 import FormItem from "@/components/ui/form-item-wrapper";
 import PaymentSelect from "@/components/sections/payment-select";
 import { MAX_ORDER_PRICE_BY_CASH, PAYMENT_METHODS } from "@/configs/constants";
@@ -16,7 +16,7 @@ interface IDeliveryPaymentSelectProps extends IDeliveryPaymentSelectContainerPro
 
 const DeliveryPaymentSelect = memo(({ orderTotalPrice, setFormValue, selectedPaymentMethod }: IDeliveryPaymentSelectProps) => {
   const paymentOptions = useMemo(() => {
-    return Object.values(PAYMENT_METHODS).filter(method => orderTotalPrice >= MAX_ORDER_PRICE_BY_CASH ? method.value !== "CASH" : true);
+    return Object.values(PAYMENT_METHODS).filter(method => orderTotalPrice >= MAX_ORDER_PRICE_BY_CASH ? method.value !== PAYMENT_TYPES.CASH : true);
   }, [orderTotalPrice]);
 
   const handleSelectPaymentMethod = useCallback((method: string) => {
