@@ -1,21 +1,5 @@
 import Dexie, { EntityTable } from "dexie";
-
-interface ICartItem {
-  id: number;
-  uid: string;
-  price: number;
-  chefId?: number;
-  quantity: number;
-  spiceLevel?: number;
-  orderBefore?: number;
-  additions?: Record<string, number>;
-}
-
-interface ILocation {
-  id: string;
-  address: string;
-  coordinates: { lng: number; lat: number };
-}
+import { ICartItem, ILocation } from "./types";
 
 const db = new Dexie("UserCart") as Dexie & {
   products: EntityTable<

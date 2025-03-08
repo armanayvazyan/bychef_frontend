@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /checkout
+Disallow: /order/
+Disallow: /orders/
+Allow: /
+
+Sitemap: https://bychef.am/sitemap.xml

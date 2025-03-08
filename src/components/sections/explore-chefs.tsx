@@ -1,44 +1,19 @@
 import { useCallback, useEffect, useRef } from "react";
+import { fetchChefs } from "@/server-actions";
 import { useTranslation } from "react-i18next";
-import { fetchApi } from "@/hooks/use-fetch-data";
 import { Skeleton } from "@/components/ui/skeleton";
 import { IChefGenericInfo, IChefsPage } from "@/types";
 import ChefCard from "@/components/sections/chef-card";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import constructFinalUrl from "@/helpers/constructFinalUrl";
-
-const limit = 8;
-
-interface IFetchChefsProps {
-  pageParam: number,
-  dateFrom?: string,
-  dateTo?: string
-}
-
-const fetchChefs = async ({ pageParam, dateFrom, dateTo }: IFetchChefsProps) => {
-  const url = new URL(constructFinalUrl("chef/active"));
-
-  url.searchParams.append("limit", limit.toString());
-  url.searchParams.append("offset", pageParam.toString());
-  if (dateFrom) url.searchParams.append("dateFrom", dateFrom);
-  if (dateTo) url.searchParams.append("dateTo", dateTo);
-
-  const data = await fetchApi(
-    {
-      initialPath: "chef/active",
-      pathExtension: url.search
-    }
-  );
-
-  return data?.result || {};
-};
+import { CHEFS_PER_PAGE_COUNT } from "@/configs/constants";
+import useServerError from "@/hooks/useServerError";
 
 const ExploreChefs = () => {
   const { t } = useTranslation("translation");
+  const { handleServerError } = useServerError();
   const observerTargetRef = useRef<HTMLDivElement | null>(null);
   const {
     data,
-    error,
     isFetching,
     hasNextPage,
     fetchNextPage,
@@ -49,6 +24,7 @@ const ExploreChefs = () => {
     ],
     queryFn: (props) => fetchChefs({
       ...props,
+      onErrorCb: handleServerError,
     }),
     initialPageParam: 0,
     getNextPageParam: (lastPage: IChefsPage, allPages: IChefsPage[]) => {
@@ -90,12 +66,12 @@ const ExploreChefs = () => {
           ))
         ))}
         {(isFetchingNextPage || isFetching) && (
-          new Array(limit).fill(1).map((_, index) => (
+          new Array(CHEFS_PER_PAGE_COUNT).fill(1).map((_, index) => (
             <Skeleton key={index} className="min-h-[140px] rounded-xl"/>
           ))
         )}
       </div>
-      {!data && !isFetchingNextPage && !isFetching && !error && (
+      {!data && !isFetchingNextPage && !isFetching && (
         <div className="w-full grid place-items-center min-h-[50dvh]">
           <h2 className="text-2xl font-bold">{t("generic.no-chefs-found")}</h2>
         </div>

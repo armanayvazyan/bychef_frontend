@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import GridCard from "@/components/ui/grid-card";
 import getDataByLocale from "@/helpers/getDataByLocale";
 import { logChefClickEvent } from "@/analytics/Events";
+import LazyImage from "@/components/sections/lazy-image";
 
 interface IChefCardProps {
   chefInfo: IChefGenericInfo
@@ -39,7 +40,12 @@ const ChefCard = ({ chefInfo }: IChefCardProps) => {
       <div className="flex flex-col flex-wrap gap-4">
         <div className="flex items-center gap-3">
           <div className="min-w-[84px] min-h-[84px] w-[84px] h-[84px]">
-            <img src={chefInfo.avatarUrl} alt="chef image" className="w-full h-full rounded-full object-cover"/>
+            <LazyImage
+              url={chefInfo.avatarUrl}
+              alt="chef avatar or logo"
+              imgClassName="w-full h-full object-cover"
+              containerClassName="w-full h-full rounded-full"
+            />
           </div>
           <p className="text-zinc-900 text-lg font-bold">{kitchenName}</p>
         </div>

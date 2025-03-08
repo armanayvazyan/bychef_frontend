@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface IDishImageProps {
@@ -25,7 +26,7 @@ const LazyImage = ({ url, alt, imgClassName, containerClassName }: IDishImagePro
   }, [url]);
 
   return (
-    <div className={containerClassName}>
+    <div className={cn(containerClassName, "overflow-hidden")}>
       {isLoaded ? (
         <img
           src={url}
@@ -34,7 +35,7 @@ const LazyImage = ({ url, alt, imgClassName, containerClassName }: IDishImagePro
           className={imgClassName}
         />
       ) : (
-        <Skeleton className="w-full h-full rounded-xl" />
+        <Skeleton className="w-full h-full" />
       )}
     </div>
   );

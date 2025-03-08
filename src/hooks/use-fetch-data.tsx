@@ -1,37 +1,39 @@
 import { useCallback } from "react";
 import isEmpty from "lodash/isEmpty";
 import { SB_KEY } from "@/configs/constants";
+import { IFetchApiReturnType } from "@/types";
 import constructFinalUrl from "@/helpers/constructFinalUrl";
 
 interface IFetchData {
   url?: string;
   initialPath?: string,
-  pathExtension?: string,
-  method?: "GET" | "POST" | "DELETE",
+  pathExtension?: string | number,
+  method?: "GET" | "POST" | "DELETE" | "PATCH",
   headerParams?: Record<string, string | number>,
   bodyParams?: Record<string, any>,
   options?: Record<string, string | number>,
   hasAT?: boolean,
   injectErrorMessage?: boolean,
+  isResponseOtherType?: boolean,
 }
 
 const processErrorResponse = (status?: number) => {
   switch (status) {
     case 400:
-      return { error: "Bad Request!" };
+      return { error: "bad-request-default" };
     case 498:
     case 401:
-      return { error: "Please authorize!" };
+      return { error: "authorize-default" };
     case 403:
-      return { error: "Forbidden!" };
+      return { error: "forbidden-default" };
     case 404:
-      return { error: "Not found!" };
+      return { error: "not-found-default" };
     case 429:
-      return { error: "Too many requests! Please try again later." };
+      return { error: "too-many-requests-default" };
     case 500:
-      return { error: "Server Error!" };
+      return { error: "server-error-default" };
     default:
-      return { error: "Something went wrong!" };
+      return { error: "something-went-wrong-default" };
   }
 };
 
@@ -45,13 +47,12 @@ export const fetchApi = async ({
   options = {},
   hasAT = true,
   injectErrorMessage = false,
-}: IFetchData = {}) => {
+  isResponseOtherType = false,
+}: IFetchData = {}): Promise<IFetchApiReturnType> => {
   try {
-    const endPoint = initialPath + pathExtension;
+    const endPoint = initialPath + String(pathExtension);
 
-    if (!endPoint && !url) return;
-
-    const reqUrl = url ? url + pathExtension : constructFinalUrl(endPoint);
+    const reqUrl = url ? url + String(pathExtension) : constructFinalUrl(endPoint);
 
     const body = !isEmpty(bodyParams) ? JSON.stringify(bodyParams) : null;
     const headers = {
@@ -74,18 +75,18 @@ export const fetchApi = async ({
     if (!response.ok) {
       if (injectErrorMessage && response) {
         const res = await response.json();
-        return { error: res.error, status: response.status, isInjected: true };
+        return { error: res.message, status: response.status, isInjected: true };
       }
 
       return { ...processErrorResponse(response.status), status: response.status, isInjected: false };
     }
 
     if (response.status === 201) {
-      return {};
+      return { isInjected: false };
     }
 
-    const res = await response.json();
-    return { result: res };
+    const res = isResponseOtherType ? response : await response.json();
+    return { result: res, isInjected: true };
   } catch (e) {
     console.error(e);
     return { ...processErrorResponse(), isInjected: false };
