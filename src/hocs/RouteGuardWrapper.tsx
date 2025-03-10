@@ -6,6 +6,8 @@ interface IRouteGuardWrapperProps extends PropsWithChildren {
   name: string;
 }
 
+const restrictedRoutes = ["home", "order_success", "order_failed", "privacy", "terms", "tracking"];
+
 const RouteGuardWrapper = ({ name, children }: IRouteGuardWrapperProps) => {
   const navigate = useNavigate();
 
@@ -13,7 +15,7 @@ const RouteGuardWrapper = ({ name, children }: IRouteGuardWrapperProps) => {
     (async () => {
       const location = await db.location.toArray();
 
-      if (!location.length && name !== "home") navigate("/");
+      if (!location.length && restrictedRoutes.includes(name)) navigate("/");
     })();
   }, [name, navigate]);
 
