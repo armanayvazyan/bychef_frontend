@@ -1,9 +1,33 @@
 {
   "generic": {
+    "home": "Home",
+    "chefs": "Chefs",
+    "kitchen": "Kitchen",
+    "checkout": "Checkout",
+    "order_success": "Order Placed",
+    "order_failed": "Failed Order",
+    "privacy": "Privacy Policy",
+    "copied": "Copied to clipboard!",
+    "terms": "General Terms and Conditions",
+    "tracking": "Order",
     "no-dish-found": "No dishes are available",
     "no-chefs-found": "No chefs are available",
     "menu": "Menu",
     "add": "Add",
+    "months": {
+      "january": "January {{day}}",
+      "february": "February {{day}}",
+      "march": "March {{day}}",
+      "april": "April {{day}}",
+      "may": "May {{day}}",
+      "june": "June {{day}}",
+      "july": "July {{day}}",
+      "august": "August {{day}}",
+      "september": "September {{day}}",
+      "october": "October {{day}}",
+      "november": "November {{day}}",
+      "december": "December {{day}}"
+    },
     "weekdays": {
       "monday": "Monday",
       "tuesday": "Tuesday",
@@ -78,6 +102,7 @@
   "footer": {
     "privacy": "Privacy policy",
     "terms": "Terms & Conditions",
+    "support@bychef.am": "support@bychef.am",
     "copyright": "© 2024 ByCHEF, All rights reserved",
     "locales": {
       "AM": "Հայերեն",
@@ -110,18 +135,21 @@
     "success": {
       "title": "Your order has been successfully placed",
       "details": "Your order number is #{{orderId}}. Soon you’ll receive an email with a link to track your order.",
-      "button": "Back to orders"
+      "back-to-orders": "Back to orders"
     },
     "failure": {
       "title": "Your order has not been confirmed",
-      "details": "Your order number is #{{orderId}}. Soon you’ll receive an email with a link to track your order.",
-      "button": "Back to orders"
+      "details": "Payment for your order #{{orderId}} failed. Please try again with the same or a different payment method.",
+      "back-to-orders": "Back to orders",
+      "try-again": "Try again",
+      "contact-support": "Contact to support"
     }
   },
   "checkout": {
     "delivery-details": "Delivery details",
     "address": "Address",
     "email": "Email",
+    "emailNotice": "You'll receive a link for tracking your order to this email address.",
     "floor": "Floor",
     "entrance": "Entrance",
     "phone": "Phone number",
@@ -130,31 +158,39 @@
     "delivery-time": "Delivery date and time",
     "select-day": "Select day",
     "select-time": "Select time",
-    "choose-payment-method": "Choose payment method",
     "payment-method": "Payment method",
     "your-order": "Your order",
     "delivery": "Delivery",
     "total": "Total",
     "pay": "Pay {{amount}} ֏",
-    "CASH": "Pay cash",
-    "IDRAM": "Pay with Idram",
-    "CARD": "Pay with card",
     "delivery-notes": "Additional notes for the delivery",
-    "months": {
-      "january": "January {{day}}",
-      "february": "February {{day}}",
-      "march": "March {{day}}",
-      "april": "April {{day}}",
-      "may": "May {{day}}",
-      "june": "June {{day}}",
-      "july": "July {{day}}",
-      "august": "August {{day}}",
-      "september": "September {{day}}",
-      "october": "October {{day}}",
-      "november": "November {{day}}",
-      "december": "December {{day}}"
-    },
-    "payment-notes": "For orders exceeding 20,000 AMD, only cashless payment methods are available."
+    "door2door": "Door to door",
+    "payment-notes": "For orders exceeding 20,000 AMD, only cashless payment methods are available.",
+    "wrongAddressModal": {
+      "title": "Oops!",
+      "description": "This chef doesn't deliver to this address",
+      "negativeButton": "Keep previous address",
+      "positiveButton": "Change address and empty cart"
+    }
+  },
+  "tracking": {
+    "floor": "Floor",
+    "entrance": "Entrance",
+    "home": "Apartment/House",
+    "address": "Address",
+    "download": "Download the receipt",
+    "order": "Order",
+    "delivery": "Delivery",
+    "total": "Total",
+    "your-order": "Your order",
+    "status": {
+      "DELIVERY_IN_PROGRESS": "Delivery in process",
+      "DELIVERED": "Delivered",
+      "PREPARING": "Preparing",
+      "REQUESTED": "Requested",
+      "DECLINED": "Cancelled",
+      "READY_FOR_DELIVERY": "Ready for delivery"
+    }
   },
   "additions": "Additions",
   "spice-level": "Spice level",
@@ -183,5 +219,50 @@
       "invalid-email": "Please enter a valid email address",
       "invalid-phone": "Please enter a valid phone number"
     }
+  },
+  "server-errors": {
+    "bad-request-default": "Bad Request!",
+    "authorize-default": "Please authorize!",
+    "forbidden-default": "Forbidden!",
+    "not-found-default": "Not found!",
+    "too-many-requests-default": "Too many requests! Please try again later.",
+    "server-error-default": "Server Error!",
+    "something-went-wrong-default": "Something went wrong!",
+
+    "user-not-found": "The user was not found. Please check the user details and try again, or contact support.",
+    "invalid-order-status": "The new status of the order is invalid. Please check the status and try again, or contact support.",
+    "invalid-order-id": "The requested order was not found. Please verify the details and try again, or contact support.",
+    "chef-doesn't-contain-dish": "The order contains dishes from different chefs. Please ensure all items belong to the same chef and try again, or contact support.",
+    "invalid-transaction-id": "There was an issue processing your transaction. Please verify your payment details and try again, or contact support.",
+    "invalid-order-payment-id": "No payment information was found for this order. Please verify the order details and try again, or contact support.",
+    "invalid-file-size": "The file size doesn't the allowable limit. Please choose a file that meets the size requirements and try again, or contact support.",
+    "invalid-file-extension": "Sorry, the file extension is not allowed. Please use a supported file format and try again, or contact support.",
+    "invalid-file-type": "Sorry, the file extension is not allowed. Please use a supported file format and try again, or contact support.",
+    "invalid-file": "No file was detected. Please select a valid file and try again, or contact support for help.",
+    "failed-excel-generation": "An error occured while generating the file. Please try again later, or contact support if the issue persists.",
+    "S3-delete-error": "An error occurred while deleting the file. Please try again later, or contact support if the issue persists.",
+    "S3-upload-error": "An error occurred while uploading the file. Please try again later, or contact support if the issue persists.",
+    "invalid-dish-addition-id": "No dish addition was found. Please verify the details and try again, or contact support.",
+    "invalid-dish-id-or-status": "No dish was found. Please verify the details and try again, or contact support.",
+    "dish-ingredients-missing": "The dish is missing the ingredients. Please make sure to add the indgredients to the dish and try again, or contact support.",
+    "invalid-dish-id": "The requested dish was not found. Please verify the details and try again, or contact support.",
+    "invalid-dish-dto": "We couldn’t update the dish due to incorrect data. Please check your input and try again, or contact support.",
+    "invalid-dish-status": "Sorry, the provided dish status is invalid. Please review your input and try again, or contact support for assistance.",
+    "invalid-spice-level-id": "An invalid spice level was provided. Please select a valid option and try again, or contact support.",
+    "invalid-chef-status": "Your current status does not permit updating your information. Please contact support for further assistance.",
+    "invalid-chef-exceptional-day": "The specified exceptional day is invalid or not found. Please verify the date and try again, or contact support.",
+    "invalid-chef-available-day": "The selected day is invalid. Please check your selection and try again, or contact support for assistance.",
+    "invalid-chef-id-or-status": "No active chef was found. Please verify your details and try again, or contact support.",
+    "invalid-chef-id": "No chef was found. Please check the information and try again, or contact support.",
+    "invalid-chef-dto": "We couldn’t update your information due to incorrect data. Please review your input and try again, or contact support.",
+    "invalid-chef-state": "Your account cannot be accessed. Please contact support for more information.",
+    "invalid-otp": "Sorry, the one-time-code you provided is incorrect. Please verify and try again.",
+    "invalid-limit-size": "Sorry, we couldn’t complete your request. Please contact support if the issue persists."
+  },
+  "payment-methods": {
+    "choose-payment-method": "Choose payment method",
+    "CASH": "Pay cash",
+    "IDRAM": "Pay with Idram",
+    "CARD": "Pay with card"
   }
 }

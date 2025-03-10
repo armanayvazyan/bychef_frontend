@@ -1,8 +1,8 @@
 import { MouseEvent } from "react";
+import { IDishAddition } from "@/types";
+import { useTranslation } from "react-i18next";
 import { Checkbox } from "@/components/ui/checkbox";
 import { getDataStringByLocale } from "@/helpers/getDataByLocale";
-import { useTranslation } from "react-i18next";
-import { IDishAddition } from "@/types";
 
 interface IAdditionProps {
   isActive: boolean,
