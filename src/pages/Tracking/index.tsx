@@ -1,12 +1,10 @@
 import { useMemo, useState } from "react";
-import { db } from "@/db";
 import { ORDER_STATUS } from "@/types";
 import Button from "@/components/ui/button";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import formatPrice from "@/helpers/formatPrice";
 import { useQuery } from "@tanstack/react-query";
-import { useLiveQuery } from "dexie-react-hooks";
 import Separator from "@/components/ui/separator";
 import { fetchOrderInfo } from "@/server-actions";
 import CopyId from "@/components/sections/copy-id";
@@ -35,12 +33,6 @@ const Tracking = () => {
     },
     refetchOnWindowFocus: false,
   });
-
-  const cartItems = useLiveQuery(async () => {
-    const products = await db.products.reverse().toArray();
-
-    return products;
-  }, [], []);
 
   const orderDate = useMemo(() => {
     if (data?.deliveryDateTime) {
@@ -135,13 +127,11 @@ const Tracking = () => {
             {!isLoading && data?.deliveryPrice && <p>{formatPrice(data.deliveryPrice)} ֏</p>}
             {isLoading && <Skeleton className="w-[100px]"/>}
           </div>
-          {!!cartItems.length && (
-            <div className="flex justify-between text-base font-bold text-zinc-800">
-              <p>{t("total")}</p>
-              {!isLoading && data?.deliveryPrice && <p>{formatPrice(data.totalPrice)} ֏</p>}
-              {isLoading && <Skeleton className="w-[100px]"/>}
-            </div>
-          )}
+          <div className="flex justify-between text-base font-bold text-zinc-800">
+            <p>{t("total")}</p>
+            {!isLoading && data?.deliveryPrice && <p>{formatPrice(data.totalPrice)} ֏</p>}
+            {isLoading && <Skeleton className="w-[100px]"/>}
+          </div>
         </div>
       </div>
     </section>
