@@ -1,15 +1,15 @@
 {
   "generic": {
     "home": "Home",
-    "chefs": "Chefs",
+    "explore": "Chefs",
     "kitchen": "Kitchen",
     "checkout": "Checkout",
     "order_success": "Order Placed",
     "order_failed": "Failed Order",
     "privacy": "Privacy Policy",
-    "copied": "Copied to clipboard!",
     "terms": "General Terms and Conditions",
     "tracking": "Order",
+    "copied": "Copied to clipboard!",
     "no-dish-found": "No dishes are available",
     "no-chefs-found": "No chefs are available",
     "menu": "Menu",

@@ -26,7 +26,7 @@ const Tracking = () => {
 
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
-  const token = urlParams.get("accessToken");
+  const token = urlParams.get("token");
 
   const { data, isLoading } = useQuery({
     queryKey: ["order-info", id, token],

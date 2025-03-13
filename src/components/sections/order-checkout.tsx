@@ -56,7 +56,7 @@ const OrderCheckout = () => {
 
   const placeOrderMutation = useMutation({
     mutationFn: (formData: IPlaceOrderProps) => {
-      return placeOrder(formData, i18n.language as LOCALES, handleServerError);
+      return placeOrder(formData, i18n.language.split("-")[0] as LOCALES, handleServerError);
     },
     onSuccess: async (data) => {
       try {
