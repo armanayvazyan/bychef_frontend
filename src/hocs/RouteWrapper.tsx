@@ -26,20 +26,20 @@ const ProviderWrapper = ({ children, name }: PropsWithChildren & { name: string 
   return (
     <RouteGuardWrapper name={name}>
       <ScrollResetWrapper>
-          <AnalyticsWrapper>
-            <PageTrackWrapper>
-              <AddressSearchContextProvider>
-                <QueryClientProvider client={queryClient}>
-                  <HFWrapper>
-                    <Helmet>
-                      <title>{name ? `byChef | ${t(name)}` : "byChef"}</title>
-                    </Helmet>
-                    {children}
-                  </HFWrapper>
-                </QueryClientProvider>
-              </AddressSearchContextProvider>
-            </PageTrackWrapper>
-          </AnalyticsWrapper>
+        <AnalyticsWrapper>
+          <PageTrackWrapper>
+            <AddressSearchContextProvider>
+              <QueryClientProvider client={queryClient}>
+                <HFWrapper>
+                  <Helmet>
+                    <title>{name ? `byChef | ${t(name)}` : "byChef"}</title>
+                  </Helmet>
+                  {children}
+                </HFWrapper>
+              </QueryClientProvider>
+            </AddressSearchContextProvider>
+          </PageTrackWrapper>
+        </AnalyticsWrapper>
       </ScrollResetWrapper>
     </RouteGuardWrapper>
   );
