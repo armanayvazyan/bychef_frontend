@@ -14,7 +14,6 @@ import PageTrackWrapper from "@/hocs/PageTrackWrapper";
 import AnalyticsWrapper from "@/hocs/AnalyticsWrapper";
 import RouteGuardWrapper from "@/hocs/RouteGuardWrapper";
 import ScrollResetWrapper from "@/hocs/ScrollResetWrapper";
-import NotificationsWrapper from "@/hocs/NotificationsWrapper";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import AddressSearchContextProvider from "@/context/address-search-context";
 import { RouterProvider, Navigate, createBrowserRouter } from "react-router-dom";
@@ -27,7 +26,6 @@ const ProviderWrapper = ({ children, name }: PropsWithChildren & { name: string 
   return (
     <RouteGuardWrapper name={name}>
       <ScrollResetWrapper>
-        <NotificationsWrapper>
           <AnalyticsWrapper>
             <PageTrackWrapper>
               <AddressSearchContextProvider>
@@ -42,7 +40,6 @@ const ProviderWrapper = ({ children, name }: PropsWithChildren & { name: string 
               </AddressSearchContextProvider>
             </PageTrackWrapper>
           </AnalyticsWrapper>
-        </NotificationsWrapper>
       </ScrollResetWrapper>
     </RouteGuardWrapper>
   );
