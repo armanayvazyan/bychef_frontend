@@ -26,7 +26,6 @@ const ProviderWrapper = ({ children, name }: PropsWithChildren & { name: string 
   return (
     <RouteGuardWrapper name={name}>
       <ScrollResetWrapper>
-        {/* <NotificationsWrapper> */}
           <AnalyticsWrapper>
             <PageTrackWrapper>
               <AddressSearchContextProvider>
@@ -41,7 +40,6 @@ const ProviderWrapper = ({ children, name }: PropsWithChildren & { name: string 
               </AddressSearchContextProvider>
             </PageTrackWrapper>
           </AnalyticsWrapper>
-        {/* </NotificationsWrapper> */}
       </ScrollResetWrapper>
     </RouteGuardWrapper>
   );
