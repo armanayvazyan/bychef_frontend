@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/u
 interface IPaymentSelectProps {
   selectedPaymentMethod: string;
   onSelectPaymentMethod: (method: string) => void;
-  paymentOptions: { value: string, logo: string }[];
+  paymentOptions: { value: string, logo: string, disabled: boolean }[];
 }
 
 const PaymentSelect = ({ selectedPaymentMethod, onSelectPaymentMethod, paymentOptions }: IPaymentSelectProps) => {
@@ -32,7 +32,7 @@ const PaymentSelect = ({ selectedPaymentMethod, onSelectPaymentMethod, paymentOp
       </SelectTrigger>
       <SelectContent className="max-h-[240px] overflow-y-scroll">
         {paymentOptions.map((method) => (
-          <SelectItem key={method.value} value={method.value} className="p-2 cursor-pointer">
+          <SelectItem key={method.value} value={method.value} className="p-2 cursor-pointer" disabled={method.disabled}>
             <div className="flex items-center gap-2 cursor-pointer">
               <LazyImage
                 url={method.logo}

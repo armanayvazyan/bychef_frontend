@@ -80,8 +80,8 @@ export const fetchCartItem = async (id: string | number, deleteItemCb?: () => vo
     injectErrorMessage: true,
   });
 
-  if (data && data.status === 403 && deleteItemCb) {
-    deleteItemCb();
+  if (data && deleteItemCb) {
+    if (data.status && data.status >= 400 && data.status < 500) deleteItemCb();
   }
 
   if (data.error) {

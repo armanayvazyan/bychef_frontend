@@ -15,7 +15,7 @@ export const DATA_DEFAULT_CACHE_TIME = 2 * DATA_DEFAULT_STALE_TIME;
 export const MIN_CART_ITEM_QUANTITY = 1;
 
 export const PAYMENT_METHODS = {
-  CARD: { value: PAYMENT_TYPES.CARD, logo: "https://static.bychef.am/icons/card-arca.svg" },
-  IDRAM: { value: PAYMENT_TYPES.IDRAM, logo: "https://static.bychef.am/icons/card-idram.svg" },
-  CASH: { value: PAYMENT_TYPES.CASH, logo: "https://static.bychef.am/icons/cash.svg" },
+  IDRAM: { value: PAYMENT_TYPES.IDRAM, logo: "https://static.bychef.am/icons/card-idram.svg", disabled: false },
+  CASH: { value: PAYMENT_TYPES.CASH, logo: "https://static.bychef.am/icons/cash.svg", disabled: false },
+  CARD: { value: PAYMENT_TYPES.CARD, logo: "https://static.bychef.am/icons/card-arca.svg", disabled: true },
 };
