@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import FormItem from "@/components/ui/form-item-wrapper";
 import { PHONE_NUMBER_PREFIX } from "@/configs/constants";
 import { Controller, useFormContext } from "react-hook-form";
-import { FormControl, FormField, FormLabel } from "@/components/ui/form";
+import { FormControl, FormField } from "@/components/ui/form";
 
 const PhoneInput = () => {
   const { control } = useFormContext();
@@ -23,9 +23,8 @@ const PhoneInput = () => {
       control={control}
       name={EInputNames.phone}
       render={() => (
-        <FormItem name={EInputNames.phone} className="w-[calc(50%-8px)]">
+        <FormItem name={EInputNames.phone} requiredAsterisk className="w-[calc(50%-8px)]" label={t("phone")}>
           <>
-            <FormLabel className="text-primary font-semibold text-sm leading-tight flex gap-1">{t("phone")}</FormLabel>
             <FormControl>
               <div className="flex">
                 <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm">
