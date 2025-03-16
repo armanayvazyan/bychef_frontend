@@ -39,9 +39,11 @@ const CartItemCard = ({
   return (
     <div className={onSelectDish ? "cursor-pointer" : ""} onClick={onSelectDish} {...props}>
       <div className="flex items-center gap-4">
-        <img src={imageUrl} alt="cart product image" className="w-[136px] h-[136px] object-cover rounded-xl"/>
+        <div className="max-w-[136px] aspect-square">
+          <img src={imageUrl} alt="cart product image" className="w-full h-full object-cover rounded-xl"/>
+        </div>
         <div>
-          <h1 className="text-xl font-extrabold text-zinc-800">{title}</h1>
+          <h1 className="text-base md:text-xl font-extrabold text-zinc-800">{title}</h1>
           <p className="text-zinc-400 text-sm my-4">{details}</p>
           <div>
             <p className="text-lg font-semibold text-zinc-800">{`${formatPrice(price)} ֏`}</p>

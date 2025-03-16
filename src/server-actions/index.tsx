@@ -247,12 +247,33 @@ export const retryOrder = async (formData: IRetryOrderProps, locale: LOCALES, on
   return data.result || null;
 };
 
-export const fetchOrderInfo = async (orderId: string, token: string, onErrorCb?: (errorKey: string) => void): Promise<IOrderDto | undefined> => {
+export const fetchOrderInfo = async (orderNumber: string, token: string, onErrorCb?: (errorKey: string) => void): Promise<IOrderDto | undefined> => {
   const data = await fetchApi({
-    initialPath: `order/number/${orderId}`,
+    initialPath: `order/number/${orderNumber}`,
     headerParams: {
       Authorization: `Bearer ${token}`
     },
+    injectErrorMessage: true,
+  });
+
+  if (data.error) {
+    if (onErrorCb) onErrorCb(data.error);
+
+    return;
+  }
+
+  return data.result;
+};
+
+export const fetchOrderReceipt = async (orderId: number, token: string, locale: LOCALES, onErrorCb?: (errorKey: string) => void): Promise<Response | undefined> => {
+  const data = await fetchApi({
+    initialPath: `order/${orderId}/pdf`,
+    headerParams: {
+      Authorization: `Bearer ${token}`,
+      language: locale,
+    },
+    isResponseOtherType: true,
+    injectErrorMessage: true,
   });
 
   if (data.error) {

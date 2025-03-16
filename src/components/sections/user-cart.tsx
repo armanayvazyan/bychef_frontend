@@ -85,7 +85,7 @@ const UserCart = () => {
           </Button>
         </div>
       </PopoverTrigger>
-      <PopoverContent align="end" sideOffset={8} className="flex flex-col gap-6">
+      <PopoverContent align="end" sideOffset={8} className="flex flex-col gap-6 max-w-[100vw]">
         <>
           {products?.length ? (
             <>

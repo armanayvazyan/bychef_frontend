@@ -1,6 +1,6 @@
-import { useMemo, useState } from "react";
+import { memo, useMemo, useState } from "react";
 import { ORDER_STATUS } from "@/types";
-import Button from "@/components/ui/button";
+import { ChevronUp } from "lucide-react";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import formatPrice from "@/helpers/formatPrice";
@@ -8,14 +8,14 @@ import { useQuery } from "@tanstack/react-query";
 import Separator from "@/components/ui/separator";
 import { fetchOrderInfo } from "@/server-actions";
 import CopyId from "@/components/sections/copy-id";
-import { ChevronUp, Download } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import useServerError from "@/hooks/useServerError";
 import OrderItem from "@/components/sections/order-item";
+import FileDownload from "@/components/sections/file-download";
 import { formatDateTimeReverse } from "@/helpers/formatDateTime";
 
 const Tracking = () => {
-  const { id } = useParams();
+  const { id: orderNumber } = useParams();
   const { handleServerError } = useServerError();
   const { t } = useTranslation("translation", { keyPrefix: "tracking" });
   const { t: tGeneral } = useTranslation("translation", { keyPrefix: "generic" });
@@ -27,9 +27,9 @@ const Tracking = () => {
   const token = urlParams.get("token");
 
   const { data, isLoading } = useQuery({
-    queryKey: ["order-info", id, token],
+    queryKey: ["order-info", orderNumber, token],
     queryFn: () => {
-      if (id && token) return fetchOrderInfo(id, token, handleServerError);
+      if (orderNumber && token) return fetchOrderInfo(orderNumber, token, handleServerError);
     },
     refetchOnWindowFocus: false,
   });
@@ -74,7 +74,7 @@ const Tracking = () => {
             <>
               <div className="flex gap-4 items-center">
                 <h1 className="text-primary font-bold text-xl">{t("order")}</h1>
-                <CopyId id={id} />
+                <CopyId id={orderNumber} />
               </div>
               <div className="flex gap-3 items-center">
                 <div className="bg-zinc-200 rounded-md px-2-5 py-1-5">
@@ -86,10 +86,7 @@ const Tracking = () => {
                 <p className="text-zinc-800 font-bold text-nowrap">{t("address") + " -"}</p>
                 <p>{address}</p>
               </div>
-              <Button variant="secondary" className="max-w-max">
-                <Download />
-                {t("download")}
-              </Button>
+              <FileDownload id={data?.id} token={token} orderNumber={orderNumber} />
             </>
           )}
         </div>
@@ -138,4 +135,4 @@ const Tracking = () => {
   );
 };
 
-export default Tracking;
+export default memo(Tracking);

@@ -178,6 +178,8 @@
     "entrance": "Entrance",
     "home": "Apartment/House",
     "address": "Address",
+    "fileDownloaded": "File was successfully downloaded.",
+    "fileDownloadFailed": "An error occurred when downloading the file.",
     "download": "Download the receipt",
     "order": "Order",
     "delivery": "Delivery",
