@@ -1,13 +1,14 @@
 import { useCallback, useId, useMemo, useState } from "react";
 import { z } from "zod";
 import { db, ICartItem } from "@/db";
-import { EInputNames, LOCALES } from "@/types";
 import { ChevronUp } from "lucide-react";
 import Input from "@/components/ui/input";
 import Button from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 import { useForm } from "@/components/ui/form";
-import { useNavigate } from "react-router-dom";
 import { FormProvider } from "react-hook-form";
+import { EInputNames, LOCALES } from "@/types";
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import formatPrice from "@/helpers/formatPrice";
 import Form from "@/components/ui/form-wrapper";
@@ -29,7 +30,6 @@ import { fetchDeliveryPrice, placeOrder } from "@/server-actions";
 import CheckoutAddressField from "@/components/sections/checkout-address-field";
 import DeliveryPaymentSelect from "@/components/sections/delivery-payment-select";
 import DeliveryDateTimeSelect from "@/components/sections/delivery-date-time-select";
-import { useToast } from "@/hooks/use-toast";
 
 const OrderCheckout = () => {
   const formId = useId();
@@ -185,6 +185,18 @@ const OrderCheckout = () => {
     form.setValue(EInputNames.payment_method, "");
   }, [cartItems, form]);
 
+  const submissionDisabled = useMemo(() => {
+    return (
+      typeof deliveryInfoResponse.data?.result?.deliveryPrice === "undefined" ||
+      deliveryInfoResponse.isLoading ||
+      placeOrderMutation.isPending
+    );
+  }, [
+    placeOrderMutation.isPending,
+    deliveryInfoResponse.isLoading,
+    deliveryInfoResponse.data?.result?.deliveryPrice,
+  ]);
+
   return (
     // @ts-expect-error zod problem (temp solution)
     <Form id={formId} form={form} onSubmit={handleSubmitOrder} className="w-full flex flex-col-reverse lg:flex-row justify-around gap-3">
@@ -272,7 +284,7 @@ const OrderCheckout = () => {
             {deliveryInfoResponse.isLoading && <Skeleton className="w-[100px]" />}
           </div>
         )}
-        <Button type="submit" disabled={!deliveryInfoResponse.data?.result?.deliveryPrice}>
+        <Button type="submit" disabled={submissionDisabled}>
           {deliveryInfoResponse.data?.result?.deliveryPrice && t("pay", { amount: formatPrice(orderTotalPrice) })}
         </Button>
       </div>
