@@ -27,7 +27,7 @@ const FileDownload = ({ id, token, orderNumber }: IFileDownloadProps) => {
       const fileResponse = await queryClient.fetchQuery({
         queryKey: ["order-receipt", id, token],
         queryFn: () => {
-          if (id && token) return fetchOrderReceipt(id, token, i18n.language as LOCALES, handleServerError);
+          if (id && token) return fetchOrderReceipt(id, token, i18n.language.split("-")[0] as LOCALES, handleServerError);
         },
       });
 

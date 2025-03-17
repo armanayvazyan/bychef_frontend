@@ -32,7 +32,7 @@ const FailedOrderRetryForm = ({ orderId }: { orderId: string | null }) => {
 
   const retryOrderMutation = useMutation({
     mutationFn: async (formData: IRetryOrderProps) => {
-      return retryOrder(formData, i18n.language as LOCALES, handleServerError);
+      return retryOrder(formData, i18n.language.split("-")[0] as LOCALES, handleServerError);
     },
     onSuccess: async (data) => {
       try {

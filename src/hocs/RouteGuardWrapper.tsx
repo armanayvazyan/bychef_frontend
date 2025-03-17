@@ -15,6 +15,8 @@ const RouteGuardWrapper = ({ name, children }: IRouteGuardWrapperProps) => {
     (async () => {
       const location = await db.location.toArray();
 
+      if (location.length && name === "home") navigate("/explore");
+
       if (!location.length && !restrictedRoutes.includes(name)) navigate("/");
     })();
   }, [name, navigate]);
