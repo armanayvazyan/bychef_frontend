@@ -199,7 +199,7 @@ const OrderCheckout = () => {
 
   return (
     // @ts-expect-error zod problem (temp solution)
-    <Form id={formId} form={form} onSubmit={handleSubmitOrder} className="w-full flex flex-col-reverse lg:flex-row justify-around gap-3">
+    <Form id={formId} form={form} onSubmit={handleSubmitOrder} className="w-full flex flex-col lg:flex-row justify-around gap-6">
       <fieldset className="flex flex-col gap-4 lg:max-w-[500px] w-full">
         <div className="flex flex-col gap-5">
           <h1 className="text-primary font-bold text-xl leading-tight">{t("delivery-details")}</h1>
