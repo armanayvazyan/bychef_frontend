@@ -66,10 +66,7 @@ const OrderCheckout = () => {
 
         await db.products.clear();
 
-        const newWindow = window.open(url, "_blank", "noopener,noreferrer");
-        if (!newWindow) {
-          window.location.href = url; // Fallback for blocked pop-ups
-        }
+        window.location.href = url;
       } catch (e) {
         toast({
           title: "Something went wrong!",

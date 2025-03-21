@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import formatPrice from "@/helpers/formatPrice";
 import Separator from "@/components/ui/separator";
 import { Trash2, TriangleAlert } from "lucide-react";
+import LazyImage from "@/components/sections/lazy-image";
 import ItemQuantityButtonGroup from "@/components/sections/item-quantity-button-group";
 
 interface ICartItemCardProps {
@@ -39,8 +40,13 @@ const CartItemCard = ({
   return (
     <div className={onSelectDish ? "cursor-pointer" : ""} onClick={onSelectDish} {...props}>
       <div className="flex items-center gap-4">
-        <div className="max-w-[136px] aspect-square">
-          <img src={imageUrl} alt="cart product image" className="w-full h-full object-cover rounded-xl"/>
+        <div className="w-[136px]">
+          <LazyImage
+            url={imageUrl}
+            alt="cart product image"
+            containerClassName="w-full aspect-square"
+            imgClassName="w-full h-full object-cover rounded-xl"
+          />
         </div>
         <div>
           <h1 className="text-base md:text-xl font-extrabold text-zinc-800">{title}</h1>
