@@ -1,4 +1,4 @@
-import { memo, useMemo, useState } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 import { ORDER_STATUS } from "@/types";
 import { ChevronUp } from "lucide-react";
 import { useParams } from "react-router-dom";
@@ -13,6 +13,7 @@ import useServerError from "@/hooks/useServerError";
 import OrderItem from "@/components/sections/order-item";
 import FileDownload from "@/components/sections/file-download";
 import { formatDateTimeReverse } from "@/helpers/formatDateTime";
+import { logPageOpenEvent } from "@/analytics/Events";
 
 const Tracking = () => {
   const { id: orderNumber } = useParams();
@@ -34,6 +35,9 @@ const Tracking = () => {
     refetchOnWindowFocus: false,
   });
 
+  useEffect(() => {
+    logPageOpenEvent();
+  }, []);
   const orderDate = useMemo(() => {
     if (data?.deliveryDateTime) {
       const dateObj = formatDateTimeReverse(data.deliveryDateTime);
