@@ -83,7 +83,7 @@ const FailedOrderRetryForm = ({ orderId }: { orderId: string | null }) => {
         />
       </FormItem>
       <Button type="submit">{t("order-status.failure.try-again")}</Button>
-      <Button type="button" className="px-0 py-0" variant="ghost">
+      <Button className="px-0 py-0" variant="ghost">
         <a className="w-full h-full grid place-items-center" href="mailto:support@bychef.am">{t("order-status.failure.contact-support")}</a>
       </Button>
     </Form>

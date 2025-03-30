@@ -41,6 +41,7 @@ const CheckoutAddressField = ({ chefId, sessionLocation }: ICheckoutAddressField
       const res = await fetchDeliveryPrice(
         chefId,
         { lat: selectedAddress.location[0], lng: selectedAddress.location[1] },
+        0,
         false,
       );
 

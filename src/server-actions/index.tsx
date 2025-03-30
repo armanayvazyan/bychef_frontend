@@ -12,7 +12,7 @@ import {
   LOCALES
 } from "@/types";
 
-export const fetchDeliveryPrice = async (id: number, coordinates: { lat: number; lng: number }, doorToDoorEnabled: boolean, onErrorCb?: (errorKey: string) => void) => {
+export const fetchDeliveryPrice = async (id: number, coordinates: { lat: number; lng: number }, totalCartPrice: number, doorToDoorEnabled: boolean, onErrorCb?: (errorKey: string) => void) => {
   const data = await fetchApi(
     {
       initialPath: "order/delivery-price",
@@ -20,6 +20,7 @@ export const fetchDeliveryPrice = async (id: number, coordinates: { lat: number;
       bodyParams: {
         chefId: id,
         doorToDoorEnabled,
+        orderPrice: totalCartPrice,
         userCoordinates: [coordinates.lng, coordinates.lat],
       },
       injectErrorMessage: true,

@@ -93,15 +93,6 @@ const OrderCheckout = () => {
 
   const sessionLocation = useLiveQuery(() => db.location.toArray());
 
-  const deliveryInfoResponse = useQuery({
-    queryKey: ["delivery-price", sessionLocation?.[0].coordinates.lat, sessionLocation?.[0].coordinates.lng, isDoorToDoorEnabled],
-    queryFn: () => (chefId && sessionLocation)
-      ? fetchDeliveryPrice(chefId, sessionLocation[0].coordinates, isDoorToDoorEnabled, handleServerError)
-      : undefined,
-    refetchOnWindowFocus: false,
-    enabled: !!chefId && !!sessionLocation,
-  });
-
   const totalCartPrice = useMemo(() => {
     return cartItems.reduce((acc: number, product: ICartItem) => {
       const additionsTotalPrice = product.additions ? Object.values(product.additions).reduce((acc, additionPrice) => acc + Number(additionPrice), 0) : 0;
@@ -109,6 +100,15 @@ const OrderCheckout = () => {
       return acc + ((product.price + additionsTotalPrice) * product.quantity);
     }, 0);
   }, [cartItems]);
+
+  const deliveryInfoResponse = useQuery({
+    queryKey: ["delivery-price", sessionLocation?.[0].coordinates.lat, sessionLocation?.[0].coordinates.lng, isDoorToDoorEnabled, totalCartPrice],
+    queryFn: () => (chefId && sessionLocation && totalCartPrice)
+      ? fetchDeliveryPrice(chefId, sessionLocation[0].coordinates, totalCartPrice, isDoorToDoorEnabled, handleServerError)
+      : undefined,
+    refetchOnWindowFocus: false,
+    enabled: !!chefId && !!sessionLocation,
+  });
 
   const orderTotalPrice = useMemo(() => {
     const deliveryPrice = deliveryInfoResponse.data?.result
@@ -120,7 +120,7 @@ const OrderCheckout = () => {
   const handleSubmitOrder = (formData: z.infer<typeof checkoutFormSchema>) => {
     if (!chefId) return;
 
-    const [country, region] = formData.address.split(", ");
+    const [country, region, ...address] = formData.address.split(", ");
 
     const orderItems = cartItems.map(item => ({
       selectedSpiceLevel: item.spiceLevel ?? null,
@@ -135,7 +135,7 @@ const OrderCheckout = () => {
         country: country,
         city: region,
         region: region,
-        street: formData.address,
+        street: address.join(", ").trim(),
         entrance: formData.entrance ?? "",
         home: formData.apartment ?? "",
         floor: formData.floor ?? "",
