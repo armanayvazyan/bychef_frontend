@@ -9,6 +9,7 @@ import Separator from "@/components/ui/separator";
 import { Circle, CircleX, ShoppingCart } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import formatPrice from "@/helpers/formatPrice";
+import { logCartItemDeletedEvent, logCartItemQuantityChangedEvent, logCartOpenEvent } from "@/analytics/Events";
 
 const UserCart = () => {
   const navigate = useNavigate();
@@ -41,6 +42,7 @@ const UserCart = () => {
           price: targetItem.price,
         }, uid);
 
+        logCartItemQuantityChangedEvent(cartItem.id, targetItem.quantity, quantity, "cart");
         callbackFn();
       }
     }, [products]);
@@ -50,6 +52,7 @@ const UserCart = () => {
 
     if (cartItem) {
       await db.products.delete(cartItem.uid);
+      logCartItemDeletedEvent(cartItem.id, cartItem.quantity, "cart");
       return;
     }
   }, [products]);
@@ -62,6 +65,9 @@ const UserCart = () => {
   const handleToggleCart = () => {
     document.body.classList.toggle("overflow-y-hidden");
     document.body.classList.toggle("md:overflow-y-auto");
+    if(!open) {
+      logCartOpenEvent();
+    }
     setOpen(prevState => !prevState);
   };
 

@@ -24,8 +24,6 @@ const PageTrackWrapper = ({ children }: PropsWithChildren) => {
           sessionStorage.setItem("currentChefId", matchResult.params.id as string);
         }
       }
-      console.log(sessionStorage.getItem("previousPage"));
-      console.log(sessionStorage.getItem("currentPage"));
       previousPathRef.current = currentRoute.name;
     }
   }, [location]);

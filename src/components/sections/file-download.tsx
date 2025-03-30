@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import useServerError from "@/hooks/useServerError";
 import { fetchOrderReceipt } from "@/server-actions";
 import { useQueryClient } from "@tanstack/react-query";
+import { logOrderReceiptDownloadedEvent } from "@/analytics/Events";
 
 interface IFileDownloadProps {
   id?: number;
@@ -57,6 +58,9 @@ const FileDownload = ({ id, token, orderNumber }: IFileDownloadProps) => {
       });
     } finally {
       setIsLoading(false);
+      if(orderNumber) {
+        logOrderReceiptDownloadedEvent(orderNumber);
+      }
     }
   };
 

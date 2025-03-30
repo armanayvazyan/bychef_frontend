@@ -1,4 +1,4 @@
-import { useCallback, useId, useMemo, useState } from "react";
+import { useCallback, useEffect, useId, useMemo, useState } from "react";
 import { z } from "zod";
 import { db, ICartItem } from "@/db";
 import { ChevronUp } from "lucide-react";
@@ -30,6 +30,12 @@ import { fetchDeliveryPrice, placeOrder } from "@/server-actions";
 import CheckoutAddressField from "@/components/sections/checkout-address-field";
 import DeliveryPaymentSelect from "@/components/sections/delivery-payment-select";
 import DeliveryDateTimeSelect from "@/components/sections/delivery-date-time-select";
+import {
+  logCartItemDeletedEvent,
+  logCartItemQuantityChangedEvent,
+  logOrderPlacedEvent,
+  logPageOpenEvent
+} from "@/analytics/Events";
 
 const OrderCheckout = () => {
   const formId = useId();
@@ -54,6 +60,9 @@ const OrderCheckout = () => {
     resolver: zodResolver(checkoutFormSchema)
   });
 
+  useEffect(() => {
+    logPageOpenEvent();
+  }, []);
   const placeOrderMutation = useMutation({
     mutationFn: (formData: IPlaceOrderProps) => {
       return placeOrder(formData, i18n.language.split("-")[0] as LOCALES, handleServerError);
@@ -129,6 +138,15 @@ const OrderCheckout = () => {
       dishId: item.id
     }));
 
+    logOrderPlacedEvent(
+      formData.payment_method,
+      Number(deliveryInfoResponse?.data?.result.deliveryPrice ?? 0.0),
+      orderTotalPrice,
+      "yandex",
+      formData.delivery_time,
+      formData.delivery_date,
+      orderItems
+    );
     placeOrderMutation.mutate({
       doorToDoorEnabled: formData.door2Door,
       addressDto: {
@@ -167,6 +185,7 @@ const OrderCheckout = () => {
           price: targetItem.price,
         }, uid);
 
+        logCartItemQuantityChangedEvent(cartItem.id, targetItem.quantity, quantity, "checkout");
         callbackFn();
         form.setValue(EInputNames.payment_method, "");
       }
@@ -177,6 +196,7 @@ const OrderCheckout = () => {
 
     if (cartItem) {
       await db.products.delete(uid);
+      logCartItemDeletedEvent(cartItem.id, cartItem.quantity, "checkout");
     }
 
     form.setValue(EInputNames.payment_method, "");
