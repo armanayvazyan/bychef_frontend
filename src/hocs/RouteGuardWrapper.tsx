@@ -6,7 +6,7 @@ interface IRouteGuardWrapperProps extends PropsWithChildren {
   name: string;
 }
 
-const restrictedRoutes = ["home", "order_success", "order_failed", "privacy", "terms", "tracking"];
+const restrictedRoutes = ["home", "order_success", "order_failed", "privacy", "terms", "tracking", "partners"];
 
 const RouteGuardWrapper = ({ name, children }: IRouteGuardWrapperProps) => {
   const navigate = useNavigate();

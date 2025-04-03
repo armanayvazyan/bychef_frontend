@@ -24,6 +24,10 @@ import { logLanguageApplyEvent } from "@/analytics/Events";
 
 const components: { title: string; href: string }[] = [
   {
+    title: "partners",
+    href: "/partners",
+  },
+  {
     title: "privacy",
     href: "/privacy",
   },
