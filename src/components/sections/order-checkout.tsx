@@ -223,22 +223,26 @@ const OrderCheckout = () => {
           {!!sessionLocation?.length && (
             <CheckoutAddressField chefId={chefId} sessionLocation={sessionLocation} />
           )}
+          <FormCheckbox name={EInputNames.door2Door} title={t("door2door")} />
           <FormItem label={t("email")} requiredAsterisk name={EInputNames.email}>
             <Input placeholder="example@gmail.com" />
           </FormItem>
           <p className="text-xs font-semibold">{t("emailNotice")}</p>
-          <div className="flex w-full gap-4">
+          {isDoorToDoorEnabled && (<div className="flex w-full gap-4">
             <FormItem className="w-[calc(50%-8px)]" label={t("home")} name={EInputNames.apartment}>
               <Input placeholder={t("home")} />
             </FormItem>
             <FormItem className="w-[calc(50%-8px)]" label={t("entrance")} name={EInputNames.entrance}>
               <Input placeholder={t("entrance")} />
             </FormItem>
-          </div>
+          </div>)
+          }
           <div className="flex w-full gap-4">
-            <FormItem className="w-[calc(50%-8px)]" label={t("floor")} name={EInputNames.floor}>
-              <Input placeholder={t("floor")} />
-            </FormItem>
+            {isDoorToDoorEnabled && (
+              <FormItem className="w-[calc(50%-8px)]" label={t("floor")} name={EInputNames.floor}>
+                <Input placeholder={t("floor")} />
+              </FormItem>
+            )}
             <FormProvider {...form}>
               <PhoneInput />
             </FormProvider>
@@ -262,7 +266,6 @@ const OrderCheckout = () => {
             </p>
           </div>
         </div>
-        <FormCheckbox name={EInputNames.door2Door} title={t("door2door")} />
       </fieldset>
       <div
         data-collapsed={isCollapsed}

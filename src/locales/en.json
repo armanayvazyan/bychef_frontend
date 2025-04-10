@@ -44,7 +44,7 @@
     "order-days-ahead": "Order {{timeAhead}} days in advance",
     "order-hours-ahead": "Order {{timeAhead}} hours in advance",
     "clearCartTitle": "Switching Chefs?",
-    "clearCartDescription": "Your cart contains dishes from another chef. Adding other chef’s dish will clear your cart. Continue?",
+    "clearCartDescription": "Your cart contains dishes from another chef. Adding other chef's dish will clear your cart. Continue?",
     "keepCart": "Keep cart",
     "clearCart": "Clear & add"
   },
@@ -72,7 +72,13 @@
       "title": "About us",
       "details": "ByCHEF allows you to find tasty, high-quality homemade food prepared by a chef. Our mission is to make tasty homemade food accessible just a few clicks away for everyone."
     },
+    "for-partners": {
+      "title": "Grow Your Food Business with byChef",
+      "description": "Join our platform to expand your customer base, streamline operations, and boost your revenue with our comprehensive food delivery solution.",
+      "cta": "Become a Partner"
+    },
     "faq": {
+      "title": "FAQ",
       "q1": {
         "question": "How can I order food from a chef?",
         "answer": {
@@ -90,7 +96,7 @@
         "answer": "If you are interested in joining ByCHEF as a chef, fill out the pre-sign up form and we'll get in touch with you for the next steps. We'll help you at each step of your journey of starting your own business from A to Z. "
       },
       "q3": {
-        "question": "Why can’t I see all the chefs on the platform?",
+        "question": "Why can't I see all the chefs on the platform?",
         "answer": "Your delivery address is out of our current coverage. You can change your delivery address to check whether the coverage is expanded."
       }
     },
@@ -99,11 +105,71 @@
       "details": "All chefs selling through our platform take their responsibility to provide you with safe meals very seriously. And ByCHEF, in turn, tries to do everything to ensure that all chefs strictly follow the rules of food preparation and storage."
     }
   },
+  "partners-page": {
+    "nav_join": "Become a Partner",
+    "hero_title": "Grow Your Business with byChef",
+    "hero_subtitle": "Join our platform and reach more customers",
+    "hero_cta": "Join Now",
+    "benefits_title": "Why byChef?",
+    "benefit_1_title": "More Orders",
+    "benefit_1_desc": "Get more orders and increase your revenue through our platform",
+    "benefit_2_title": "Delivery",
+    "benefit_2_desc": "Complete your orders through the integrated delivery service or through your own service, determining the delivery price list yourself",
+    "benefit_3_title": "Data analytics",
+    "benefit_3_desc": "Make data-driven decisions with our detailed analytics and insights",
+    "benefit_4_title": "Payment methods",
+    "benefit_4_desc": "Accept payments via bank cards, Idram, and cash",
+    "benefit_5_title": "Order Management",
+    "benefit_5_desc": "Easy-to-use system to efficiently manage orders",
+    "benefit_6_title": "24/7 Support",
+    "benefit_6_desc": "Our dedicated team is ready to assist you at any time",
+    "how_it_works_title": "Join us now",
+    "how_it_works_subtitle": "Join our platform in three simple steps and start growing your business",
+    "step_1_title": "Sign Agreement",
+    "step_1_desc": "Contact us and sign the partnership agreement to get started",
+    "step_2_title": "Page Setup",
+    "step_2_desc": "Our team will help you set up your page, create a menu, and train you on using all the features of the system",
+    "step_3_title": "Start Selling",
+    "step_3_desc": "Begin receiving orders and growing your business with byChef",
+    "faq_title": "Common Questions",
+    "seo": {
+      "title": "Become a byChef Partner | Grow Your Food Business in Armenia",
+      "description": "Partner with byChef to expand your food business. Get more customers, streamlined operations, and increased revenue with our food delivery platform in Armenia.",
+      "keywords": "food delivery partner, restaurant partnership, byChef partner, food business growth, online food platform, Armenia food delivery"
+    },
+    "faq": {
+      "q1": {
+        "question": "What's byChef?",
+        "answer": "byChef is a platform connecting food entrepreneurs with local customers on the hunt for tasty meals and desserts. From marketing to order management, payment processing, delivery, customer service, and more, we're a one stop shop to grow your business."
+      },
+      "q2": {
+        "question": "Who can sell on byChef?",
+        "answer": "We work with a wide range of chefs, some who are just getting started, and others with established food business or decades of experience. The one thing all chefs have in common is a passion for cooking! Please note that you must be a registered legal entity. You are also required to comply with all legal requirements applicable to the type of food you're selling."
+      },
+      "q3": {
+        "question": "How much does it cost to join byChef?",
+        "answer": "We offer flexible commission rates based on your business needs. Contact us for detailed pricing information."
+      },
+      "q4": {
+        "question": "How will I receive payments for the orders I have prepared?",
+        "answer": "Payments are always non-cash. We transfer to the bank account specified when signing the contract. In the future, if necessary, you can change it by requesting support."
+      }
+    },
+    "contact": {
+      "join-today": "Join byChef Today",
+      "subtitle": "Contact us to discuss the partnership",
+      "btn": "Contact Us",
+      "phone_label": "Phone Number",
+      "submit_btn": "Submit",
+      "success_message": "Thanks! We'll call you soon to discuss the partnership."
+    }
+  },
   "footer": {
     "privacy": "Privacy policy",
     "terms": "Terms & Conditions",
     "support@bychef.am": "support@bychef.am",
     "copyright": "© 2024 ByCHEF, All rights reserved",
+    "partners": "For Partners",
     "locales": {
       "AM": "Հայերեն",
       "RU": "Русский",
@@ -134,7 +200,7 @@
   "order-status": {
     "success": {
       "title": "Your order has been successfully placed",
-      "details": "Your order number is #{{orderId}}. Soon you’ll receive an email with a link to track your order.",
+      "details": "Your order number is #{{orderId}}. Soon you'll receive an email with a link to track your order.",
       "back-to-orders": "Back to orders"
     },
     "failure": {
@@ -248,7 +314,7 @@
     "invalid-dish-id-or-status": "No dish was found. Please verify the details and try again, or contact support.",
     "dish-ingredients-missing": "The dish is missing the ingredients. Please make sure to add the indgredients to the dish and try again, or contact support.",
     "invalid-dish-id": "The requested dish was not found. Please verify the details and try again, or contact support.",
-    "invalid-dish-dto": "We couldn’t update the dish due to incorrect data. Please check your input and try again, or contact support.",
+    "invalid-dish-dto": "We couldn't update the dish due to incorrect data. Please check your input and try again, or contact support.",
     "invalid-dish-status": "Sorry, the provided dish status is invalid. Please review your input and try again, or contact support for assistance.",
     "invalid-spice-level-id": "An invalid spice level was provided. Please select a valid option and try again, or contact support.",
     "invalid-chef-status": "Your current status does not permit updating your information. Please contact support for further assistance.",
@@ -256,10 +322,10 @@
     "invalid-chef-available-day": "The selected day is invalid. Please check your selection and try again, or contact support for assistance.",
     "invalid-chef-id-or-status": "No active chef was found. Please verify your details and try again, or contact support.",
     "invalid-chef-id": "No chef was found. Please check the information and try again, or contact support.",
-    "invalid-chef-dto": "We couldn’t update your information due to incorrect data. Please review your input and try again, or contact support.",
+    "invalid-chef-dto": "We couldn't update your information due to incorrect data. Please review your input and try again, or contact support.",
     "invalid-chef-state": "Your account cannot be accessed. Please contact support for more information.",
     "invalid-otp": "Sorry, the one-time-code you provided is incorrect. Please verify and try again.",
-    "invalid-limit-size": "Sorry, we couldn’t complete your request. Please contact support if the issue persists."
+    "invalid-limit-size": "Sorry, we couldn't complete your request. Please contact support if the issue persists."
   },
   "payment-methods": {
     "choose-payment-method": "Choose payment method",

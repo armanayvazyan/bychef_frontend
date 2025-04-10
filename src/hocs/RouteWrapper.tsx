@@ -17,6 +17,7 @@ import ScrollResetWrapper from "@/hocs/ScrollResetWrapper";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import AddressSearchContextProvider from "@/context/address-search-context";
 import { RouterProvider, Navigate, createBrowserRouter } from "react-router-dom";
+import PartnersLanding from "@/pages/PartnersLanding";
 
 const queryClient = new QueryClient();
 
@@ -50,6 +51,11 @@ export const routes = [
     path: "/",
     name: "home",
     element: <ProviderWrapper name="home"><Home /></ProviderWrapper>
+  },
+  {
+    path: "/partners",
+    name: "partners",
+    element: <ProviderWrapper name="partners"><PartnersLanding /></ProviderWrapper>
   },
   {
     path: "/explore",
