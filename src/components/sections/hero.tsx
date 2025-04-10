@@ -1,14 +1,14 @@
 import { useContext } from "react";
 import { db } from "@/db";
 import Button from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useSearchParams } from "react-router-dom";
 import MapDialog from "@/components/sections/map-dialog";
 import AddressSearch from "@/components/sections/address-search";
 import { AddressSearchContext } from "@/context/address-search-context";
 
 const HeroTemp = () => {
-  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { t } = useTranslation("translation");
   const { selectedAddress } = useContext(AddressSearchContext);
 
@@ -22,9 +22,8 @@ const HeroTemp = () => {
 
       if (callback) callback();
 
-      if (window.location.pathname === "/") {
-        navigate("/explore");
-      }
+      const targetUrl = searchParams.get("returnUrl") ?? "/explore";
+      window.location.href = targetUrl;
     }
   };
 

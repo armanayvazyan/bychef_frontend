@@ -17,7 +17,18 @@ const RouteGuardWrapper = ({ name, children }: IRouteGuardWrapperProps) => {
 
       if (location.length && name === "home") navigate("/explore");
 
-      if (!location.length && !restrictedRoutes.includes(name)) navigate("/");
+      if (
+        !location.length &&
+        !restrictedRoutes.includes(name)
+      ) {
+        const currentUrl = window.location.href;
+        const urlObject = new URL(currentUrl).searchParams;
+        if (!urlObject.has("returnUrl")) {
+          navigate(`/?returnUrl=${window.location.href}`);
+        } else {
+          navigate("/");
+        }
+      }
     })();
   }, [name, navigate]);
 
