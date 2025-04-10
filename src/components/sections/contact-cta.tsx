@@ -1,4 +1,3 @@
-import React from "react";
 import Button from "../ui/button";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";

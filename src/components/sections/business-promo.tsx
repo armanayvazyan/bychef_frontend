@@ -1,4 +1,3 @@
-import React from "react";
 import Button from "../ui/button";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
@@ -8,14 +7,14 @@ interface BusinessPromoProps {
   className?: string;
 }
 
-const BusinessPromo: React.FC<BusinessPromoProps> = ({ 
+const BusinessPromo: React.FC<BusinessPromoProps> = ({
   backgroundImage,
-  className 
+  className
 }) => {
   const { t } = useTranslation("translation", { keyPrefix: "partners-page" });
 
   return (
-    <header 
+    <header
       className={cn(
         "relative w-full h-[400px] flex flex-col justify-center items-center text-center text-white py-12 bg-gradient-to-r from-red-500/90 to-orange-400/90",
         className
@@ -34,7 +33,7 @@ const BusinessPromo: React.FC<BusinessPromoProps> = ({
           {t("hero_subtitle")}
         </p>
         <a href="tel:+37477916666" aria-label={t("contact.btn")}>
-          <Button 
+          <Button
             className="rounded-full px-8 py-2 bg-red-500 hover:bg-red-600 text-white"
             size="lg"
           >
@@ -46,4 +45,4 @@ const BusinessPromo: React.FC<BusinessPromoProps> = ({
   );
 };
 
-export default BusinessPromo; 
+export default BusinessPromo;
