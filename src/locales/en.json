@@ -325,7 +325,8 @@
     "invalid-chef-dto": "We couldn't update your information due to incorrect data. Please review your input and try again, or contact support.",
     "invalid-chef-state": "Your account cannot be accessed. Please contact support for more information.",
     "invalid-otp": "Sorry, the one-time-code you provided is incorrect. Please verify and try again.",
-    "invalid-limit-size": "Sorry, we couldn't complete your request. Please contact support if the issue persists."
+    "invalid-limit-size": "Sorry, we couldn't complete your request. Please contact support if the issue persists.",
+    "distance-not-supported": "Delivery to this location is not supported"
   },
   "payment-methods": {
     "choose-payment-method": "Choose payment method",
