@@ -165,6 +165,7 @@ const OrderCheckout = () => {
       chefId: chefId,
       deliveryDateTime: formatDateTime(formData.delivery_date, formData.delivery_time),
       paymentType: formData.payment_method,
+      deliveryMethod: deliveryInfoResponse?.data?.result?.deliveryMethod ?? "YANDEX",
       createOrderDishes: orderItems,
     });
   };

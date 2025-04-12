@@ -340,6 +340,7 @@ export interface IOrderDto {
   receiverEmail: string;
   totalPrice: number;
   deliveryPrice: number;
+  deliveryMethod: string;
   chefId: number;
   chefName: string;
   orderDishList: IOrderDishDto[];

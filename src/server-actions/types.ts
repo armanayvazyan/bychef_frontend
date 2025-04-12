@@ -23,6 +23,7 @@ export interface IPlaceOrderProps {
   chefId: number,
   deliveryDateTime: string,
   paymentType: string,
+  deliveryMethod: string,
   createOrderDishes: {
     selectedSpiceLevel: number | null,
     quantity: number,
