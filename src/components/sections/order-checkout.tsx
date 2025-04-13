@@ -162,6 +162,7 @@ const OrderCheckout = () => {
       chefId: chefId,
       deliveryDateTime: formatDateTime(formData.delivery_date, formData.delivery_time),
       paymentType: formData.payment_method,
+      deliveryMethod: deliveryInfoResponse?.data?.result?.deliveryMethod ?? "YANDEX",
       createOrderDishes: orderItems,
     });
   };
@@ -301,12 +302,12 @@ const OrderCheckout = () => {
         {!!cartItems.length && (
           <div className="flex justify-between text-base font-bold text-zinc-800 mb-8">
             <p>{t("total")}</p>
-            {deliveryInfoResponse.data?.result?.deliveryPrice && <p>{formatPrice(orderTotalPrice)} ֏</p>}
+            {deliveryInfoResponse.data?.result?.deliveryPrice !== undefined && <p>{formatPrice(orderTotalPrice)} ֏</p>}
             {deliveryInfoResponse.isLoading && <Skeleton className="w-[100px]" />}
           </div>
         )}
         <Button type="submit" disabled={submissionDisabled}>
-          {deliveryInfoResponse.data?.result?.deliveryPrice && t("pay", { amount: formatPrice(orderTotalPrice) })}
+          {deliveryInfoResponse.data?.result?.deliveryPrice !== undefined && t("pay", { amount: formatPrice(orderTotalPrice) })}
         </Button>
       </div>
     </Form>
