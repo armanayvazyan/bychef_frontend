@@ -13,7 +13,7 @@ const PaymentSelect = ({ selectedPaymentMethod, onSelectPaymentMethod, paymentOp
   const { t } = useTranslation("translation", { keyPrefix: "payment-methods" });
 
   return (
-    <Select onValueChange={onSelectPaymentMethod}>
+    <Select value={selectedPaymentMethod} onValueChange={onSelectPaymentMethod}>
       <SelectTrigger>
         <div className="flex justify-between py-2 rounded-xl cursor-pointer">
           {selectedPaymentMethod ? (

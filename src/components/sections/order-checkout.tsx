@@ -60,9 +60,6 @@ const OrderCheckout = () => {
     resolver: zodResolver(checkoutFormSchema)
   });
 
-  useEffect(() => {
-    logPageOpenEvent();
-  }, []);
   const placeOrderMutation = useMutation({
     mutationFn: (formData: IPlaceOrderProps) => {
       return placeOrder(formData, i18n.language.split("-")[0] as LOCALES, handleServerError);
@@ -140,7 +137,7 @@ const OrderCheckout = () => {
 
     logOrderPlacedEvent(
       formData.payment_method,
-      Number(deliveryInfoResponse?.data?.result.deliveryPrice ?? 0.0),
+      Number(deliveryInfoResponse.data?.result.deliveryPrice ?? 0.0),
       orderTotalPrice,
       "yandex",
       formData.delivery_time,
@@ -213,6 +210,10 @@ const OrderCheckout = () => {
     deliveryInfoResponse.isLoading,
     deliveryInfoResponse.data?.result?.deliveryPrice,
   ]);
+
+  useEffect(() => {
+    logPageOpenEvent();
+  }, []);
 
   return (
     // @ts-expect-error zod problem (temp solution)
