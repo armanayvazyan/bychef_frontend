@@ -37,9 +37,9 @@ const ChefDetails = () => {
             {isLoading && (
               <Skeleton className="w-1/2 h-[30px] rounded-xl" />
             )}
-            {name && (
-              <h2 className="text-sm md:text-base font-semibold text-primary">{name}</h2>
-            )}
+            {/*{name && (*/}
+            {/*  <h2 className="text-sm md:text-base font-semibold text-primary">{name}</h2>*/}
+            {/*)}*/}
             {isLoading && (
               <Skeleton className="w-full h-[30px] rounded-xl" />
             )}
