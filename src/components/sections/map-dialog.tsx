@@ -5,6 +5,7 @@ import { YMaps } from "@pbe/react-yandex-maps";
 import { useTranslation } from "react-i18next";
 import AddressSearch from "@/components/sections/address-search";
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { YMAP_KEY } from "@/configs/constants";
 
 interface IMapDialogProps {
   trigger: ReactNode,
@@ -36,7 +37,7 @@ const MapDialog = ({ trigger, onApplyAddress }: IMapDialogProps) => {
           <div className="flex gap-2 items-center mb-6">
             <AddressSearch onApplyAddress={handleApplyAddress} />
           </div>
-          <YMaps query={{ lang: "en_US", apikey: import.meta.env.VITE_YMAP_KEY }}>
+          <YMaps query={{ lang: "en_US", apikey: YMAP_KEY }}>
             <Map/>
           </YMaps>
         </div>

@@ -158,10 +158,14 @@
     "contact": {
       "join-today": "Join byChef Today",
       "subtitle": "Contact us to discuss the partnership",
-      "btn": "Contact Us",
-      "phone_label": "Phone Number",
-      "submit_btn": "Submit",
-      "success_message": "Thanks! We'll call you soon to discuss the partnership."
+      "btn": "Submit",
+      "name": "Full Name",
+      "namePlaceholder": "Enter your full name",
+      "phone": "Phone Number",
+      "phonePlaceholder": "Enter your phone number",
+      "submitting": "Submitting...",
+      "success": "Thank you for your submission! We'll contact you soon.",
+      "error": "Something went wrong. Please try again."
     }
   },
   "footer": {

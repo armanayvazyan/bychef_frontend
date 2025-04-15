@@ -13,6 +13,13 @@ const BusinessPromo: React.FC<BusinessPromoProps> = ({
 }) => {
   const { t } = useTranslation("translation", { keyPrefix: "partners-page" });
 
+  const handleScrollToContact = () => {
+    const contactSection = document.getElementById("contact-title");
+    if (contactSection) {
+      contactSection.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <header
       className={cn(
@@ -32,14 +39,13 @@ const BusinessPromo: React.FC<BusinessPromoProps> = ({
         <p className="text-base md:text-xl mb-8">
           {t("hero_subtitle")}
         </p>
-        <a href="tel:+37477916666" aria-label={t("contact.btn")}>
-          <Button
-            className="rounded-full px-8 py-2 bg-red-500 hover:bg-red-600 text-white"
-            size="lg"
-          >
-            {t("hero_cta")}
-          </Button>
-        </a>
+        <Button
+          className="rounded-full px-8 py-2 bg-red-500 hover:bg-red-600 text-white"
+          size="lg"
+          onClick={handleScrollToContact}
+        >
+          {t("hero_cta")}
+        </Button>
       </div>
     </header>
   );
