@@ -88,7 +88,7 @@ export const logOrderReceiptDownloadedEvent = (orderNumber: string): void => {
   analyticManager.logEvent("order_receipt_downloaded", properties);
 };
 
-export const logOrderPlacedEvent = (paymentMethod: string, deliveryPrice: number, totalPrice: number, deliveryOption: string, deliveryTime: string, deliveryDate: string, orderedDishes: Record<string, any>[]): void => {
+export const logOrderPlacedEvent = (paymentMethod: string, deliveryPrice: number, totalPrice: number, deliveryOption: string, deliveryTime: string, deliveryDate: string, userPhoneNumber: string, orderedDishes: Record<string, any>[]): void => {
   const properties: Record<string, any> = {
     chef_id: Number(sessionStorage.getItem("currentChefId")),
     payment_method: paymentMethod,
@@ -98,6 +98,7 @@ export const logOrderPlacedEvent = (paymentMethod: string, deliveryPrice: number
     delivery_date: deliveryDate,
     delivery_time: deliveryTime,
     order: orderedDishes,
+    user_phone_number: userPhoneNumber,
     page: sessionStorage.getItem("currentPage"),
   };
   analyticManager.logEvent("order_placed", properties);

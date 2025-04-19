@@ -142,6 +142,7 @@ const OrderCheckout = () => {
       "yandex",
       formData.delivery_time,
       formData.delivery_date,
+      formData.phone,
       orderItems
     );
     placeOrderMutation.mutate({
