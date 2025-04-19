@@ -143,7 +143,7 @@ const OrderCheckout = () => {
       formData.delivery_time,
       formData.delivery_date,
       formData.phone,
-      deliveryInfoResponse?.data?.result?.deliveryMethod,
+      deliveryInfoResponse?.data?.result?.deliveryMethod ?? "unknown",
       orderItems
     );
     placeOrderMutation.mutate({
